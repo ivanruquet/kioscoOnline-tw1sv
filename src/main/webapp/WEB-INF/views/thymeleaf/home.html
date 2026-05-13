@@ -13,22 +13,75 @@
 
   <!-- custom style -->
   <link rel="stylesheet" th:href="@{/css/main.css}" />
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
 
 </head>
 
 <body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="#">KioNet UNLAM</a>
+            <div class="carrito">
+                <img src="" alt="carrito">
+                <p> Mi Carrito</p>
+                <p>$00000</p>
+            </div>
+            <div class="perfil">
+                <img th:src="@{/images/perfil.jpg}" alt="perfil">
+                <p th:text="${usuario.nombre}"></p>
 
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">Kiosco UNLAM</a>
-  </nav>
+            </div>
 
-  <main role="main" class="container">
-    <div class="container">
-      <h1>Bienvenidos al kiosco de Taller Web 1</h1>
+            <a href="login.html" class="btn btn-lg btn-primary btn-block">Volver</a>
+        </nav>
 
-      <a href="login.html" class="btn btn-lg btn-primary btn-block">Volver</a>
-    </div>
-  </main>
+    </header>
+
+    <main role="main" class="container">
+        <div class="container">
+          <h1>Bienvenidos al kiosco de Taller Web 1</h1>
+        </div>
+
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand" href="">Todos</a>
+            <a class="navbar-brand" href="">Golosinas</a>
+            <a class="navbar-brand" href="">Bebidas</a>
+            <a class="navbar-brand" href="">Librería</a>
+            <a class="navbar-brand" href="">Buffet</a>
+            <input type="search" class="form-control" placeholder="Buscar...">
+        </nav>
+
+        <section class="listado_productos">
+            <section class="productos">
+                <h2 class="subtitulos">Golosinas</h2>
+                <div class="tarjeta-img">
+                    <img src="" alt="golo">
+                    <div class="tarteta-texto">
+                        <p>caramelo</p>
+                        <p>$$</p>
+                    </div>
+                </div>
+                <div class="tarjeta-img">
+                    <img src="" alt="golo">
+                    <div class="tarteta-texto">
+                        <p>caramelo</p>
+                        <p>$$</p>
+                    </div>
+                </div>
+                <div class="tarjeta-img">
+                    <img src="" alt="golo">
+                    <div class="tarteta-texto">
+                        <p>caramelo</p>
+                        <p>$$</p>
+                    </div>
+                </div>
+
+
+            </section>
+
+
+        </section>
+    </main>
   <!-- /.container -->
 
   <!-- Boostrap core js -->

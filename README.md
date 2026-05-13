@@ -49,9 +49,25 @@ Docker es una plataforma de contenedores que permite empaquetar aplicaciones con
 docker build -f DockerfileSQL -t mysql .
 docker run --env-file .env --name mysql-container -d -p 3306:3306 mysql
 
+#Si ya tengo el contenedor creado :
+docker start mysql-container
+
+#para verificar:
+docker ps
+
+
 # Iniciamos el proyecto
 $ mvn clean jetty:run
+$ mvn clean test jetty:run
 # http://localhost:8080/spring
+
+#Si ya tengo el contenedor creado :
+docker start mysql-container
+
+#para verificar:
+docker ps
+
+
 ```
 ## 2. Thymeleaf
 * [Documentación](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)

@@ -1,9 +1,6 @@
 package com.tallerwebi.dominio;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Usuario {
@@ -12,11 +9,28 @@ public class Usuario {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+    @Column (nullable = false)
   private String email;
+
+    @Column (nullable = false)
   private String password;
+
+    @Column (nullable = false)
   private String rol;
+
+    @Column (nullable = false)
   private Boolean activo = false;
 
+  @Column (nullable = false)
+  private String nombre;
+
+  @Column (nullable = false)
+  private String apellido;
+
+    @Column (nullable = false)
+    private Long telefono;
+
+    //getter y setter
   public Long getId() {
     return id;
   }
@@ -25,7 +39,31 @@ public class Usuario {
     this.id = id;
   }
 
-  public String getEmail() {
+    public Long getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(Long telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getEmail() {
     return email;
   }
 
