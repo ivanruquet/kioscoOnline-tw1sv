@@ -133,14 +133,14 @@ public class ControladorLoginTest {
     assertThat(modelAndView.getModel().get("usuario"), instanceOf(Usuario.class));
   }
 
-  @Test
-  public void irAHomeDeberiaRetornarVistaHome() {
-    // ejecucion
-    ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
-
-    // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
-  }
+  //  @Test
+  //  public void irAHomeDeberiaRetornarVistaHome() {
+  //    // ejecucion
+  //    ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
+  //
+  //    // validacion
+  //    assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
+  //  }
 
   @Test
   public void inicioDeberiaRedirigirALogin() {

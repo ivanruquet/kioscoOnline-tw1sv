@@ -65,28 +65,22 @@
         <section class="listado_productos">
             <section class="productos">
                 <h2 class="subtitulos">Golosinas</h2>
-                <div class="tarjeta-img">
-                    <img th:src="@{/imagenes/caramelo.png}" alt="golo">
-                    <div class="tarteta-texto">
-                        <p>caramelo</p>
-                        <p>$$</p>
-                    </div>
-                </div>
-                <div class="tarjeta-img">
-                    <img th:src="@{/imagenes/caramelo.png}" alt="golo">
-                    <div class="tarteta-texto">
-                        <p>caramelo</p>
-                        <p>$$</p>
-                    </div>
-                </div>
-                <div class="tarjeta-img">
-                    <img th:src="@{/imagenes/caramelo.png}" alt="golo">
-                    <div class="tarteta-texto">
-                        <p>caramelo</p>
-                        <p>$$</p>
-                    </div>
-                </div>
+                <div class="tarjeta-img" th:each="producto : ${productos}">
+                    <img
+                            th:if="${producto.imagen != null}"
+                            th:src="${producto.imagen}"
+                            alt="golo">
 
+                    <img
+                            th:unless="${producto.imagen != null}"
+                            th:src="@{/imagenes/caramelo.png}"
+                            alt="golo">
+                    <div class="tarteta-texto">
+                        <p th:text="${producto.nombre}"></p>
+                        <p th:text="${producto.descripcion}"></p>
+                        <p>$ <span th:text="${producto.precio}"></span></p>
+                    </div>
+                </div>
 
             </section>
 
