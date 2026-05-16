@@ -136,7 +136,7 @@ public class ControladorLoginTest {
   @Test
   public void irAHomeDeberiaRetornarVistaHome() {
     // ejecucion
-    ModelAndView modelAndView = controladorLogin.irAHome();
+    ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
 
     // validacion
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));

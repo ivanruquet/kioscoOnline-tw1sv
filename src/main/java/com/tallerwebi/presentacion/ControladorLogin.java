@@ -4,6 +4,7 @@ import com.tallerwebi.dominio.ServicioLogin;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -73,8 +74,16 @@ public class ControladorLogin {
   }
 
   @RequestMapping(path = "/home", method = RequestMethod.GET)
-  public ModelAndView irAHome() {
-    return new ModelAndView("home");
+  public ModelAndView irAHome(HttpSession session) {
+    Usuario usuario = (Usuario) session.getAttribute("USUARIO");
+
+    ModelAndView mv = new ModelAndView();
+
+    mv.addObject("usuario", usuario);
+
+    mv.setViewName("home");
+
+    return mv;
   }
 
   @RequestMapping(path = "/", method = RequestMethod.GET)

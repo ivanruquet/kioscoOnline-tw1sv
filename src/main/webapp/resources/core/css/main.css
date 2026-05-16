@@ -1,4 +1,9 @@
+
+*{
+    box-sizing: border-box;
+}
 body {
+    margin: 0;
   padding-top: 5rem;
 }
 .starter-template {

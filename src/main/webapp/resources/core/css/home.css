@@ -1,3 +1,41 @@
-.listado_productos{
+.navbar{
+    background-color: black;
 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 1rem 2rem;
+}
+
+.navbar a,
+.navbar p,
+.navbar span{
+    color: white;
+    text-decoration: none;
+    margin: 0;
+}
+
+.carrito,
+.perfil{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.perfil img, .carrito img{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.navbar-brand{
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.btn{
+    border: 1px solid white;
+    padding: .5rem 1rem;
 }

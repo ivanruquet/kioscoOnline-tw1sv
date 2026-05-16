@@ -9,28 +9,31 @@ public class Usuario {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-    @Column (nullable = false)
+  @Column(nullable = false)
   private String email;
 
-    @Column (nullable = false)
+  @Column(nullable = false)
   private String password;
 
-    @Column (nullable = false)
+  @Column(nullable = false)
   private String rol;
 
-    @Column (nullable = false)
+  @Column(nullable = false)
   private Boolean activo = false;
 
-  @Column (nullable = false)
+  @Column(nullable = false)
   private String nombre;
 
-  @Column (nullable = false)
+  @Column(nullable = false)
   private String apellido;
 
-    @Column (nullable = false)
-    private Long telefono;
+  @Column(nullable = false)
+  private Long telefono;
 
-    //getter y setter
+  @Column
+  private String fotoPerfil;
+
+  //getter y setter
   public Long getId() {
     return id;
   }
@@ -39,31 +42,31 @@ public class Usuario {
     this.id = id;
   }
 
-    public Long getTelefono() {
-        return telefono;
-    }
+  public Long getTelefono() {
+    return telefono;
+  }
 
-    public void setTelefono(Long telefono) {
-        this.telefono = telefono;
-    }
+  public void setTelefono(Long telefono) {
+    this.telefono = telefono;
+  }
 
-    public String getApellido() {
-        return apellido;
-    }
+  public String getApellido() {
+    return apellido;
+  }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
+  public void setApellido(String apellido) {
+    this.apellido = apellido;
+  }
 
-    public String getNombre() {
-        return nombre;
-    }
+  public String getNombre() {
+    return nombre;
+  }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
 
-    public String getEmail() {
+  public String getEmail() {
     return email;
   }
 
@@ -85,6 +88,14 @@ public class Usuario {
 
   public void setRol(String rol) {
     this.rol = rol;
+  }
+
+  public String getFotoPerfil() {
+    return fotoPerfil;
+  }
+
+  public void setFotoPerfil(String foto) {
+    this.fotoPerfil = foto;
   }
 
   public Boolean getActivo() {
