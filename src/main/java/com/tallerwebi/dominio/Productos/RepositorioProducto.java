@@ -10,4 +10,6 @@ public interface RepositorioProducto {
   List<CategoriaProductos> listarCategorias();
 
   List<Producto> buscarProductos(String texto);
+
+  Producto buscarProductoPorId(long id);
 }

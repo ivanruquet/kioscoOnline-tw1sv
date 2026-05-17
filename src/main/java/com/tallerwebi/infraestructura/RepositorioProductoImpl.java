@@ -50,4 +50,9 @@ public class RepositorioProductoImpl implements RepositorioProducto {
       .setParameter("nombreBuscado", "%" + texto + "%") // Los % permiten buscar en cualquier parte del texto
       .getResultList();
   }
+
+  @Override
+  public Producto buscarProductoPorId(long id) {
+    return this.sessionFactory.getCurrentSession().get(Producto.class, id);
+  }
 }
