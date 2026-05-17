@@ -19,24 +19,20 @@ INSERT INTO CategoriaProductos (id, nombreCategoria)
 VALUES (5, 'Varios');
 
 -- Insert de productos
-INSERT INTO Producto (id, nombre, descripcion, precio)
-VALUES (null, 'Mogul', 'Caramelos gomitas de frutas surtidas', 1200.00);
+INSERT INTO Producto (id, nombre, descripcion, precio,categoria_id,imagen)
+VALUES (null, 'Mogul', 'Caramelos gomitas de frutas surtidas', 1200.00,1,'/img_Productos/GOMITAS-MOGUL-ROLLO-FRUTALES-X35GR-1-145.webp');
+
+INSERT INTO Producto (id, nombre, descripcion, precio,categoria_id,imagen)
+VALUES (null, 'Alfajor Jorgito', 'Alfajor de chocolate relleno con dulce de leche', 1500.00,1,'/img_Productos/alf-jorgito-negro.jpg');
+
+INSERT INTO Producto (id, nombre, descripcion, precio,categoria_id,imagen)
+VALUES (null, 'Chupetín Pico Dulce', 'Chupetín duro sabores frutales', 500.00,1,'/img_Productos/pico-dulce.jpg');
 
 
-INSERT INTO Producto (id, nombre, descripcion, precio)
-VALUES (null, 'Alfajor Jorgito', 'Alfajor de chocolate relleno con dulce de leche', 1500.00);
 
-INSERT INTO Producto (id, nombre, descripcion, precio)
-VALUES (null, 'Chupetín Pico Dulce', 'Chupetín duro sabores frutales', 500.00);
+INSERT INTO Producto (id, nombre, descripcion, precio, categoria_id,imagen)
+VALUES (null, 'Jugo Baggio Chico', 'Jugo de fruta listo para tomar de 200ml', 800.00, 2,'/img_Productos/jugo-baggio-multi.jpg');
 
-UPDATE Producto
-SET categoria_id = 1
-WHERE nombre IN ('Mogul', 'Alfajor Jorgito', 'Chupetín Pico Dulce');
 
--- Insert de una Bebida (Asumiendo que 'Bebidas' tiene el ID 2)
-INSERT INTO Producto (id, nombre, descripcion, precio, categoria_id)
-VALUES (null, 'Jugo Baggio Chico', 'Jugo de fruta listo para tomar de 200ml', 800.00, 2);
-
--- Insert de un artículo de Librería (Asumiendo que 'Librería' tiene el ID 3)
-INSERT INTO Producto (id, nombre, descripcion, precio, categoria_id)
-VALUES (null, 'Cuaderno Éxito N°1', 'Cuaderno tapa dura de 48 hojas rayadas', 3500.00, 3);
+INSERT INTO Producto (id, nombre, descripcion, precio, categoria_id,imagen)
+VALUES (null, 'Cuaderno Éxito N°1', 'Cuaderno tapa dura de 48 hojas rayadas', 3500.00, 3,'/img_Productos/cuad-exito-n1.jpg');
