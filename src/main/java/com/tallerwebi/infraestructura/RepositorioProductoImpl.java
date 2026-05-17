@@ -23,4 +23,9 @@ public class RepositorioProductoImpl implements RepositorioProducto {
       .createQuery("FROM Producto", Producto.class)
       .getResultList();
   }
+
+  @Override
+  public Producto buscarProductoPorId(long id) {
+    return this.sessionFactory.getCurrentSession().get(Producto.class, id);
+  }
 }
