@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomeControlador {
 
   private static final String VISTA_HOME = "home";
-  private ServicioProducto servicioProducto;
+  private final ServicioProducto servicioProducto;
 
   @Autowired
   public HomeControlador(ServicioProducto servicioProducto) {
