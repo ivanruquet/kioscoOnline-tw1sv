@@ -25,6 +25,7 @@ public class Producto {
   @JoinColumn(name = "categoria_id") //nombre de la columna en la BD
   private CategoriaProductos categoria; //objeto java
 
+
   public CategoriaProductos getCategoria() {
     return categoria;
   }

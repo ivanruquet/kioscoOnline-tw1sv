@@ -4,16 +4,19 @@ VALUES(null, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', 'test', 'ADMIN', tr
 
 -- Insert de Categorías
 INSERT INTO CategoriaProductos (id, nombreCategoria)
-VALUES (null, 'Golosina'); -- Probablemente tome el ID 1
+VALUES (1, 'Golosina');
 
 INSERT INTO CategoriaProductos (id, nombreCategoria)
-VALUES (null, 'Bebidas');  -- Probestamps el ID 2
+VALUES (2, 'Bebidas');
 
 INSERT INTO CategoriaProductos (id, nombreCategoria)
-VALUES (null, 'Librería'); -- Probablemente tome el ID 3
+VALUES (3, 'Librería');
 
 INSERT INTO CategoriaProductos (id, nombreCategoria)
-VALUES (null, 'Buffet');   -- Probablemente tome el ID 4
+VALUES (4, 'Buffet');
+
+INSERT INTO CategoriaProductos (id, nombreCategoria)
+VALUES (5, 'Varios');
 
 -- Insert de productos
 INSERT INTO Producto (id, nombre, descripcion, precio)
