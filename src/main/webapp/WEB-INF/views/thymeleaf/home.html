@@ -22,7 +22,7 @@
         <nav class="navbar">
             <a class="navbar-brand" href="#">KioNet UNLAM</a>
             <div class="carrito">
-                <img th:src="@{/imagenes/carrito.jpg}" alt="carrito">
+                <img th:src="@{/imagenes/imagenesDefault/carrito.jpg}" alt="carrito">
                 <p>Mi Carrito</p>
                 <p>$00000</p>
             </div>
@@ -35,7 +35,7 @@
 
                 <img
                         th:unless="${usuario.fotoPerfil != null}"
-                        th:src="@{/imagenes/default-user.jpg}"
+                        th:src="@{/imagenes/imagenesDefault/default-user.jpg}"
                         alt="perfil">
                 <p> Hola
                    <span th:text="${usuario.nombre}"></span>
@@ -45,8 +45,10 @@
             <div>
                 <form th:action="@{/home}" method="GET" class="d-flex">
                     <!-- El atributo 'name' es vital: define cómo se llamará el parámetro en la URL (?busqueda=...) -->
-                    <input type="search" name="busqueda" class="form-control" placeholder="Buscar productos..."
-                           th:value="${param.busqueda}"> <!-- Mantiene lo que escribiste visible después de recargar -->
+                    <label>
+                        <input type="search" name="busqueda" class="form-control" placeholder="Buscar productos..."
+                               th:value="${param.busqueda}">
+                    </label> <!-- Mantiene lo que escribiste visible después de recargar -->
                     <button type="submit" class="btn btn-primary">Buscar</button>
                 </form>
             </div>
@@ -86,7 +88,7 @@
 
                     <img
                             th:unless="${producto.imagen != null}"
-                            th:src="@{/imagenesDefault/caramelo.png}"
+                            th:src="@{/imagenes/imagenesDefault/caramelo.png}"
                             alt="golo">
 
                     <div class="tarteta-texto">
@@ -110,7 +112,7 @@
 
                     <img
                             th:unless="${producto.imagen != null}"
-                            th:src="@{/imagenesDefault/caramelo.png}"
+                            th:src="@{/imagenes/imagenesDefault/caramelo.png}"
                             alt="golo">
                     <div class="tarteta-texto">
                         <p th:text="${producto.nombre}"></p>

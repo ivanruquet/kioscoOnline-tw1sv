@@ -20,19 +20,19 @@ VALUES (5, 'Varios');
 
 -- Insert de productos
 INSERT INTO Producto (id, nombre, descripcion, precio,categoria_id,imagen)
-VALUES (null, 'Mogul', 'Caramelos gomitas de frutas surtidas', 1200.00,1,'/img_Productos/GOMITAS-MOGUL-ROLLO-FRUTALES-X35GR-1-145.webp');
+VALUES (null, 'Rollo Mogul', 'Gomitas de frutas surtidas', 600.00,1,'imagenes/img_Productos/GOMITAS-MOGUL-ROLLO-FRUTALES-X35GR-1-145.webp');
 
 INSERT INTO Producto (id, nombre, descripcion, precio,categoria_id,imagen)
-VALUES (null, 'Alfajor Jorgito', 'Alfajor de chocolate relleno con dulce de leche', 1500.00,1,'/img_Productos/alf-jorgito-negro.jpg');
+VALUES (null, 'Alfajor Jorgito Negro', 'Alfajor de chocolate relleno con dulce de leche', 1200.00,1,'imagenes/img_Productos/alf-jorgito-negro.jpg');
 
 INSERT INTO Producto (id, nombre, descripcion, precio,categoria_id,imagen)
-VALUES (null, 'Chupetín Pico Dulce', 'Chupetín duro sabores frutales', 500.00,1,'/img_Productos/pico-dulce.jpg');
+VALUES (null, 'Chupetín Pico Dulce', 'Chupetín duro sabor frutal', 500.00,1,'imagenes/img_Productos/pico-dulce.jpg');
 
 
 
 INSERT INTO Producto (id, nombre, descripcion, precio, categoria_id,imagen)
-VALUES (null, 'Jugo Baggio Chico', 'Jugo de fruta listo para tomar de 200ml', 800.00, 2,'/img_Productos/jugo-baggio-multi.jpg');
+VALUES (null, 'Jugo Baggio 200ml Multifruta', 'Jugo de fruta listo para tomar de 200ml', 800.00, 2,'imagenes/img_Productos/jugo-baggio-multi.jpg');
 
 
 INSERT INTO Producto (id, nombre, descripcion, precio, categoria_id,imagen)
-VALUES (null, 'Cuaderno Éxito N°1', 'Cuaderno tapa dura de 48 hojas rayadas', 3500.00, 3,'/img_Productos/cuad-exito-n1.jpg');
+VALUES (null, 'Cuaderno Éxito N°1', 'Cuaderno tapa dura de 48 hojas rayadas', 8000.00, 3,'imagenes/img_Productos/cuad-exito-n1.jpg');
