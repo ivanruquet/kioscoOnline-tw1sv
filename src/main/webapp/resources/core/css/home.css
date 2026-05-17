@@ -39,3 +39,80 @@
     border: 1px solid white;
     padding: .5rem 1rem;
 }
+
+/* --- CONTENEDOR PRINCIPAL DE PRODUCTOS --- */
+.listado_productos {
+    padding: 2rem 0;
+}
+
+.productos {
+    display: grid;
+    /* Crea columnas automáticas que se adaptan a la pantalla (mínimo 250px cada tarjeta) */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem; /* Espacio entre tarjeta y tarjeta */
+    padding: 1rem 0;
+}
+
+.subtitulos {
+    grid-column: 1 / -1; /* Hace que el título ocupe todo el ancho del grid */
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+/* --- LA TARJETA (EL RECUADRO) --- */
+.tarjeta-img {
+    background-color: white;
+    border: 1px solid #e0e0e0; /* El recuadro gris */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Sombra suave para dar volumen */
+    overflow: hidden; /* Evita que el contenido desborde los bordes redondeados */
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efecto visual cuando pasás el mouse por encima */
+.tarjeta-img:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* --- IMAGEN DEL PRODUCTO --- */
+.tarjeta-img img {
+    width: 100%;
+    height: 200px; /* Alto fijo para que todas las imágenes midan lo mismo */
+    object-fit: contain; /* Ajusta la imagen sin deformarla */
+    background-color: #f9f9f9; /* Fondo gris claro por si la imagen tiene transparencias */
+    padding: 1rem;
+}
+
+/* --- TEXTO DENTRO DE LA TARJETA --- */
+/* Nota: En tu HTML pusiste "tarteta-texto", te recomiendo corregirlo a "tarjeta-texto" */
+.tarjeta-texto, .tarteta-texto {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1; /* Empuja el precio hacia abajo si el texto es corto */
+}
+
+.tarjeta-texto p:nth-child(1), .tarteta-texto p:nth-child(1) {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #222;
+    margin: 0;
+}
+
+.tarjeta-texto p:nth-child(2), .tarteta-texto p:nth-child(2) {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+}
+
+.tarjeta-texto p:nth-child(3), .tarteta-texto p:nth-child(3) {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #28a745; /* Color verde para el precio */
+    margin-top: auto; /* Alinea el precio al fondo de la tarjeta */
+}

@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.Productos.CategoriaProductos;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.ServicioProducto;
 import com.tallerwebi.dominio.Usuario;
@@ -21,6 +22,9 @@ public class HomeControladorTest {
   private Usuario usuarioMock;
   private HttpSession sessionMock;
   private Producto productoMock;
+  private Producto productoMock2;
+
+  private CategoriaProductos categoriaProductoMock;
   private ServicioProducto servicioProductoMock;
 
   @BeforeEach
@@ -29,7 +33,9 @@ public class HomeControladorTest {
     homeControlador = new HomeControlador(servicioProductoMock);
     usuarioMock = Mockito.mock(Usuario.class);
     productoMock = Mockito.mock(Producto.class);
+    productoMock2 = Mockito.mock(Producto.class);
     sessionMock = Mockito.mock(HttpSession.class);
+    categoriaProductoMock = Mockito.mock(CategoriaProductos.class);
   }
 
   @Test
@@ -38,7 +44,7 @@ public class HomeControladorTest {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(null);
 
     // ejecucion
-    ModelAndView modelAndView = homeControlador.irAHome(sessionMock);
+    ModelAndView modelAndView = homeControlador.irAHome(sessionMock, null, null);
 
     // validacion
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
@@ -90,5 +96,79 @@ public class HomeControladorTest {
     List<Producto> productosObtenidos = (List<Producto>) modelAndView.getModel().get("productos");
 
     assertThat(productosObtenidos.get(0).getNombre(), equalToIgnoringCase("Mogul"));
+  }
+
+  @Test
+  public void seDebenVisualizarTodasLasCategoriasEnElNav() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+
+    when(categoriaProductoMock.getNombreCategoria()).thenReturn("algo");
+
+    List<CategoriaProductos> categoriasSimuladas = Arrays.asList(categoriaProductoMock);
+
+    when(servicioProductoMock.obtenerListadoCategorias()).thenReturn(categoriasSimuladas);
+
+    ModelAndView mv = homeControlador.mostrarCategoriasEnNav();
+
+    //validacion
+    List<CategoriaProductos> catObtenidos = (List<CategoriaProductos>) mv
+      .getModel()
+      .get("categorias");
+
+    assertThat(catObtenidos.get(0).getNombreCategoria(), equalToIgnoringCase("algo"));
+  }
+
+  @Test
+  public void SeDebeVerListadoFiltradoPorCategoria() {
+    String categoria = "golo";
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+
+    when(productoMock.getNombre()).thenReturn("Mogul");
+    when(categoriaProductoMock.getNombreCategoria()).thenReturn(categoria);
+
+    when(productoMock.getCategoria()).thenReturn(categoriaProductoMock);
+
+    List<Producto> productosFiltrados = Arrays.asList(productoMock);
+
+    when(servicioProductoMock.obtenerListadoProductosFiltrado(categoria))
+      .thenReturn(productosFiltrados);
+
+    ModelAndView modelAndView = homeControlador.mostrarListadoProductosFiltrados(categoria);
+    List<Producto> productosObtenidos = (List<Producto>) modelAndView.getModel().get("productos");
+    assertThat(productosObtenidos.get(0).getNombre(), equalToIgnoringCase("Mogul"));
+    assertThat(
+      productosObtenidos.get(0).getCategoria().getNombreCategoria(),
+      equalToIgnoringCase(categoria)
+    );
+
+    verify(servicioProductoMock, times(1)).obtenerListadoProductosFiltrado(categoria);
+  }
+
+  @Test
+  public void alBuscarUnProductoPorNombreDebeTraerLasCoincidencias() {
+    String texto = "cuad";
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    //carga simulada de productos
+    when(productoMock.getNombre()).thenReturn("Cuaderno Universitario");
+    when(productoMock2.getNombre()).thenReturn("Cuaderno Exito");
+
+    List<Producto> productosBuscados = Arrays.asList(productoMock, productoMock2);
+    when(servicioProductoMock.buscarProductosPorNombre(texto)).thenReturn(productosBuscados);
+
+    ModelAndView modelAndView = homeControlador.mostrarProductosBuscados(texto);
+
+    List<Producto> productosObtenidos = (List<Producto>) modelAndView.getModel().get("productos");
+
+    assertThat(productosObtenidos.size(), org.hamcrest.Matchers.equalTo(2));
+
+    // Verificamos el nombre de cada uno de ellos en su posición correspondiente
+    assertThat(
+      productosObtenidos.get(0).getNombre(),
+      equalToIgnoringCase("Cuaderno Universitario")
+    );
+    assertThat(productosObtenidos.get(1).getNombre(), equalToIgnoringCase("Cuaderno Exito"));
+
+    // Verificamos que se haya invocado al servicio una sola vez con el parámetro correcto
+    verify(servicioProductoMock, times(1)).buscarProductosPorNombre(texto);
   }
 }

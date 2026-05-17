@@ -20,4 +20,19 @@ public class ServicioProductoImpl implements ServicioProducto {
   public List<Producto> obtenerListadoProductos() {
     return this.repositorioProducto.listarProductos();
   }
+
+  @Override
+  public List<Producto> obtenerListadoProductosFiltrado(String categoria) {
+    return this.repositorioProducto.listarProductosFiltrados(categoria);
+  }
+
+  @Override
+  public List<CategoriaProductos> obtenerListadoCategorias() {
+    return this.repositorioProducto.listarCategorias();
+  }
+
+  @Override
+  public List<Producto> buscarProductosPorNombre(String texto) {
+    return this.repositorioProducto.buscarProductos(texto);
+  }
 }

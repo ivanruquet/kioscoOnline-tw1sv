@@ -42,6 +42,14 @@
                 </p>
 
             </div>
+            <div>
+                <form th:action="@{/home}" method="GET" class="d-flex">
+                    <!-- El atributo 'name' es vital: define cómo se llamará el parámetro en la URL (?busqueda=...) -->
+                    <input type="search" name="busqueda" class="form-control" placeholder="Buscar productos..."
+                           th:value="${param.busqueda}"> <!-- Mantiene lo que escribiste visible después de recargar -->
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </form>
+            </div>
 
             <a href="login.html" class="btn btn-lg btn-primary btn-block">Volver</a>
         </nav>
@@ -53,18 +61,47 @@
           <h1>Bienvenidos al kiosco de Taller Web 1</h1>
         </div>
 
-        <nav class="navbar">
-            <a class="navbar-brand" href="">Todos</a>
-            <a class="navbar-brand" href="">Golosinas</a>
-            <a class="navbar-brand" href="">Bebidas</a>
-            <a class="navbar-brand" href="">Librería</a>
-            <a class="navbar-brand" href="">Buffet</a>
-            <input type="search" class="form-control" placeholder="Buscar...">
+        <nav class="navbar" >
+            <!-- Opción fija para ver todos los productos -->
+            <a class="navbar-brand" th:href="@{/home}">Todos</a>
+
+            <div class="navbar-nav" th:each="categoriaProd : ${categorias}">
+                <!-- th:text va a pintar el nombre de la categoría -->
+                <!-- th:href creará el enlace dinámico pasando el id, por ejemplo: /home?categoriaId=1 -->
+                <a class="nav-item nav-link"
+                   th:href="@{/home(categoria=${categoriaProd.nombreCategoria})}"
+                   th:text="${categoriaProd.nombreCategoria}"></a>
+            </div>
+
+
         </nav>
+        <section class="busquedaResultado" th:if="${productosBuscados != null}">
+            <h2 class="subtitulos">Resultados de la búsqueda:</h2>
+            <div class="productos" th:unless="${#lists.isEmpty(productosBuscados)}">
+                <div class="tarjeta-img" th:each="producto : ${productosBuscados}">
+                    <img
+                            th:if="${producto.imagen != null}"
+                            th:src="${producto.imagen}"
+                            alt="golo">
+
+                    <img
+                            th:unless="${producto.imagen != null}"
+                            th:src="@{/imagenes/caramelo.png}"
+                            alt="golo">
+
+                    <div class="tarteta-texto">
+                        <p th:text="${producto.nombre}"></p>
+                        <p th:text="${producto.descripcion}"></p>
+                        <p>$ <span th:text="${producto.precio}"></span></p>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </section>
 
         <section class="listado_productos">
             <section class="productos">
-                <h2 class="subtitulos">Golosinas</h2>
+                <h2 class="subtitulos" th:text="${param.categoria != null} ? ${param.categoria} : 'Todos los productos'"></h2>
                 <div class="tarjeta-img" th:each="producto : ${productos}">
                     <img
                             th:if="${producto.imagen != null}"
@@ -83,7 +120,6 @@
                 </div>
 
             </section>
-
 
         </section>
     </main>
