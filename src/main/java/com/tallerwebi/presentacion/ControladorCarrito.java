@@ -56,8 +56,11 @@ public class ControladorCarrito {
       carrito = new ArrayList<>();
     }
 
+    Double total = servicioCarrito.calcularTotal(carrito);
+
     ModelMap model = new ModelMap();
     model.put(CARRITO, carrito);
+    model.put("total", total);
 
     return new ModelAndView(CARRITO, model);
   }

@@ -28,4 +28,15 @@ public class ServicioCarritoImpl implements ServicioCarrito {
     carrito.add(producto);
     return carrito;
   }
+
+  @Override
+  public Double calcularTotal(List<Producto> carrito) {
+    Double total = 0.0;
+
+    for (Producto producto : carrito) {
+      total += producto.getPrecio();
+    }
+
+    return total;
+  }
 }

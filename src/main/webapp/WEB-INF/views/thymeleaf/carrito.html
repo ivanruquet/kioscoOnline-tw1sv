@@ -1,3 +1,5 @@
+<!--
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +11,102 @@
 <h1>Mi carrito</h1>
 
 <ul>
-    <li th:each="producto : ${carrito}"
-        th:text="${producto.nombre}">
+    <li th:each="producto : ${carrito}">
+
+        <span th:text="${producto.nombre}"></span>
+        -
+        $
+        <span th:text="${producto.precio}"></span>
     </li>
 </ul>
 
+<h2>
+    Total: $
+    <span th:text="${total}"></span>
+</h2>
+
+</body>
+</html>
+
+-->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KioNet - Mi Carrito</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/carrito.css}" />
+</head>
+<body>
+<div class="app-container">
+
+    <header class="navbar">
+
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/img/KioNet.png}" alt="logo">
+        </a>
+        <a href="/spring/home" class="back-link">← Volver al kiosco</a>
+    </header>
+
+    <main class="cart-layout">
+
+        <section class="cart-items-section">
+            <h2 class="section-title">Tu pedido</h2>
+
+            <div class="cart-items-list">
+
+                <div class="cart-item-card" th:each="producto : ${carrito}">
+                    <img class="item-image bg-pastel-purple" th:src="${producto.imagen}"></img>
+                    <div class="item-details">
+                        <h3 class="item-name" th:text="${producto.nombre}"></h3>
+                    </div>
+                    <div class="item-actions">
+                        <div class="quantity-control">
+                            <button class="qty-btn">−</button>
+                            <span class="qty-number">2</span>
+                            <button class="qty-btn">+</button>
+                        </div>
+                            <p class="item-price">
+                                $<span th:text="${producto.precio}"></span>
+                            </p>
+                        <button class="remove-btn">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="cart-summary-section">
+            <div class="summary-card">
+                <h2 class="summary-title">Resumen de compra</h2>
+
+                <div class="summary-row">
+                    <span>Subtotal (X Cantidad de productos)</span>
+                    <span>
+                        $<span th:text="${total}"></span>
+                    </span>
+                </div>
+
+                <hr class="summary-divider">
+
+                <div class="summary-row total-row">
+                    <span>Total</span>
+                    <span>
+                        $<span th:text="${total}"></span>
+                    </span>
+                </div>
+
+                <button class="btn-primary">Proceder al pago</button>
+
+                <div class="secure-checkout">
+                    <span>🔒 Plataforma 100% segura</span>
+                    <p>Tus datos están protegidos</p>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+</div>
 </body>
 </html>

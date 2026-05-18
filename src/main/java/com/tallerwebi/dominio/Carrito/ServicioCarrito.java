@@ -5,4 +5,6 @@ import java.util.List;
 
 public interface ServicioCarrito {
   List<Producto> agregarProducto(long id, List<Producto> carrito);
+
+  Double calcularTotal(List<Producto> carrito);
 }
