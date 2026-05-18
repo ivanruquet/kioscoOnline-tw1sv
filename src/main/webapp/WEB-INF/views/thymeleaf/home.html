@@ -48,11 +48,11 @@
     </header>
     <main class="main">
         <section class="panel-cliente">
-            <div class="perfil-widget">
+            <a href="/spring/perfil" class="perfil-widget" style="text-decoration: none;">
                 <img th:if="${usuario.fotoPerfil != null}" th:src="${usuario.fotoPerfil}" alt="perfil" class="avatar">
                 <img th:unless="${usuario.fotoPerfil != null}" th:src="@{/imagenes/imagenesDefault/default-user.jpg}" alt="perfil" class="avatar">
                 <p class="welcome-text">Hola, <span th:text="${usuario.nombre}"></span></p>
-            </div>
+            </a>
 
             <a href="login.html" class="btn-logout">Cerrar sesión</a>
 
