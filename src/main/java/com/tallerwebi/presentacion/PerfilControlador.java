@@ -1,4 +1,3 @@
 package com.tallerwebi.presentacion;
 
-public class PerfilControlador {
-}
+public class PerfilControlador {}
