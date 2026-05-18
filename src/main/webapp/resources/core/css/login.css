@@ -6,7 +6,7 @@
     --white:       #FFFFFF;
     --text:        #1A1A2E;
     --muted:       #6B7280;
-    --border:      #E5E7EB;
+    --border: #ddb4f8;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

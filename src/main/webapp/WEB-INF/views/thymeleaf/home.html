@@ -5,139 +5,129 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Taller Web I</title>
+  <title>KioNet - Tu Kiosco Virtual</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Boostrap core css -->
-<!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"-->
-<!--    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">-->
-
-  <!-- custom style -->
-  <link rel="stylesheet" th:href="@{/css/main.css}"/>
-  <link rel="stylesheet" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
 
 </head>
 
 <body>
-    <header>
-        <nav class="navbar">
-            <a class="navbar-brand" href="#">KioNet UNLAM</a>
-            <div class="carrito">
-                <img th:src="@{/imagenes/imagenesDefault/carrito.jpg}" alt="carrito">
-                <!--<p>Mi Carrito</p>-->
-                <a href="/spring/carrito">Ver carrito</a>
-                <p>$00000</p>
-            </div>
-            <div class="perfil">
-<!--                <img th:src="@{/imagenes/default-user.jpg}" alt="foto">-->
-                <img
-                        th:if="${usuario.fotoPerfil != null}"
-                        th:src="${usuario.fotoPerfil}"
-                        alt="perfil">
+<div class="container-fluid">
 
-                <img
-                        th:unless="${usuario.fotoPerfil != null}"
-                        th:src="@{/imagenes/imagenesDefault/default-user.jpg}"
-                        alt="perfil">
-                <p> Hola
-                   <span th:text="${usuario.nombre}"></span>
-                </p>
+    <header class="main-header">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/img/KioNet.png}" alt="logo">
+        </a>
 
-            </div>
-            <div>
-                <form th:action="@{/home}" method="GET" class="d-flex">
-                    <!-- El atributo 'name' es vital: define cómo se llamará el parámetro en la URL (?busqueda=...) -->
-                    <label>
-                        <input type="search" name="busqueda" class="form-control" placeholder="Buscar productos..."
-                               th:value="${param.busqueda}">
-                    </label> <!-- Mantiene lo que escribiste visible después de recargar -->
-                    <button type="submit" class="btn btn-primary">Buscar</button>
-                </form>
-            </div>
-
-            <a href="login.html" class="btn btn-lg btn-primary btn-block">Volver</a>
-        </nav>
-
-    </header>
-
-    <main role="main" class="container">
-        <div class="container">
-          <h1>Bienvenidos al kiosco de Taller Web 1</h1>
+        <div class="header-center">
+            <form th:action="@{/home}" method="GET" class="search-form">
+                <div class="search-wrapper">
+                    <input type="search" name="busqueda" class="form-control-search" placeholder="Buscar productos..." th:value="${param.busqueda}">
+                    <button type="submit" class="btn-search">Buscar</button>
+                </div>
+            </form>
         </div>
 
-        <nav class="navbar" >
-            <!-- Opción fija para ver todos los productos -->
-            <a class="navbar-brand" th:href="@{/home}">Todos</a>
-
-            <div class="navbar-nav" th:each="categoriaProd : ${categorias}">
-                <!-- th:text va a pintar el nombre de la categoría -->
-                <!-- th:href creará el enlace dinámico pasando el id, por ejemplo: /home?categoriaId=1 -->
-                <a class="nav-item nav-link"
-                   th:href="@{/home(categoria=${categoriaProd.nombreCategoria})}"
-                   th:text="${categoriaProd.nombreCategoria}"></a>
-            </div>
-
-
-        </nav>
-        <section class="busquedaResultado" th:if="${productosBuscados != null}">
-            <h2 class="subtitulos">Resultados de la búsqueda:</h2>
-            <div class="productos" th:unless="${#lists.isEmpty(productosBuscados)}">
-                <div class="tarjeta-img" th:each="producto : ${productosBuscados}">
-                    <img
-                            th:if="${producto.imagen != null}"
-                            th:src="${producto.imagen}"
-                            alt="golo">
-
-                    <img
-                            th:unless="${producto.imagen != null}"
-                            th:src="@{/imagenes/imagenesDefault/caramelo.png}"
-                            alt="golo">
-
-                    <div class="tarteta-texto">
-                        <p th:text="${producto.nombre}"></p>
-                        <p th:text="${producto.descripcion}"></p>
-                        <p>$ <span th:text="${producto.precio}"></span></p>
-                    </div>
+        <div class="header-right">
+            <div class="carrito-widget">
+                <div class="cart-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 01.98 1.61h9.72a2 2 0 0 01.98-1.61L23 6H6"/></svg>
+                </div>
+                <div class="cart-info">
+                    <a href="/spring/carrito" class="cart-link">Ver carrito</a>
+                    <p class="cart-total">$00000</p>
                 </div>
             </div>
-            <hr>
-        </section>
 
-        <section class="listado_productos">
-            <section class="productos">
-                <h2 class="subtitulos" th:text="${param.categoria != null} ? ${param.categoria} : 'Todos los productos'"></h2>
-                <div class="tarjeta-img" th:each="producto : ${productos}">
-                    <img
-                            th:if="${producto.imagen != null}"
-                            th:src="${producto.imagen}"
-                            alt="golo">
 
-                    <img
-                            th:unless="${producto.imagen != null}"
-                            th:src="@{/imagenes/imagenesDefault/caramelo.png}"
-                            alt="golo">
-                    <div class="tarteta-texto">
-                        <p th:text="${producto.nombre}"></p>
-                        <p th:text="${producto.descripcion}"></p>
-                        <p>$ <span th:text="${producto.precio}"></span></p>
+        </div>
+    </header>
+    <main class="main">
+        <section class="panel-cliente">
+            <div class="perfil-widget">
+                <img th:if="${usuario.fotoPerfil != null}" th:src="${usuario.fotoPerfil}" alt="perfil" class="avatar">
+                <img th:unless="${usuario.fotoPerfil != null}" th:src="@{/imagenes/imagenesDefault/default-user.jpg}" alt="perfil" class="avatar">
+                <p class="welcome-text">Hola, <span th:text="${usuario.nombre}"></span></p>
+            </div>
+
+            <a href="login.html" class="btn-logout">Cerrar sesión</a>
+
+        </section><!--FIN PANEL LATERAL CLIENTE-->
+        <section class="panel-tienda">
+            <div class="welcome-banner">
+                <h1>Bienvenidos a KioNet UNLAM</h1>
+                <h2>Hacé tu pedido hoy, tu hijo retira mañana</h2>
+            </div>
+
+            <nav class="categories-nav">
+                <a class="category-chip"
+                   th:href="@{/home}"
+                   th:classappend="${param.categoria == null} ? 'active' : ''">Todos</a>
+
+                <th:block th:each="categoriaProd : ${categorias}">
+                    <a class="category-chip"
+                       th:href="@{/home(categoria=${categoriaProd.nombreCategoria})}"
+                       th:text="${categoriaProd.nombreCategoria}"
+                       th:classappend="${param.categoria != null && param.categoria[0] == categoriaProd.nombreCategoria} ? 'active' : ''"></a>
+                </th:block>
+            </nav>
+            <section class="products-section" th:if="${productosBuscados != null}">
+                <h2 class="subtitulos">Resultados de la búsqueda:</h2>
+
+                <div class="products-grid" th:unless="${#lists.isEmpty(productosBuscados)}">
+                    <div class="product-card" th:each="producto : ${productosBuscados}">
+                        <div class="product-image-wrapper">
+                            <img th:if="${producto.imagen != null}" th:src="${producto.imagen}" alt="golo">
+                            <img th:unless="${producto.imagen != null}" th:src="@{/imagenes/imagenesDefault/caramelo.png}" alt="golo">
+                        </div>
+
+                        <div class="product-info">
+                            <h4 th:text="${producto.nombre}"></h4>
+                            <p class="product-desc" th:text="${producto.descripcion}"></p>
+                            <span class="product-price">$ <th:block th:text="${producto.precio}"></th:block></span>
+                        </div>
                     </div>
-
-                    <form action="carrito/agregar" method="post">
-                        <input type="hidden" name="productoId" th:value="${producto.id}">
-                        <button type="submit">Agregar al carrito</button>
-                    </form>
                 </div>
-
+                <hr class="section-divider">
             </section>
 
-        </section>
+            <section class="products-section">
+                <h2 class="subtitulos" th:text="${param.categoria != null} ? ${param.categoria} : 'Todos los productos'"></h2>
+
+                <div class="products-grid">
+                    <div class="product-card" th:each="producto : ${productos}">
+                        <div class="product-image-wrapper">
+                            <img th:if="${producto.imagen != null}" th:src="${producto.imagen}" alt="golo">
+                            <img th:unless="${producto.imagen != null}" th:src="@{/imagenes/imagenesDefault/caramelo.png}" alt="golo">
+                        </div>
+
+                        <div class="product-info">
+                            <h4 th:text="${producto.nombre}"></h4>
+                            <p class="product-desc" th:text="${producto.descripcion}"></p>
+                            <span class="product-price">$ <th:block th:text="${producto.precio}"></th:block></span>
+                        </div>
+
+                        <form action="carrito/agregar" method="post" class="add-to-cart-form">
+                            <input type="hidden" name="productoId" th:value="${producto.id}">
+                            <button type="submit" class="btn-add-product">+ Agregar al carrito</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+        </section><!--FIN PANEL TIENDA-->
     </main>
-  <!-- /.container -->
 
-  <!-- Boostrap core js -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-    crossorigin="anonymous"></script>
-
+</div>
 </body>
-
+        <!-- Boostrap core js -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+                crossorigin="anonymous">
+        </script>
 </html>
+
