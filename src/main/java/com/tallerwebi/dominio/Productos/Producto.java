@@ -15,6 +15,24 @@ public class Producto {
   @Column
   private String descripcion;
 
+  @Column(nullable = false)
+  private double precio;
+
+  @Column
+  private String imagen;
+
+  @ManyToOne
+  @JoinColumn(name = "categoria_id") //nombre de la columna en la BD
+  private CategoriaProductos categoria; //objeto java
+
+  public CategoriaProductos getCategoria() {
+    return categoria;
+  }
+
+  public void setCategoria(CategoriaProductos categoria) {
+    this.categoria = categoria;
+  }
+
   public String getDescripcion() {
     return descripcion;
   }
@@ -54,10 +72,4 @@ public class Producto {
   public void setPrecio(double precio) {
     this.precio = precio;
   }
-
-  @Column(nullable = false)
-  private double precio;
-
-  @Column
-  private String imagen;
 }

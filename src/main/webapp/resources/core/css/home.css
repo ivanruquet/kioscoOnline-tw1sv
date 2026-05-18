@@ -1,41 +1,367 @@
-.navbar{
-    background-color: black;
+/* ── CONFIGURACIÓN GLOBAL DE LA TIENDA ── */
+body {
+    background-color: #F8F9FD; /* El fondo claro de la foto */
+    color: var(--text);
+    padding: 1rem;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
 
+.container-fluid {
+    width: 100%;
+    max-width: 100%; /* Ocupa el total real de la pantalla */
+    margin: 0;
+    padding: 0;
+}
+/* ── HEADER / NAVBAR ESTILO MODERNO ── */
+.main-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    padding: 1rem 2rem;
+    background-color: var(--white);
+    padding: 1rem 1.75rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--border);
+    margin-bottom: 2.5rem;
+    gap: 1.5rem;
 }
 
-.navbar a,
-.navbar p,
-.navbar span{
-    color: white;
+/* Control del tamaño del Logo en el Header */
+.navbar-brand {
+    display: flex;
+    align-items: center;
     text-decoration: none;
+}
+
+.navbar-brand img {
+    height: 65px; /* Ajustá este valor si lo querés un poco más grande o chico */
+    width: auto;
+    object-fit: contain;
+}
+
+/* Buscador centralizado */
+.header-center {
+    flex-grow: 1;
+    max-width: 600px;
+}
+
+.search-wrapper {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.form-control-search {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    background: #FAFAFA;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.form-control-search:focus {
+    border-color: var(--purple);
+    background: var(--white);
+}
+
+.btn-search {
+    background-color: var(--purple);
+    color: var(--white);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-search:hover {
+    background-color: var(--purple-dark);
+}
+
+/* Lado derecho (Carrito) */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.carrito-widget {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.cart-icon {
+    background-color: #FAFAFA; /* Cambiado a gris muy claro neutro acorde al buscador */
+    border: 1px solid var(--border);
+    padding: 0.5rem;
+    border-radius: 10px;
+    color: var(--purple);
+    display: flex;
+}
+
+.cart-link {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.cart-link:hover {
+    text-decoration: underline;
+    color: var(--purple);
+}
+
+.cart-total {
+    font-size: 0.9rem;
+    font-weight: 700;
     margin: 0;
 }
 
-.carrito,
-.perfil{
-    display: flex;
-    align-items: center;
-    gap: .5rem;
+/* ── DISTRIBUCIÓN DEL CONTENIDO PRINCIPAL (MAIN) ── */
+.main {
+    display: grid;
+    /* La columna izquierda mide 260px fijas, la derecha toma todo el espacio restante (1fr) */
+    grid-template-columns: 260px 1fr;
+    gap: 2rem; /* Espaciado de separación entre el panel y la tienda */
+    align-items: start;
+    width: 100%;
 }
 
-.perfil img, .carrito img{
-    width: 45px;
-    height: 45px;
+/* ── COLUMNA LATERAL (PANEL CLIENTE) ── */
+.panel-cliente {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Separación interna entre los widgets */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+}
+
+/* Reajustamos el widget de perfil para que en vertical se vea ordenado */
+.panel-cliente .perfil-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border); /* Línea sutil divisoria interna */
+}
+
+.panel-cliente .avatar {
+    width: 65px; /* Lo hacemos un toque más grande ya que está en el panel lateral */
+    height: 65px;
     border-radius: 50%;
     object-fit: cover;
+    border: 1.5px solid var(--border);
 }
 
-.navbar-brand{
-    font-size: 1.5rem;
-    font-weight: bold;
+.welcome-text {
+    font-size: 0.9rem;
+    margin: 0;
+    color: var(--muted);
 }
 
-.btn{
-    border: 1px solid white;
-    padding: .5rem 1rem;
+.welcome-text span {
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* Estiramos el botón de volver para que ocupe todo el ancho del bloque */
+.panel-cliente .btn-logout {
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn-logout {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+.btn-logout:hover {
+    background: #F3F4F6;
+    color: var(--text);
+}
+
+/* ── CONTENIDO DERECHO (PANEL TIENDA) ── */
+.panel-tienda {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── RECUADRO DE BIENVENIDA ── */
+.welcome-banner {
+    background: linear-gradient(135deg, #5B3FE4 0%, #4A32C8 100%);
+    border-radius: 20px;
+    padding: 2.2rem;
+    color: var(--white);
+    margin-bottom: 2.5rem;
+}
+
+.welcome-banner h1 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    margin: 0 0 0.3rem 0;
+}
+
+.welcome-banner h2 {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.85;
+    margin: 0;
+}
+
+/* ── CHIPS DE CATEGORÍAS ── */
+.categories-nav {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.category-chip {
+    padding: 0.6rem 1.2rem;
+    background-color: var(--white);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+/* Estado cuando pasás el mouse por encima de un chip común */
+.category-chip:hover {
+    background-color: var(--purple-lt);
+    color: var(--purple);
+    border-color: var(--purple);
+}
+
+/* Estado ACTIVO: El chip seleccionado (Por defecto 'Todos' al iniciar) */
+.category-chip.active {
+    background-color: var(--purple);
+    color: var(--white);
+    border-color: var(--purple);
+}
+
+/* Evita que cambie de color feo si pasás el mouse sobre el chip ya activo */
+.category-chip.active:hover {
+    background-color: var(--purple-dark);
+    color: var(--white);
+    border-color: var(--purple-dark);
+}
+
+/* ── SECCIONES DE PRODUCTOS EN REJILLA (GRID) ── */
+.products-section {
+    margin-bottom: 3rem;
+    width: 100%;
+}
+
+.subtitulos {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* TARJETAS IGUALES A LA IMAGEN */
+.product-card {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+}
+
+.product-image-wrapper {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.product-image-wrapper img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.product-info h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    color: var(--text);
+}
+
+.product-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.3;
+}
+
+.product-price {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--purple);
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Botón interactivo "+ Agregar al carrito" */
+.btn-add-product {
+    width: 100%;
+    background-color: var(--white);
+    color: var(--purple);
+    border: 1.5px solid var(--border); /* Ahora usa el gris suave estándar */
+    padding: 0.65rem;
+    font-weight: 700;
+    font-size: 0.88rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-add-product:hover {
+    background-color: var(--purple);
+    color: var(--white);
+    border-color: var(--purple);
+}
+
+.section-divider {
+    border: 0;
+    height: 1px;
+    background-color: var(--border);
+    margin: 3rem 0;
 }

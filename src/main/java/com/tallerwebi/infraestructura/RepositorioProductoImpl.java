@@ -1,5 +1,6 @@
 package com.tallerwebi.infraestructura;
 
+import com.tallerwebi.dominio.Productos.CategoriaProductos;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.RepositorioProducto;
 import java.util.List;
@@ -21,6 +22,32 @@ public class RepositorioProductoImpl implements RepositorioProducto {
   public List<Producto> listarProductos() {
     return this.sessionFactory.getCurrentSession()
       .createQuery("FROM Producto", Producto.class)
+      .getResultList();
+  }
+
+  @Override
+  public List<Producto> listarProductosFiltrados(String categoria) {
+    return this.sessionFactory.getCurrentSession()
+      .createQuery("FROM Producto p WHERE p.categoria.nombreCategoria = :nombreCat", Producto.class)
+      .setParameter("nombreCat", categoria)
+      .getResultList();
+  }
+
+  @Override
+  public List<CategoriaProductos> listarCategorias() {
+    return this.sessionFactory.getCurrentSession()
+      .createQuery("FROM CategoriaProductos ", CategoriaProductos.class)
+      .getResultList();
+  }
+
+  @Override
+  public List<Producto> buscarProductos(String texto) {
+    return this.sessionFactory.getCurrentSession()
+      .createQuery(
+        "FROM Producto p WHERE LOWER(p.nombre) LIKE LOWER(:nombreBuscado)",
+        Producto.class
+      )
+      .setParameter("nombreBuscado", "%" + texto + "%") // Los % permiten buscar en cualquier parte del texto
       .getResultList();
   }
 
