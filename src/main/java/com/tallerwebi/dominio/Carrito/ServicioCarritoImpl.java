@@ -25,6 +25,12 @@ public class ServicioCarritoImpl implements ServicioCarrito {
       throw new ProductoNoEncontradoException();
     }
 
+    for (Producto productoEnCarrito : carrito) {
+      if (productoEnCarrito.getId().equals(producto.getId())) {
+        return carrito;
+      }
+    }
+
     carrito.add(producto);
     return carrito;
   }
@@ -38,5 +44,12 @@ public class ServicioCarritoImpl implements ServicioCarrito {
     }
 
     return total;
+  }
+
+  @Override
+  public List<Producto> eliminarProducto(long id, List<Producto> carrito) {
+    carrito.removeIf(producto -> producto.getId().equals(id));
+
+    return carrito;
   }
 }

@@ -69,4 +69,42 @@ public class ServicioCarritoTest {
     //validacion
     assertEquals(300.0, total, 0.01);
   }
+
+  @Test
+  public void dadoUnProductoYaExistenteEnCarritoCuandoLoAgregoNoSeDuplica() {
+    //preparacion
+    Producto producto = new Producto();
+    producto.setId(1L);
+    producto.setNombre("Alfajor");
+
+    List<Producto> carrito = new ArrayList<>();
+    carrito.add(producto);
+
+    when(repositorioProductoMock.buscarProductoPorId(1L)).thenReturn(producto);
+
+    //ejecucion
+    List<Producto> resultado = servicioCarrito.agregarProducto(1L, carrito);
+
+    //validacion
+    assertEquals(1, resultado.size());
+  }
+
+  @Test
+  public void dadoUnProductoEnCarritoCuandoLoEliminoEntoncesSeRemueveCorrectamente() {
+    //preparacion
+    Producto producto = new Producto();
+    producto.setId(1L);
+    producto.setNombre("Alfajor");
+
+    List<Producto> carrito = new ArrayList<>();
+    carrito.add(producto);
+
+    when(repositorioProductoMock.buscarProductoPorId(1L)).thenReturn(producto);
+
+    //ejecucion
+    List<Producto> resultado = servicioCarrito.eliminarProducto(1L, carrito);
+
+    //validacion
+    assertEquals(0, resultado.size());
+  }
 }

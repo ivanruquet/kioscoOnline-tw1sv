@@ -200,7 +200,10 @@ body {
 }
 
 .remove-btn {
-    background: transparent;
+    background: #dc3545;
+    border-radius: var(--radius-sm);
+    width: 30px;
+    height: 30px;
     border: none;
     cursor: pointer;
     opacity: 0.5;

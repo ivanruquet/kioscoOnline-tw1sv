@@ -64,4 +64,19 @@ public class ControladorCarrito {
 
     return new ModelAndView(CARRITO, model);
   }
+
+  @RequestMapping(path = "/carrito/eliminar", method = RequestMethod.POST)
+  public String eliminarProducto(@RequestParam("productoId") Long productoId, HttpSession session) {
+    List<Producto> carrito = (List<Producto>) session.getAttribute(CARRITO);
+
+    if (carrito == null) {
+      carrito = new ArrayList<>();
+    }
+
+    carrito = servicioCarrito.eliminarProducto(productoId, carrito);
+
+    session.setAttribute(CARRITO, carrito);
+
+    return "redirect:/carrito";
+  }
 }

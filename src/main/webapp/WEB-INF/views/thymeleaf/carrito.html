@@ -71,7 +71,13 @@
                             <p class="item-price">
                                 $<span th:text="${producto.precio}"></span>
                             </p>
-                        <button class="remove-btn">🗑️</button>
+                        <form th:action="@{/carrito/eliminar}" method="post">
+                            <input type="hidden"
+                                   name="productoId"
+                                   th:value="${producto.id}">
+
+                            <button type="submit" class="remove-btn">🗑️</button>
+                        </form>
                     </div>
                 </div>
             </div>
