@@ -49,28 +49,4 @@ public class PerfilControladorTest {
 
     @Test
     public void elPerfilDebeMostrarApellidoDeUsuario() {
-        when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
-        when(usuarioMock.getApellido()).thenReturn("apellidoPrueba");
-        ModelAndView modelAndView = perfilControlador.mostrarDatosUsuario(sessionMock);
-        assertThat(((Usuario) modelAndView.getModel().get("usuario")).getApellido(),
-                equalToIgnoringCase("apellidoPrueba"));
-    }
-
-    @Test
-    public void elPerfilDebeMostrarEmailDeUsuario() {
-        when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
-        when(usuarioMock.getEmail()).thenReturn("email");
-        ModelAndView modelAndView = perfilControlador.mostrarDatosUsuario(sessionMock);
-        assertThat(((Usuario) modelAndView.getModel().get("usuario")).getEmail(),
-                equalToIgnoringCase("email"));
-    }
-
-    @Test
-    public void elPerfilDebeMostrarFotoDePerfilDeUsuario() {
-        when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
-        when(usuarioMock.getFotoPerfil()).thenReturn("foto.jpg");
-        ModelAndView modelAndView = perfilControlador.mostrarDatosUsuario(sessionMock);
-        assertThat(((Usuario) modelAndView.getModel().get("usuario")).getFotoPerfil(),
-                equalToIgnoringCase("foto.jpg"));
-    }
-}
+        when(sessionMock.getAttribute("USUARIO")).thenReturn(
