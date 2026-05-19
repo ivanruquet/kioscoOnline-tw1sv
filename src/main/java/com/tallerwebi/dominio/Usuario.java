@@ -30,7 +30,7 @@ public class Usuario {
   private String apellido;
 
   @Column(nullable = false)
-  private Long telefono;
+  private Long celular;
 
   @Column
   private String fotoPerfil;
@@ -56,12 +56,12 @@ public class Usuario {
     this.id = id;
   }
 
-  public Long getTelefono() {
-    return telefono;
+  public Long getCelular() {
+    return celular;
   }
 
-  public void setTelefono(Long telefono) {
-    this.telefono = telefono;
+  public void setCelular(Long celular) {
+    this.celular = celular;
   }
 
   public String getApellido() {
