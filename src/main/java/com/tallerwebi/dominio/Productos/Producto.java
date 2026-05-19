@@ -21,9 +21,12 @@ public class Producto {
   @Column
   private String imagen;
 
-  @ManyToOne
+  @ManyToOne // productos * ---- 1 categoria
   @JoinColumn(name = "categoria_id") //nombre de la columna en la BD
   private CategoriaProductos categoria; //objeto java
+
+  @Column(nullable = false)
+  private Integer cantidad;
 
   public CategoriaProductos getCategoria() {
     return categoria;
@@ -71,5 +74,13 @@ public class Producto {
 
   public void setPrecio(double precio) {
     this.precio = precio;
+  }
+
+  public Integer getCantidad() {
+    return cantidad;
+  }
+
+  public void setCantidad(Integer cantidad) {
+    this.cantidad = cantidad;
   }
 }

@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.Hijos.Hijos;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -33,7 +35,19 @@ public class Usuario {
   @Column
   private String fotoPerfil;
 
+  //Usuario 1 -------- * Hijos
+  @OneToMany(mappedBy = "padre")
+  private List<Hijos> hijos;
+
   //getter y setter
+  public List<Hijos> getHijos() {
+    return hijos;
+  }
+
+  public void setHijos(List<Hijos> hijos) {
+    this.hijos = hijos;
+  }
+
   public Long getId() {
     return id;
   }

@@ -175,13 +175,13 @@ body {
 }
 
 /* Estiramos el botón de volver para que ocupe todo el ancho del bloque */
-.panel-cliente .btn-logout {
+.panel-cliente .btn-volver  {
     text-align: center;
     width: 100%;
     box-sizing: border-box;
 }
 
-.btn-logout {
+.btn-volver {
     font-size: 0.85rem;
     color: var(--muted);
     text-decoration: none;
@@ -192,10 +192,35 @@ body {
     transition: background 0.2s;
 }
 
-.btn-logout:hover {
+.btn-volver:hover {
     background: #F3F4F6;
     color: var(--text);
 }
+
+.btn-logout  {
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--purple);
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+
+    border: none;
+    padding: .85rem;
+    border-radius: 10px;
+    cursor: pointer;
+
+    transition: background .2s, transform .15s, box-shadow .2s;}
+
+.btn-logout:hover:not(:disabled) {
+    background: var(--purple-dark);
+    box-shadow: 0 6px 20px rgba(91,63,228,.35);
+    transform: translateY(-1px);
+}
+.btn-logout:disabled { opacity: .6; cursor: not-allowed; }
 
 /* ── CONTENIDO DERECHO (PANEL TIENDA) ── */
 .panel-tienda {
