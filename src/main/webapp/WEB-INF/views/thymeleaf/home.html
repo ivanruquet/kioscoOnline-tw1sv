@@ -64,6 +64,10 @@
                             <p class="product-desc" th:text="${producto.descripcion}"></p>
                             <span class="product-price">$ <th:block th:text="${producto.precio}"></th:block></span>
                         </div>
+                        <form action="carrito/agregar" method="post" class="add-to-cart-form">
+                            <input type="hidden" name="productoId" th:value="${producto.id}">
+                            <button type="submit" class="btn-add-product">+ Agregar al carrito</button>
+                        </form>
                     </div>
                 </div>
                 <hr class="section-divider">
