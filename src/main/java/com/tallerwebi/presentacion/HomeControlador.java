@@ -70,41 +70,4 @@ public class HomeControlador {
       modelo.put("productosBuscados", buscados);
     }
   }
-
-  //METODOS DE LOS TEST!!
-  public ModelAndView mostrarDatosUsuario(HttpSession session) {
-    Usuario usuario = (Usuario) session.getAttribute("USUARIO");
-    ModelMap modelo = new ModelMap();
-    modelo.put("usuario", usuario);
-    return new ModelAndView(VISTA_HOME, modelo);
-  }
-
-  public ModelAndView mostrarListadoProductos() {
-    ModelMap modelo = new ModelMap();
-    List<Producto> productos = this.servicioProducto.obtenerListadoProductos();
-    modelo.put("productos", productos);
-    return new ModelAndView(VISTA_HOME, modelo);
-  }
-
-  public ModelAndView mostrarListadoProductosFiltrados(String categoriaProductos) {
-    ModelMap modelo = new ModelMap();
-    List<Producto> productos =
-      this.servicioProducto.obtenerListadoProductosFiltrado(categoriaProductos);
-    modelo.put("productos", productos);
-    return new ModelAndView(VISTA_HOME, modelo);
-  }
-
-  public ModelAndView mostrarCategoriasEnNav() {
-    ModelMap modelo = new ModelMap();
-    List<CategoriaProductos> categoriaProductos = this.servicioProducto.obtenerListadoCategorias();
-    modelo.put("categorias", categoriaProductos); // Usamos "categorias" en plural
-    return new ModelAndView(VISTA_HOME, modelo);
-  }
-
-  public ModelAndView mostrarProductosBuscados(String texto) {
-    ModelMap modelo = new ModelMap();
-    List<Producto> productosBuscados = this.servicioProducto.buscarProductosPorNombre(texto);
-    modelo.put("productosBuscados", productosBuscados);
-    return new ModelAndView(VISTA_HOME, modelo);
-  }
 }

@@ -58,7 +58,7 @@ public class HomeControladorTest {
     when(usuarioMock.getNombre()).thenReturn("Rocio");
 
     //ejecucion
-    ModelAndView modelAndView = homeControlador.mostrarDatosUsuario(sessionMock);
+    ModelAndView modelAndView = homeControlador.irAHome(sessionMock, null, null);
 
     //validacion
 
@@ -73,7 +73,7 @@ public class HomeControladorTest {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
     when(usuarioMock.getFotoPerfil()).thenReturn("fotoUsuario.jpeg");
 
-    ModelAndView modelAndView = homeControlador.mostrarDatosUsuario(sessionMock);
+    ModelAndView modelAndView = homeControlador.irAHome(sessionMock, null, null);
 
     assertThat(
       ((Usuario) modelAndView.getModel().get("usuario")).getFotoPerfil(),
@@ -91,7 +91,7 @@ public class HomeControladorTest {
 
     when(servicioProductoMock.obtenerListadoProductos()).thenReturn(productos);
     //ejecucion
-    ModelAndView modelAndView = homeControlador.mostrarListadoProductos();
+    ModelAndView modelAndView = homeControlador.irAHome(sessionMock, null, null);
     //validacion
     List<Producto> productosObtenidos = (List<Producto>) modelAndView.getModel().get("productos");
 
@@ -99,7 +99,7 @@ public class HomeControladorTest {
   }
 
   @Test
-  public void seDebenVisualizarTodasLasCategoriasEnElNav() {
+  public void seDebenVisualizarTodasLasCategorias() {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
 
     when(categoriaProductoMock.getNombreCategoria()).thenReturn("algo");
@@ -108,7 +108,7 @@ public class HomeControladorTest {
 
     when(servicioProductoMock.obtenerListadoCategorias()).thenReturn(categoriasSimuladas);
 
-    ModelAndView mv = homeControlador.mostrarCategoriasEnNav();
+    ModelAndView mv = homeControlador.irAHome(sessionMock, null, null);
 
     //validacion
     List<CategoriaProductos> catObtenidos = (List<CategoriaProductos>) mv
@@ -133,7 +133,7 @@ public class HomeControladorTest {
     when(servicioProductoMock.obtenerListadoProductosFiltrado(categoria))
       .thenReturn(productosFiltrados);
 
-    ModelAndView modelAndView = homeControlador.mostrarListadoProductosFiltrados(categoria);
+    ModelAndView modelAndView = homeControlador.irAHome(sessionMock, categoria, null);
     List<Producto> productosObtenidos = (List<Producto>) modelAndView.getModel().get("productos");
     assertThat(productosObtenidos.get(0).getNombre(), equalToIgnoringCase("Mogul"));
     assertThat(
@@ -155,9 +155,11 @@ public class HomeControladorTest {
     List<Producto> productosBuscados = Arrays.asList(productoMock, productoMock2);
     when(servicioProductoMock.buscarProductosPorNombre(texto)).thenReturn(productosBuscados);
 
-    ModelAndView modelAndView = homeControlador.mostrarProductosBuscados(texto);
+    ModelAndView modelAndView = homeControlador.irAHome(sessionMock, null, texto);
 
-    List<Producto> productosObtenidos = (List<Producto>) modelAndView.getModel().get("productos");
+    List<Producto> productosObtenidos = (List<Producto>) modelAndView
+      .getModel()
+      .get("productosBuscados");
 
     assertThat(productosObtenidos.size(), org.hamcrest.Matchers.equalTo(2));
 
