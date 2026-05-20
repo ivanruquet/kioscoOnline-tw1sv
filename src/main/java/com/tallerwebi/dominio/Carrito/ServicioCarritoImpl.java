@@ -12,43 +12,73 @@ import org.springframework.stereotype.Service;
 public class ServicioCarritoImpl implements ServicioCarrito {
 
   private RepositorioProducto repositorioProducto;
+  private static final int CANTIDAD_MINIMA_PRODUCTO = 1;
 
   public ServicioCarritoImpl(RepositorioProducto repositorioProducto) {
     this.repositorioProducto = repositorioProducto;
   }
 
   @Override
-  public List<Producto> agregarProducto(long id, List<Producto> carrito) {
+  public List<ItemCarrito> agregarProducto(long id, List<ItemCarrito> carrito) {
     Producto producto = repositorioProducto.buscarProductoPorId(id);
 
     if (producto == null) {
       throw new ProductoNoEncontradoException();
     }
 
-    for (Producto productoEnCarrito : carrito) {
-      if (productoEnCarrito.getId().equals(producto.getId())) {
+    for (ItemCarrito item : carrito) {
+      if (item.getProducto().getId().equals(id)) {
+        item.setCantidad(item.getCantidad() + 1);
         return carrito;
       }
     }
 
-    carrito.add(producto);
+    carrito.add(new ItemCarrito(producto, 1));
     return carrito;
   }
 
   @Override
-  public Double calcularTotal(List<Producto> carrito) {
+  public Double calcularTotal(List<ItemCarrito> carrito) {
     Double total = 0.0;
 
-    for (Producto producto : carrito) {
-      total += producto.getPrecio();
+    for (ItemCarrito item : carrito) {
+      total += item.getProducto().getPrecio() * item.getCantidad();
     }
 
     return total;
   }
 
   @Override
-  public List<Producto> eliminarProducto(long id, List<Producto> carrito) {
-    carrito.removeIf(producto -> producto.getId().equals(id));
+  public List<ItemCarrito> eliminarProducto(long id, List<ItemCarrito> carrito) {
+    carrito.removeIf(item -> item.getProducto().getId().equals(id));
+
+    return carrito;
+  }
+
+  @Override
+  public List<ItemCarrito> aumentarCantidad(long id, List<ItemCarrito> carrito) {
+    for (ItemCarrito item : carrito) {
+      if (item.getProducto().getId().equals(id)) {
+        item.setCantidad(item.getCantidad() + 1);
+
+        return carrito;
+      }
+    }
+
+    return carrito;
+  }
+
+  @Override
+  public List<ItemCarrito> restarCantidad(long id, List<ItemCarrito> carrito) {
+    for (ItemCarrito item : carrito) {
+      if (item.getProducto().getId().equals(id)) {
+        if (item.getCantidad() > CANTIDAD_MINIMA_PRODUCTO) {
+          item.setCantidad(item.getCantidad() - 1);
+        }
+
+        return carrito;
+      }
+    }
 
     return carrito;
   }

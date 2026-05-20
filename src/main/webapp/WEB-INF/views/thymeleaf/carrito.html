@@ -57,24 +57,38 @@
 
             <div class="cart-items-list">
 
-                <div class="cart-item-card" th:each="producto : ${carrito}">
-                    <img class="item-image bg-pastel-purple" th:src="${producto.imagen}"></img>
+                <div class="cart-item-card" th:each="item : ${carrito}">
+                    <img class="item-image bg-pastel-purple" th:src="${item.producto.imagen}"></img>
                     <div class="item-details">
-                        <h3 class="item-name" th:text="${producto.nombre}"></h3>
+                        <h3 class="item-name" th:text="${item.producto.nombre}"></h3>
                     </div>
                     <div class="item-actions">
                         <div class="quantity-control">
-                            <button class="qty-btn">−</button>
-                            <span class="qty-number">2</span>
-                            <button class="qty-btn">+</button>
+                            <form th:action="@{/carrito/restar}" method="post">
+                                <input type="hidden"
+                                       name="productoId"
+                                       th:value="${item.producto.id}">
+
+                                <button class="qty-btn" type="submit">-</button>
+                            </form>
+                            <!-- <button class="qty-btn">−</button> -->
+                            <span class="qty-number" th:text="${item.cantidad}"></span>
+                            <form th:action="@{/carrito/aumentar}" method="post">
+                                <input type="hidden"
+                                       name="productoId"
+                                       th:value="${item.producto.id}">
+
+                                <button class="qty-btn" type="submit">+</button>
+                            </form>
+                           <!-- <button class="qty-btn">+</button> -->
                         </div>
                             <p class="item-price">
-                                $<span th:text="${producto.precio}"></span>
+                                $<span th:text="${item.producto.precio}"></span>
                             </p>
                         <form th:action="@{/carrito/eliminar}" method="post">
                             <input type="hidden"
                                    name="productoId"
-                                   th:value="${producto.id}">
+                                   th:value="${item.producto.id}">
 
                             <button type="submit" class="remove-btn">🗑️</button>
                         </form>
@@ -88,7 +102,7 @@
                 <h2 class="summary-title">Resumen de compra</h2>
 
                 <div class="summary-row">
-                    <span>Subtotal (X Cantidad de productos)</span>
+                    <span>Subtotal</span>
                     <span>
                         $<span th:text="${total}"></span>
                     </span>
