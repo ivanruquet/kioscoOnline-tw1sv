@@ -1,6 +1,6 @@
 INSERT INTO Usuario
-    (id,nombre,apellido,celular, email, password, rol, activo)
-VALUES(null, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', 'test', 'ADMIN', true);
+    (id,nombre,apellido,celular, email, password, rol, activo,fotoPerfil)
+VALUES(null, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', 'test', 'ADMIN', true,'imagenes/img_Perfiles/testFoto.png');
 
 -- Insert de Categorías
 INSERT INTO CategoriaProductos (id, nombreCategoria)
