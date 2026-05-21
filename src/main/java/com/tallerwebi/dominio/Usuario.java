@@ -1,6 +1,6 @@
 package com.tallerwebi.dominio;
 
-import com.tallerwebi.dominio.Hijos.Hijos;
+import com.tallerwebi.dominio.Hijos.Hijo;
 import java.util.List;
 import javax.persistence.*;
 
@@ -37,14 +37,14 @@ public class Usuario {
 
   //Usuario 1 -------- * Hijos
   @OneToMany(mappedBy = "padre")
-  private List<Hijos> hijos;
+  private List<Hijo> hijos;
 
   //getter y setter
-  public List<Hijos> getHijos() {
+  public List<Hijo> getHijos() {
     return hijos;
   }
 
-  public void setHijos(List<Hijos> hijos) {
+  public void setHijos(List<Hijo> hijos) {
     this.hijos = hijos;
   }
 

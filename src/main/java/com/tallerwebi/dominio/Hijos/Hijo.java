@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-public class Hijos {
+public class Hijo {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,7 @@ public class Hijos {
   @Column(nullable = false)
   private String curso; //CREO QUE LO MEJOR SERIA TENER UNA TABLA CURSO CON LOS CURSOS YA PRECARGADOS
 
-  @Column(nullable = false)
+  @Column
   private String fotoPerfil;
 
   @Column
@@ -25,7 +25,7 @@ public class Hijos {
 
   //Hijos * -------1 padre
   @ManyToOne
-  @JoinColumn(name = "padre_id")
+  @JoinColumn(name = "idPadre")
   private Usuario padre;
 
   public String getNombre() {
