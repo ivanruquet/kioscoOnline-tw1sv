@@ -1,7 +1,7 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.Carrito.ItemCarrito;
 import com.tallerwebi.dominio.Carrito.ServicioCarrito;
-import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,7 @@ public class ControladorCarrito {
 
   private ServicioCarrito servicioCarrito;
   private static final String CARRITO = "carrito";
+  private static final String PRODUCTO_ID = "productoId";
 
   @Autowired
   public ControladorCarrito(ServicioCarrito servicioCarrito) {
@@ -27,11 +28,11 @@ public class ControladorCarrito {
 
   @RequestMapping(path = "/carrito/agregar", method = RequestMethod.POST)
   public String agregarProducto(
-    @RequestParam("productoId") Long productoId,
+    @RequestParam(PRODUCTO_ID) Long productoId,
     HttpSession session,
     ModelMap model
   ) {
-    List<Producto> carrito = (List<Producto>) session.getAttribute(CARRITO);
+    List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute(CARRITO);
 
     if (carrito == null) {
       carrito = new ArrayList<>();
@@ -50,15 +51,69 @@ public class ControladorCarrito {
 
   @RequestMapping(path = "/carrito", method = RequestMethod.GET)
   public ModelAndView verCarrito(HttpSession session) {
-    List<Producto> carrito = (List<Producto>) session.getAttribute(CARRITO);
+    List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute(CARRITO);
 
     if (carrito == null) {
       carrito = new ArrayList<>();
     }
 
+    Double total = servicioCarrito.calcularTotal(carrito);
+
     ModelMap model = new ModelMap();
     model.put(CARRITO, carrito);
+    model.put("total", total);
 
     return new ModelAndView(CARRITO, model);
+  }
+
+  @RequestMapping(path = "/carrito/eliminar", method = RequestMethod.POST)
+  public String eliminarProducto(@RequestParam(PRODUCTO_ID) Long productoId, HttpSession session) {
+    List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute(CARRITO);
+
+    if (carrito == null) {
+      carrito = new ArrayList<>();
+    }
+
+    carrito = servicioCarrito.eliminarProducto(productoId, carrito);
+
+    session.setAttribute(CARRITO, carrito);
+
+    return "redirect:/carrito";
+  }
+
+  @RequestMapping(path = "/carrito/aumentar", method = RequestMethod.POST)
+  public String aumentarCantidadDeProducto(
+    @RequestParam(PRODUCTO_ID) Long productoId,
+    HttpSession session
+  ) {
+    List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute(CARRITO);
+
+    if (carrito == null) {
+      carrito = new ArrayList<>();
+    }
+
+    carrito = servicioCarrito.aumentarCantidad(productoId, carrito);
+
+    session.setAttribute(CARRITO, carrito);
+
+    return "redirect:/carrito";
+  }
+
+  @RequestMapping(path = "/carrito/restar", method = RequestMethod.POST)
+  public String restarCantidadDeProducto(
+    @RequestParam(PRODUCTO_ID) Long productoId,
+    HttpSession session
+  ) {
+    List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute(CARRITO);
+
+    if (carrito == null) {
+      carrito = new ArrayList<>();
+    }
+
+    carrito = servicioCarrito.restarCantidad(productoId, carrito);
+
+    session.setAttribute(CARRITO, carrito);
+
+    return "redirect:/carrito";
   }
 }

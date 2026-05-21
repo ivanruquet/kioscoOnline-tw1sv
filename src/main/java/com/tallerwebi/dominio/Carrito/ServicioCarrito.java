@@ -1,8 +1,15 @@
 package com.tallerwebi.dominio.Carrito;
 
-import com.tallerwebi.dominio.Productos.Producto;
 import java.util.List;
 
 public interface ServicioCarrito {
-  List<Producto> agregarProducto(long id, List<Producto> carrito);
+  List<ItemCarrito> agregarProducto(long id, List<ItemCarrito> carrito);
+
+  Double calcularTotal(List<ItemCarrito> carrito);
+
+  List<ItemCarrito> eliminarProducto(long id, List<ItemCarrito> carrito);
+
+  List<ItemCarrito> aumentarCantidad(long id, List<ItemCarrito> carrito);
+
+  List<ItemCarrito> restarCantidad(long id, List<ItemCarrito> carrito);
 }
