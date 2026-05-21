@@ -18,7 +18,7 @@ public class ServicioProductoImpl implements ServicioProducto {
 
   @Override
   public List<Producto> obtenerListadoProductos() {
-    return this.repositorioProducto.listarProductos();
+      return this.repositorioProducto.listarProductos();
   }
 
   @Override

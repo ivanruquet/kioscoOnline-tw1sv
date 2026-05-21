@@ -37,96 +37,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KioNet - Mi Carrito</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
     <link rel="stylesheet" th:href="@{/css/carrito.css}" />
 </head>
+
 <body>
-<div class="app-container">
+<div class="container-fluid">
+    <div th:replace="fragmentos/header :: header"></div>
 
-    <header class="navbar">
 
-        <a class="navbar-brand" href="#">
-            <img th:src="@{/img/KioNet.png}" alt="logo">
-        </a>
-        <a href="/spring/home" class="back-link">← Volver al kiosco</a>
-    </header>
+    <div class="app-container">
+        <main class="cart-layout">
 
-    <main class="cart-layout">
+            <section class="cart-items-section">
+                <h2 class="section-title">Tu pedido</h2>
 
-        <section class="cart-items-section">
-            <h2 class="section-title">Tu pedido</h2>
+                <div class="cart-items-list">
 
-            <div class="cart-items-list">
-
-                <div class="cart-item-card" th:each="item : ${carrito}">
-                    <img class="item-image bg-pastel-purple" th:src="${item.producto.imagen}"></img>
-                    <div class="item-details">
-                        <h3 class="item-name" th:text="${item.producto.nombre}"></h3>
-                    </div>
-                    <div class="item-actions">
-                        <div class="quantity-control">
-                            <form th:action="@{/carrito/restar}" method="post">
-                                <input type="hidden"
-                                       name="productoId"
-                                       th:value="${item.producto.id}">
-
-                                <button class="qty-btn" type="submit">-</button>
-                            </form>
-                            <!-- <button class="qty-btn">−</button> -->
-                            <span class="qty-number" th:text="${item.cantidad}"></span>
-                            <form th:action="@{/carrito/aumentar}" method="post">
-                                <input type="hidden"
-                                       name="productoId"
-                                       th:value="${item.producto.id}">
-
-                                <button class="qty-btn" type="submit">+</button>
-                            </form>
-                           <!-- <button class="qty-btn">+</button> -->
+                    <div class="cart-item-card" th:each="item : ${carrito}">
+                        <img class="item-image bg-pastel-purple" th:src="${item.producto.imagen}"></img>
+                        <div class="item-details">
+                            <h3 class="item-name" th:text="${item.producto.nombre}"></h3>
                         </div>
+                        <div class="item-actions">
+                            <div class="quantity-control">
+                                <form th:action="@{/carrito/restar}" method="post">
+                                    <input type="hidden"
+                                           name="productoId"
+                                           th:value="${item.producto.id}">
+
+                                    <button class="qty-btn" type="submit">-</button>
+                                </form>
+                                <!-- <button class="qty-btn">−</button> -->
+                                <span class="qty-number" th:text="${item.cantidad}"></span>
+                                <form th:action="@{/carrito/aumentar}" method="post">
+                                    <input type="hidden"
+                                           name="productoId"
+                                           th:value="${item.producto.id}">
+
+                                    <button class="qty-btn" type="submit">+</button>
+                                </form>
+                                <!-- <button class="qty-btn">+</button> -->
+                            </div>
                             <p class="item-price">
                                 $<span th:text="${item.producto.precio}"></span>
                             </p>
-                        <form th:action="@{/carrito/eliminar}" method="post">
-                            <input type="hidden"
-                                   name="productoId"
-                                   th:value="${item.producto.id}">
+                            <form th:action="@{/carrito/eliminar}" method="post">
+                                <input type="hidden"
+                                       name="productoId"
+                                       th:value="${item.producto.id}">
 
-                            <button type="submit" class="remove-btn">🗑️</button>
-                        </form>
+                                <button type="submit" class="remove-btn">🗑️</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <aside class="cart-summary-section">
-            <div class="summary-card">
-                <h2 class="summary-title">Resumen de compra</h2>
+            <aside class="cart-summary-section">
+                <div class="summary-card">
+                    <h2 class="summary-title">Resumen de compra</h2>
 
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>
                         $<span th:text="${total}"></span>
                     </span>
-                </div>
+                    </div>
 
-                <hr class="summary-divider">
+                    <hr class="summary-divider">
 
-                <div class="summary-row total-row">
-                    <span>Total</span>
-                    <span>
+                    <div class="summary-row total-row">
+                        <span>Total</span>
+                        <span>
                         $<span th:text="${total}"></span>
                     </span>
+                    </div>
+
+                    <button class="btn-primary">Proceder al pago</button>
+
+                    <div class="secure-checkout">
+                        <span>🔒 Plataforma 100% segura</span>
+                        <p>Tus datos están protegidos</p>
+                    </div>
                 </div>
+            </aside>
 
-                <button class="btn-primary">Proceder al pago</button>
+        </main>
+    </div>
 
-                <div class="secure-checkout">
-                    <span>🔒 Plataforma 100% segura</span>
-                    <p>Tus datos están protegidos</p>
-                </div>
-            </div>
-        </aside>
-
-    </main>
 </div>
+
 </body>
 </html>

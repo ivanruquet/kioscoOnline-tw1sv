@@ -27,10 +27,10 @@ public class HomeControlador {
 
   @RequestMapping(path = "/home", method = RequestMethod.GET)
   public ModelAndView irAHome(
-    HttpSession session,
-    @RequestParam(value = "categoria", required = false) String categoria,
-    @RequestParam(value = "busqueda", required = false) String busqueda
-  ) {
+                        HttpSession session,
+                        @RequestParam(value = "categoria", required = false) String categoria,
+                        @RequestParam(value = "busqueda", required = false) String busqueda
+                      ) {
     Usuario usuario = (Usuario) session.getAttribute("USUARIO");
     if (usuario == null) {
       return new ModelAndView("redirect:/login");
