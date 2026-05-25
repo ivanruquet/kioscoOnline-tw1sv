@@ -17,7 +17,7 @@ public class Hijo {
   @Column(nullable = false)
   private String curso; //CREO QUE LO MEJOR SERIA TENER UNA TABLA CURSO CON LOS CURSOS YA PRECARGADOS
 
-  @Column(nullable = false)
+  @Column
   private String fotoPerfil;
 
   @Column

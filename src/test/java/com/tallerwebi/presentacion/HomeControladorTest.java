@@ -8,6 +8,7 @@ import com.tallerwebi.dominio.Productos.CategoriaProductos;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.ServicioProducto;
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpSession;
@@ -82,7 +83,7 @@ public class HomeControladorTest {
   }
 
   @Test
-  public void seDebeVerElListadoDeProductos() {
+  public void seDebeVerElListadoDeProductosCompleto() {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
     //preparacion
     when(productoMock.getNombre()).thenReturn("Mogul");
@@ -96,6 +97,22 @@ public class HomeControladorTest {
     List<Producto> productosObtenidos = (List<Producto>) modelAndView.getModel().get("productos");
 
     assertThat(productosObtenidos.get(0).getNombre(), equalToIgnoringCase("Mogul"));
+  }
+
+  @Test
+  public void siNoHayProductosCargadosEnLaBD_seDebeMostrarMensajeCorrespondiente() {
+    String mensajeException = "No se encontraron productos en la base de datos";
+    // preparacion
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(servicioProductoMock.obtenerListadoProductos())
+      .thenThrow(new ProductoNoEncontradoException(mensajeException));
+
+    // ejecucion
+    ModelAndView modelAndView = homeControlador.irAHome(sessionMock, null, null);
+
+    // validacion
+    String mensajeError = (String) modelAndView.getModel().get("errorCargaProductos");
+    assertThat(mensajeError, equalToIgnoringCase(mensajeException));
   }
 
   @Test
@@ -119,7 +136,7 @@ public class HomeControladorTest {
   }
 
   @Test
-  public void SeDebeVerListadoFiltradoPorCategoria() {
+  public void SeDebenVerListadoProductosFiltradoPorCategoria() {
     String categoria = "golo";
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
 
@@ -142,6 +159,20 @@ public class HomeControladorTest {
     );
 
     verify(servicioProductoMock, times(1)).obtenerListadoProductosFiltrado(categoria);
+  }
+
+  @Test
+  public void siNoHayProductosEnUnaCategoria_seDebeMostrarMensajeError() {
+    String mensajeException = "No se encontraron productos en esta categoria";
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(servicioProductoMock.obtenerListadoProductosFiltrado("categoria"))
+      .thenThrow(new ProductoNoEncontradoException(mensajeException));
+    //ejecucion
+    ModelAndView modelAndView = homeControlador.irAHome(sessionMock, "categoria", null);
+
+    //validacion
+    String mensajeError = (String) modelAndView.getModel().get("errorCargaProductos");
+    assertThat(mensajeError, equalToIgnoringCase(mensajeException));
   }
 
   @Test
@@ -172,5 +203,19 @@ public class HomeControladorTest {
 
     // Verificamos que se haya invocado al servicio una sola vez con el parámetro correcto
     verify(servicioProductoMock, times(1)).buscarProductosPorNombre(texto);
+  }
+
+  @Test
+  public void siNoHayProductoConElNombreBuscadoDebeMostrarMensajeError() {
+    String busqueda = "Cuaderno Universitario";
+    String mensajeException =
+      "No se encontró ninguna coincidencia para: " + busqueda + ". Intente otra búsqueda";
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(servicioProductoMock.buscarProductosPorNombre(busqueda))
+      .thenThrow(new ProductoNoEncontradoException(mensajeException));
+    ModelAndView modelAndView = homeControlador.irAHome(sessionMock, null, busqueda);
+
+    String mensajeError = (String) modelAndView.getModel().get("errorBusquedaProductos");
+    assertThat(mensajeError, equalToIgnoringCase(mensajeException));
   }
 }

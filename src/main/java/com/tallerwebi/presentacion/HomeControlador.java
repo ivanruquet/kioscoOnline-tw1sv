@@ -4,6 +4,7 @@ import com.tallerwebi.dominio.Productos.CategoriaProductos;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.ServicioProducto;
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,19 +56,27 @@ public class HomeControlador {
   }
 
   private void cargarProductos(ModelMap modelo, String categoria) {
-    List<Producto> productos;
-    if (categoria != null && !categoria.isEmpty()) {
-      productos = this.servicioProducto.obtenerListadoProductosFiltrado(categoria);
-    } else {
-      productos = this.servicioProducto.obtenerListadoProductos();
+    try {
+      List<Producto> productos;
+      if (categoria != null && !categoria.isEmpty()) {
+        productos = this.servicioProducto.obtenerListadoProductosFiltrado(categoria);
+      } else {
+        productos = this.servicioProducto.obtenerListadoProductos();
+      }
+      modelo.put("productos", productos);
+    } catch (ProductoNoEncontradoException e) {
+      modelo.put("errorCargaProductos", e.getMessage());
     }
-    modelo.put("productos", productos);
   }
 
   private void cargarResultadoBusqueda(ModelMap modelo, String busqueda) {
-    if (busqueda != null && !busqueda.trim().isEmpty()) {
-      List<Producto> buscados = this.servicioProducto.buscarProductosPorNombre(busqueda);
-      modelo.put("productosBuscados", buscados);
+    try {
+      if (busqueda != null && !busqueda.trim().isEmpty()) {
+        List<Producto> buscados = this.servicioProducto.buscarProductosPorNombre(busqueda);
+        modelo.put("productosBuscados", buscados);
+      }
+    } catch (ProductoNoEncontradoException e) {
+      modelo.put("errorBusquedaProductos", e.getMessage());
     }
   }
 }

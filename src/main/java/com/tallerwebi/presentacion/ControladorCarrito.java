@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControladorCarrito {
 
-  private ServicioCarrito servicioCarrito;
+  private final ServicioCarrito servicioCarrito;
   private static final String CARRITO = "carrito";
   private static final String PRODUCTO_ID = "productoId";
 

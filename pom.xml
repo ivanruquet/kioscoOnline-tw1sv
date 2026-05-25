@@ -151,6 +151,9 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+                    <!--agrego esto por el problema de los carac.especiales y las tildes-->
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
+
                 </configuration>
             </plugin>
 
@@ -402,6 +405,13 @@
                     <webApp>
                         <contextPath>/spring</contextPath>
                     </webApp>
+                    <!--agrego esto por el problema de los caracteres especiales y las tildes-->
+                    <systemProperties>
+                        <systemProperty>
+                            <name>file.encoding</name>
+                            <value>UTF-8</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
 

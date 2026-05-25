@@ -73,6 +73,37 @@
 
             </div>
 
+            <div class="seccion-hijos">
+                <div class="welcome-banner">
+                    <h1>Mis hijos</h1>
+                    <h2>Seleccioná uno de tus hijos para realizar el pedido.</h2>
+                </div>
+
+                <p th:if="${mensajeError}" th:text="${mensajeError}" class="mensaje-error"></p>
+                <!-- tarjetas de hijos -->
+
+                <div class="hijos-grid" th:if="${hijos}">
+                    <div class="hijo-card" th:each="hijo : ${hijos}">
+                        <img th:if="${hijo.fotoPerfil != null}" th:src="${hijo.fotoPerfil}" class="hijo-avatar" alt="foto hijo">
+                        <div th:unless="${hijo.fotoPerfil != null}" class="hijo-avatar-iniciales">
+                            <span th:text="${#strings.substring(hijo.nombre,0,1)}"></span>
+                        </div>
+                        <p class="hijo-nombre" th:text="${hijo.nombre}"></p>
+                        <span class="hijo-badge" th:text="${hijo.curso}"></span>
+                        <button>Seleccionar</button>
+                    </div>
+
+                </div>
+                <div class="agregar-hijo-banner">
+                    <div>
+                        <strong>¿Tenés un nuevo hijo en el colegio?</strong>
+                    </div>
+                    <a href="/spring/agregarHijo" class="btn-agregar">+ Agregar hijo</a>
+                </div>
+
+
+            </div>
+
         </section>
 <!--        <section class="panel-tienda">-->
 <!--            <div class="welcome-banner">-->

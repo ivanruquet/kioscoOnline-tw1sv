@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository("repositorioProducto")
 public class RepositorioProductoImpl implements RepositorioProducto {
 
-  private SessionFactory sessionFactory;
+  private final SessionFactory sessionFactory;
 
   @Autowired
   public RepositorioProductoImpl(SessionFactory sessionFactory) {
