@@ -151,8 +151,8 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+                    <argLine>@{argLine} -Dfile.encoding=UTF-8</argLine>
                     <!--agrego esto por el problema de los carac.especiales y las tildes-->
-                    <argLine>-Dfile.encoding=UTF-8</argLine>
 
                 </configuration>
             </plugin>
