@@ -48,8 +48,10 @@
                        th:classappend="${param.categoria != null && param.categoria[0] == categoriaProd.nombreCategoria} ? 'active' : ''"></a>
                 </th:block>
             </nav>
-            <section class="products-section" th:if="${productosBuscados != null}">
+            <section class="products-section" th:if="${productosBuscados != null || errorBusquedaProductos != null}">
                 <h2 class="subtitulos">Resultados de la búsqueda:</h2>
+                <p th:if="${errorBusquedaProductos}" th:text="${errorBusquedaProductos}"></p>
+
 
                 <div class="products-grid" th:unless="${#lists.isEmpty(productosBuscados)}">
                     <div class="product-card" th:each="producto : ${productosBuscados}">
@@ -75,7 +77,10 @@
             <section class="products-section">
                 <h2 class="subtitulos" th:text="${param.categoria != null} ? ${param.categoria} : 'Todos los productos'"></h2>
 
+                <p th:if="${errorCargaProductos}" th:text="${errorCargaProductos}"></p>
+
                 <div class="products-grid">
+
                     <div class="product-card" th:each="producto : ${productos}">
                         <div class="product-image-wrapper">
                             <img th:if="${producto.imagen != null}" th:src="${producto.imagen}" alt="golo">

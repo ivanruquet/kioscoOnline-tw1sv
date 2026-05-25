@@ -23,7 +23,7 @@ public class ServicioCarritoImpl implements ServicioCarrito {
     Producto producto = repositorioProducto.buscarProductoPorId(id);
 
     if (producto == null) {
-      throw new ProductoNoEncontradoException();
+      throw new ProductoNoEncontradoException("El producto no fue encontrado");
     }
 
     for (ItemCarrito item : carrito) {

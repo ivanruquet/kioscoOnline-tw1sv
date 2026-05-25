@@ -1,7 +1,9 @@
 package com.tallerwebi.infraestructura;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
 import com.tallerwebi.dominio.Productos.CategoriaProductos;
 import com.tallerwebi.dominio.Productos.Producto;
@@ -91,6 +93,20 @@ public class RepositorioProductoTest {
     List<Producto> productoBuscado = repositorioProducto.buscarProductos(busqueda);
 
     assertThat(productoBuscado, hasSize(1));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaRetornarUnNull_SiNoSeEncuentraProductoAlBuscarloPorSuNombre() {
+    String busqueda = "algo";
+    Producto producto = this.dadoQueTengoUnProducto();
+    Producto producto2 = this.dadoQueTengoUnProducto2();
+    this.sessionFactory.getCurrentSession().save(producto);
+    this.sessionFactory.getCurrentSession().save(producto2);
+
+    List<Producto> productoBuscado = repositorioProducto.buscarProductos(busqueda);
+    assertThat(productoBuscado, is(empty()));
   }
 
   //--------------METODOS AUXILIARES DE LOS TEST----------------
