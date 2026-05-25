@@ -125,6 +125,9 @@ public class RepositorioUsuarioTest {
     usuario.setEmail(email);
     usuario.setPassword(password);
     usuario.setRol(rol);
+    usuario.setNombre("Test");
+    usuario.setApellido("Usuario");
+    usuario.setCelular(1234567890L);
     return usuario;
   }
 

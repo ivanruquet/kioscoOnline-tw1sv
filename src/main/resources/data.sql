@@ -1,9 +1,12 @@
+DELETE FROM Usuario where id>0;
+
 INSERT INTO Usuario
     (id,nombre,apellido,celular, email, password, rol, activo,fotoPerfil)
 VALUES(null, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', 'test', 'ADMIN', true,'imagenes/img_Perfiles/testFoto.png');
 
 INSERT INTO Hijo (id,curso, fechaNac, fotoPerfil, nombre, idPadre)
 VALUES (null,'3°C','2020-06-18',null,'Santiago',1);
+
 -- Insert de Categorías
 INSERT INTO CategoriaProductos (id, nombreCategoria)
 VALUES (1, 'Golosina');
