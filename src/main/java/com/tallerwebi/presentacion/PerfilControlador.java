@@ -2,7 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

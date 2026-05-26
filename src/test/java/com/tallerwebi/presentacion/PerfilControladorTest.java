@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpSession;

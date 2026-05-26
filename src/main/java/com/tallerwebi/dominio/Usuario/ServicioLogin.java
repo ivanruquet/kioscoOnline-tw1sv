@@ -1,8 +1,11 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.Usuario;
 
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 
 public interface ServicioLogin {
-  Usuario consultarUsuario(String email, String password);
+  Usuario consultarUsuarioLogin(String email, String password);
+
+  Boolean usuarioYaExiste(Usuario usuario);
+
   void registrar(Usuario usuario) throws UsuarioExistente;
 }

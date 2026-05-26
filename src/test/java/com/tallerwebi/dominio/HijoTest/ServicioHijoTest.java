@@ -8,7 +8,7 @@ import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.RepositorioHijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijoImpl;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

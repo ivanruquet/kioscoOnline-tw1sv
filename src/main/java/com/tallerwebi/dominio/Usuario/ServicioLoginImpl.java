@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.Usuario;
 
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import javax.transaction.Transactional;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class ServicioLoginImpl implements ServicioLogin {
 
-  private RepositorioUsuario repositorioUsuario;
+  private final RepositorioUsuario repositorioUsuario;
 
   @Autowired
   public ServicioLoginImpl(RepositorioUsuario repositorioUsuario) {
@@ -17,19 +17,23 @@ public class ServicioLoginImpl implements ServicioLogin {
   }
 
   @Override
-  public Usuario consultarUsuario(String email, String password) {
-    return repositorioUsuario.buscarUsuario(email, password);
+  public Usuario consultarUsuarioLogin(String email, String password) {
+    return repositorioUsuario.buscarUsuarioLogin(email, password);
   }
 
   @Override
   public void registrar(Usuario usuario) throws UsuarioExistente {
-    Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(
-      usuario.getEmail(),
-      usuario.getPassword()
-    );
-    if (usuarioEncontrado != null) {
+    if (this.usuarioYaExiste(usuario)) { // ← directamente el boolean
       throw new UsuarioExistente();
     }
     repositorioUsuario.guardar(usuario);
+  }
+
+  @Override
+  public Boolean usuarioYaExiste(Usuario usuario) {
+    return (
+      repositorioUsuario.existeUsuario_PorMail(usuario.getEmail()) ||
+      repositorioUsuario.existeUsuario_PorDNI(usuario.getDni())
+    );
   }
 }

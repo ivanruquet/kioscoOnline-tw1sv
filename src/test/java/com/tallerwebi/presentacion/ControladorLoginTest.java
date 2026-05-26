@@ -5,8 +5,8 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.ServicioLogin;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Usuario.ServicioLogin;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,7 +37,7 @@ public class ControladorLoginTest {
   @Test
   public void loginConUsuarioYPasswordInorrectosDeberiaLlevarALoginNuevamente() {
     // preparacion
-    when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(null);
+    when(servicioLoginMock.consultarUsuarioLogin(anyString(), anyString())).thenReturn(null);
 
     // ejecucion
     ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
@@ -58,7 +58,7 @@ public class ControladorLoginTest {
     when(usuarioEncontradoMock.getRol()).thenReturn("ADMIN");
 
     when(requestMock.getSession()).thenReturn(sessionMock);
-    when(servicioLoginMock.consultarUsuario(anyString(), anyString()))
+    when(servicioLoginMock.consultarUsuarioLogin(anyString(), anyString()))
       .thenReturn(usuarioEncontradoMock);
 
     // ejecucion

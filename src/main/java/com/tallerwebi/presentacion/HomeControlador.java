@@ -3,7 +3,7 @@ package com.tallerwebi.presentacion;
 import com.tallerwebi.dominio.Productos.CategoriaProductos;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.ServicioProducto;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import java.util.List;
 import javax.servlet.http.HttpSession;

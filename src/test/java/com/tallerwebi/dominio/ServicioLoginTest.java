@@ -5,6 +5,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.Usuario.RepositorioUsuario;
+import com.tallerwebi.dominio.Usuario.ServicioLogin;
+import com.tallerwebi.dominio.Usuario.ServicioLoginImpl;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,29 +25,31 @@ public class ServicioLoginTest {
   }
 
   @Test
-  public void consultarUsuarioDeberiaLlamarAlRepositorio() {
+  public void consultarUsuario_EnLogin_DeberiaLlamarAlRepositorio() {
     // preparacion
     String email = "test@test.com";
     String password = "password";
     Usuario usuarioEsperado = new Usuario();
-    when(this.repositorioUsuarioMock.buscarUsuario(email, password)).thenReturn(usuarioEsperado);
+    when(this.repositorioUsuarioMock.buscarUsuarioLogin(email, password))
+      .thenReturn(usuarioEsperado);
 
     // ejecucion
-    Usuario usuarioObtenido = this.servicioLogin.consultarUsuario(email, password);
+    Usuario usuarioObtenido = this.servicioLogin.consultarUsuarioLogin(email, password);
 
     // validacion
     assertThat(usuarioObtenido, equalTo(usuarioEsperado));
-    verify(this.repositorioUsuarioMock, times(1)).buscarUsuario(email, password);
+    verify(this.repositorioUsuarioMock, times(1)).buscarUsuarioLogin(email, password);
   }
 
   @Test
-  public void registrarUsuarioSiNoExisteDeberiaGuardarlo() throws UsuarioExistente {
+  public void registrarUsuario_SiNoExiste_DeberiaGuardarlo() throws UsuarioExistente {
     // preparacion
     Usuario usuario = new Usuario();
     usuario.setEmail("nuevo@test.com");
-    usuario.setPassword("123");
-    when(this.repositorioUsuarioMock.buscarUsuario(usuario.getEmail(), usuario.getPassword()))
-      .thenReturn(null);
+    usuario.setPassword("password");
+    usuario.setDni(123456L);
+    when(this.repositorioUsuarioMock.existeUsuario_PorMail(usuario.getEmail())).thenReturn(false);
+    when(this.repositorioUsuarioMock.existeUsuario_PorDNI(usuario.getDni())).thenReturn(false);
 
     // ejecucion
     this.servicioLogin.registrar(usuario);
@@ -53,13 +59,28 @@ public class ServicioLoginTest {
   }
 
   @Test
-  public void registrarUsuarioSiExisteDeberiaLanzarExcepcion() {
+  public void registrarUsuario_SiExisteMAIL_DeberiaLanzarExcepcion() {
+    Usuario usuario = new Usuario();
+    usuario.setEmail("existe@test.com");
+    usuario.setDni(999999L);
+    usuario.setPassword("123");
+    when(this.repositorioUsuarioMock.existeUsuario_PorMail(usuario.getEmail())).thenReturn(true); // simula que ya hay alguien con ese mail
+    when(this.repositorioUsuarioMock.existeUsuario_PorDNI(usuario.getDni())).thenReturn(false);
+
+    // ejecucion y validacion
+    assertThrows(UsuarioExistente.class, () -> this.servicioLogin.registrar(usuario));
+    verify(this.repositorioUsuarioMock, times(0)).guardar(usuario);
+  }
+
+  @Test
+  public void registrarUsuario_SiExisteDNI_DeberiaLanzarExcepcion() {
     // preparacion
     Usuario usuario = new Usuario();
     usuario.setEmail("existe@test.com");
+    usuario.setDni(999999L);
     usuario.setPassword("123");
-    when(this.repositorioUsuarioMock.buscarUsuario(usuario.getEmail(), usuario.getPassword()))
-      .thenReturn(new Usuario());
+    when(this.repositorioUsuarioMock.existeUsuario_PorMail(usuario.getEmail())).thenReturn(false);
+    when(this.repositorioUsuarioMock.existeUsuario_PorDNI(usuario.getDni())).thenReturn(true); // simula que ya hay alguien con ese DNI
 
     // ejecucion y validacion
     assertThrows(UsuarioExistente.class, () -> this.servicioLogin.registrar(usuario));

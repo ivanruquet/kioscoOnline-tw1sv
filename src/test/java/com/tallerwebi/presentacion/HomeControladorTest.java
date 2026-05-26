@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 import com.tallerwebi.dominio.Productos.CategoriaProductos;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.ServicioProducto;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import java.util.Arrays;
 import java.util.List;

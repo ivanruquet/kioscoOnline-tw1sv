@@ -8,8 +8,8 @@ ALTER TABLE Usuario CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ALTER TABLE Hijo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 INSERT INTO Usuario
-(id,nombre,apellido,celular, email, password, rol, activo,fotoPerfil)
-VALUES(null, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', 'test', 'ADMIN', true,'imagenes/img_Perfiles/testFoto.png');
+(id,dni,nombre,apellido,celular, email, password, rol, activo,fotoPerfil)
+VALUES(null,1234567890, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', 'test', 'ADMIN', true,'imagenes/img_Perfiles/testFoto.png');
 
 
 # INSERT INTO Hijo (id,curso, fechaNac, fotoPerfil, nombre, idPadre)

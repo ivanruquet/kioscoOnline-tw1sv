@@ -1,6 +1,6 @@
 package com.tallerwebi.dominio.Hijos;
 
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import java.util.Date;
 import javax.persistence.*;
 

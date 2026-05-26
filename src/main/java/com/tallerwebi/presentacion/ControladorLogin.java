@@ -1,7 +1,7 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.ServicioLogin;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Usuario.ServicioLogin;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControladorLogin {
 
-  private ServicioLogin servicioLogin;
+  private final ServicioLogin servicioLogin;
 
   @Autowired
   public ControladorLogin(ServicioLogin servicioLogin) {
@@ -34,7 +34,7 @@ public class ControladorLogin {
     @ModelAttribute("datosLogin") DatosLogin datosLogin,
     HttpServletRequest request
   ) {
-    Usuario usuarioBuscado = servicioLogin.consultarUsuario(
+    Usuario usuarioBuscado = servicioLogin.consultarUsuarioLogin(
       datosLogin.getEmail(),
       datosLogin.getPassword()
     );
@@ -54,6 +54,7 @@ public class ControladorLogin {
   public ModelAndView registrarme(@ModelAttribute("usuario") Usuario usuario) {
     ModelMap model = new ModelMap();
     try {
+      usuario.setRol("USER");
       servicioLogin.registrar(usuario);
     } catch (UsuarioExistente e) {
       model.put("error", "El usuario ya existe");
