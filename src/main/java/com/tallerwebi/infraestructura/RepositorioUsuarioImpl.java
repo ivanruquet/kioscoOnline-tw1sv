@@ -41,7 +41,7 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
   }
 
   @Override
-  public Boolean existeUsuario_PorMail(String email) {
+  public Boolean existeUsuarioPorMail(String email) {
     //    return (Usuario) sessionFactory
     //      .getCurrentSession()
     //      .createCriteria(Usuario.class)
@@ -54,7 +54,7 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
   }
 
   @Override
-  public Boolean existeUsuario_PorDNI(Long dni) {
+  public Boolean existeUsuarioPorDni(Long dni) {
     String hql = "FROM Usuario WHERE dni=:dni";
     Query query = sessionFactory.getCurrentSession().createQuery(hql);
     query.setParameter("dni", dni);

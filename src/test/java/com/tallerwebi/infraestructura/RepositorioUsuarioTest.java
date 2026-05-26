@@ -140,11 +140,11 @@ public class RepositorioUsuarioTest {
   }
 
   private Boolean cuandoVerificoSiExisteUsuarioPorMail(String email) {
-    return repositorioUsuario.existeUsuario_PorMail(email);
+    return repositorioUsuario.existeUsuarioPorMail(email);
   }
 
   private Boolean cuandoVerificoSiExisteUsuarioPorDNI(Long dni) {
-    return repositorioUsuario.existeUsuario_PorDNI(dni);
+    return repositorioUsuario.existeUsuarioPorDni(dni);
   }
 
   private Usuario dadoQueTengoUnUsuario(String email, String password, String rol) {

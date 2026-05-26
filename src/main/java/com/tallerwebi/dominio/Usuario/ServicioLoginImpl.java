@@ -32,8 +32,8 @@ public class ServicioLoginImpl implements ServicioLogin {
   @Override
   public Boolean usuarioYaExiste(Usuario usuario) {
     return (
-      repositorioUsuario.existeUsuario_PorMail(usuario.getEmail()) ||
-      repositorioUsuario.existeUsuario_PorDNI(usuario.getDni())
+      repositorioUsuario.existeUsuarioPorMail(usuario.getEmail()) ||
+      repositorioUsuario.existeUsuarioPorDni(usuario.getDni())
     );
   }
 }
