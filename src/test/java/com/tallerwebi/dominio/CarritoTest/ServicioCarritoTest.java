@@ -3,6 +3,7 @@ package com.tallerwebi.dominio.CarritoTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import com.tallerwebi.dominio.Carrito.Carrito;
 import com.tallerwebi.dominio.Carrito.ItemCarrito;
 import com.tallerwebi.dominio.Carrito.ServicioCarritoImpl;
 import com.tallerwebi.dominio.Productos.Producto;
@@ -35,16 +36,17 @@ public class ServicioCarritoTest {
     producto.setId(1L);
     producto.setNombre("Galletitas");
 
-    List<ItemCarrito> carrito = new ArrayList<>();
+    Carrito carrito = new Carrito();
 
-    when(repositorioProductoMock.buscarProductoPorId(1L)).thenReturn(producto);
+    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
 
     //ejecucion
-    List<ItemCarrito> carritoActualizado = servicioCarrito.agregarProducto(1L, carrito);
+    servicioCarrito.agregarProducto(producto.getId(), carrito);
+
+    int resultado = carrito.getItems().size();
 
     //validacion
-    assertEquals(1, carritoActualizado.size());
-    assertEquals(producto, carritoActualizado.get(0).getProducto());
+    assertEquals(1, resultado);
   }
 
   @Test
@@ -60,9 +62,13 @@ public class ServicioCarritoTest {
     producto2.setNombre("Gaseosa");
     producto2.setPrecio(200.0);
 
-    List<ItemCarrito> carrito = new ArrayList<>();
-    carrito.add(new ItemCarrito(producto1, 1));
-    carrito.add(new ItemCarrito(producto2, 1));
+    Carrito carrito = new Carrito();
+
+    when(repositorioProductoMock.buscarProductoPorId(producto1.getId())).thenReturn(producto1);
+    when(repositorioProductoMock.buscarProductoPorId(producto2.getId())).thenReturn(producto2);
+
+    servicioCarrito.agregarProducto(producto1.getId(), carrito);
+    servicioCarrito.agregarProducto(producto2.getId(), carrito);
 
     //ejecucion
     Double total = servicioCarrito.calcularTotal(carrito);
@@ -78,16 +84,19 @@ public class ServicioCarritoTest {
     producto.setId(1L);
     producto.setNombre("Alfajor");
 
-    List<ItemCarrito> carrito = new ArrayList<>();
-    carrito.add(new ItemCarrito(producto, 1));
+    Carrito carrito = new Carrito();
 
-    when(repositorioProductoMock.buscarProductoPorId(1L)).thenReturn(producto);
+    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+
+    servicioCarrito.agregarProducto(producto.getId(), carrito);
 
     //ejecucion
-    List<ItemCarrito> resultado = servicioCarrito.agregarProducto(1L, carrito);
+    servicioCarrito.agregarProducto(producto.getId(), carrito);
+
+    int resultado = carrito.getItems().size();
 
     //validacion
-    assertEquals(1, resultado.size());
+    assertEquals(1, resultado);
   }
 
   @Test
@@ -97,16 +106,19 @@ public class ServicioCarritoTest {
     producto.setId(1L);
     producto.setNombre("Alfajor");
 
-    List<ItemCarrito> carrito = new ArrayList<>();
-    carrito.add(new ItemCarrito(producto, 1));
+    Carrito carrito = new Carrito();
 
-    when(repositorioProductoMock.buscarProductoPorId(1L)).thenReturn(producto);
+    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+
+    servicioCarrito.agregarProducto(producto.getId(), carrito);
 
     //ejecucion
-    List<ItemCarrito> resultado = servicioCarrito.eliminarProducto(1L, carrito);
+    servicioCarrito.eliminarProducto(producto.getId(), carrito);
+
+    int resultado = carrito.getItems().size();
 
     //validacion
-    assertEquals(0, resultado.size());
+    assertEquals(0, resultado);
   }
 
   @Test
@@ -116,15 +128,19 @@ public class ServicioCarritoTest {
     producto.setId(1L);
     producto.setNombre("Alfajor");
 
-    ItemCarrito item = new ItemCarrito(producto, 1);
-    List<ItemCarrito> carrito = new ArrayList<>();
-    carrito.add(item);
+    Carrito carrito = new Carrito();
+
+    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+
+    servicioCarrito.agregarProducto(producto.getId(), carrito);
 
     //ejecucion
-    List<ItemCarrito> resultado = servicioCarrito.aumentarCantidad(1L, carrito);
+    servicioCarrito.aumentarCantidad(producto.getId(), carrito);
+
+    int resultado = carrito.getItems().get(0).getCantidad();
 
     //validacion
-    assertEquals(2, resultado.get(0).getCantidad());
+    assertEquals(2, resultado);
   }
 
   @Test
@@ -134,14 +150,19 @@ public class ServicioCarritoTest {
     producto.setId(1L);
     producto.setNombre("Alfajor");
 
-    ItemCarrito item = new ItemCarrito(producto, 2);
-    List<ItemCarrito> carrito = new ArrayList<>();
-    carrito.add(item);
+    Carrito carrito = new Carrito();
+
+    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+
+    servicioCarrito.agregarProducto(producto.getId(), carrito);
+    servicioCarrito.aumentarCantidad(producto.getId(), carrito);
 
     //ejecucion
-    List<ItemCarrito> resultado = servicioCarrito.restarCantidad(1L, carrito);
+    servicioCarrito.disminuirCantidad(producto.getId(), carrito);
+
+    int resultado = carrito.getItems().get(0).getCantidad();
 
     //validacion
-    assertEquals(1, resultado.get(0).getCantidad());
+    assertEquals(1, resultado);
   }
 }

@@ -3,7 +3,6 @@ package com.tallerwebi.dominio.Carrito;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.RepositorioProducto;
 import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
-import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -12,74 +11,39 @@ import org.springframework.stereotype.Service;
 public class ServicioCarritoImpl implements ServicioCarrito {
 
   private RepositorioProducto repositorioProducto;
-  private static final int CANTIDAD_MINIMA_PRODUCTO = 1;
 
   public ServicioCarritoImpl(RepositorioProducto repositorioProducto) {
     this.repositorioProducto = repositorioProducto;
   }
 
   @Override
-  public List<ItemCarrito> agregarProducto(long id, List<ItemCarrito> carrito) {
-    Producto producto = repositorioProducto.buscarProductoPorId(id);
+  public void agregarProducto(long productoId, Carrito carrito) {
+    Producto producto = repositorioProducto.buscarProductoPorId(productoId);
 
     if (producto == null) {
       throw new ProductoNoEncontradoException("El producto no fue encontrado");
     }
 
-    for (ItemCarrito item : carrito) {
-      if (item.getProducto().getId().equals(id)) {
-        item.setCantidad(item.getCantidad() + 1);
-        return carrito;
-      }
-    }
-
-    carrito.add(new ItemCarrito(producto, 1));
-    return carrito;
+    carrito.agregarProducto(producto);
   }
 
   @Override
-  public Double calcularTotal(List<ItemCarrito> carrito) {
-    Double total = 0.0;
-
-    for (ItemCarrito item : carrito) {
-      total += item.getProducto().getPrecio() * item.getCantidad();
-    }
-
-    return total;
+  public Double calcularTotal(Carrito carrito) {
+    return carrito.calcularTotal();
   }
 
   @Override
-  public List<ItemCarrito> eliminarProducto(long id, List<ItemCarrito> carrito) {
-    carrito.removeIf(item -> item.getProducto().getId().equals(id));
-
-    return carrito;
+  public void eliminarProducto(long productoId, Carrito carrito) {
+    carrito.eliminarProducto(productoId);
   }
 
   @Override
-  public List<ItemCarrito> aumentarCantidad(long id, List<ItemCarrito> carrito) {
-    for (ItemCarrito item : carrito) {
-      if (item.getProducto().getId().equals(id)) {
-        item.setCantidad(item.getCantidad() + 1);
-
-        return carrito;
-      }
-    }
-
-    return carrito;
+  public void aumentarCantidad(long productoId, Carrito carrito) {
+    carrito.aumentarCantidad(productoId);
   }
 
   @Override
-  public List<ItemCarrito> restarCantidad(long id, List<ItemCarrito> carrito) {
-    for (ItemCarrito item : carrito) {
-      if (item.getProducto().getId().equals(id)) {
-        if (item.getCantidad() > CANTIDAD_MINIMA_PRODUCTO) {
-          item.setCantidad(item.getCantidad() - 1);
-        }
-
-        return carrito;
-      }
-    }
-
-    return carrito;
+  public void disminuirCantidad(long productoId, Carrito carrito) {
+    carrito.disminuirCantidad(productoId);
   }
 }

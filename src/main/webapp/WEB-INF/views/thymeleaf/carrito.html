@@ -1,35 +1,3 @@
-<!--
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Taller Web I</title>
-</head>
-<body>
-
-<h1>Mi carrito</h1>
-
-<ul>
-    <li th:each="producto : ${carrito}">
-
-        <span th:text="${producto.nombre}"></span>
-        -
-        $
-        <span th:text="${producto.precio}"></span>
-    </li>
-</ul>
-
-<h2>
-    Total: $
-    <span th:text="${total}"></span>
-</h2>
-
-</body>
-</html>
-
--->
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -55,21 +23,20 @@
 
                 <div class="cart-items-list">
 
-                    <div class="cart-item-card" th:each="item : ${carrito}">
+                    <div class="cart-item-card" th:each="item : ${carrito.items}">
                         <img class="item-image bg-pastel-purple" th:src="${item.producto.imagen}"></img>
                         <div class="item-details">
                             <h3 class="item-name" th:text="${item.producto.nombre}"></h3>
                         </div>
                         <div class="item-actions">
                             <div class="quantity-control">
-                                <form th:action="@{/carrito/restar}" method="post">
+                                <form th:action="@{/carrito/disminuir}" method="post">
                                     <input type="hidden"
                                            name="productoId"
                                            th:value="${item.producto.id}">
 
                                     <button class="qty-btn" type="submit">-</button>
                                 </form>
-                                <!-- <button class="qty-btn">−</button> -->
                                 <span class="qty-number" th:text="${item.cantidad}"></span>
                                 <form th:action="@{/carrito/aumentar}" method="post">
                                     <input type="hidden"
@@ -78,7 +45,6 @@
 
                                     <button class="qty-btn" type="submit">+</button>
                                 </form>
-                                <!-- <button class="qty-btn">+</button> -->
                             </div>
                             <p class="item-price">
                                 $<span th:text="${item.producto.precio}"></span>
