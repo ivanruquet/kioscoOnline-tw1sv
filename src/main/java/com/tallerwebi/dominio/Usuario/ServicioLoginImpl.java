@@ -23,10 +23,20 @@ public class ServicioLoginImpl implements ServicioLogin {
 
   @Override
   public void registrar(Usuario usuario) throws UsuarioExistente {
-    if (this.usuarioYaExiste(usuario)) { // ← directamente el boolean
+    if (this.usuarioYaExiste(usuario)) { //  el boolean
       throw new UsuarioExistente();
     }
     repositorioUsuario.guardar(usuario);
+  }
+
+  @Override
+  public void cambiarContrasenia(String email, String nuevaClave) {
+    Usuario usuario = repositorioUsuario.buscarUsuarioPorEmail(email);
+
+    if (usuario != null) {
+      usuario.setPassword(nuevaClave);
+      repositorioUsuario.modificar(usuario);
+    }
   }
 
   @Override

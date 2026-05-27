@@ -55,7 +55,7 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
   @Override
   public Boolean existeUsuarioPorDni(Long dni) {
-    String hql = "FROM Usuario WHERE dni=:dni";
+    String hql = "FROM Usuario u WHERE u.dni=:dni";
     Query query = sessionFactory.getCurrentSession().createQuery(hql);
     query.setParameter("dni", dni);
     return !query.getResultList().isEmpty();
@@ -69,5 +69,14 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
   @Override
   public Usuario buscarUsuarioPorId(Long id) {
     return sessionFactory.getCurrentSession().get(Usuario.class, id);
+  }
+
+  @Override
+  public Usuario buscarUsuarioPorEmail(String email) {
+    String hql = "FROM Usuario WHERE email=:email";
+    Query query = sessionFactory.getCurrentSession().createQuery(hql);
+    query.setParameter("email", email);
+    List<Usuario> resultado = query.getResultList();
+    return resultado.isEmpty() ? null : resultado.get(0);
   }
 }

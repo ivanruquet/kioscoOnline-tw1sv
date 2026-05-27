@@ -12,6 +12,7 @@ import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.servlet.ModelAndView;
 
 public class ServicioLoginTest {
 
@@ -85,5 +86,20 @@ public class ServicioLoginTest {
     // ejecucion y validacion
     assertThrows(UsuarioExistente.class, () -> this.servicioLogin.registrar(usuario));
     verify(this.repositorioUsuarioMock, times(0)).guardar(usuario);
+  }
+
+  @Test
+  public void CambiarContraConMailVerificadoDeberiaModificarUsuario() {
+    String email = "ro@test.com";
+    String nuevaClave = "nuevaClave";
+    Usuario usuEncontrado = new Usuario();
+
+    usuEncontrado.setEmail(email);
+    when(repositorioUsuarioMock.buscarUsuarioPorEmail(email)).thenReturn(usuEncontrado);
+
+    servicioLogin.cambiarContrasenia(email, nuevaClave);
+
+    verify(repositorioUsuarioMock, times(1)).modificar(usuEncontrado);
+    assertThat(usuEncontrado.getPassword(), equalTo(nuevaClave));
   }
 }
