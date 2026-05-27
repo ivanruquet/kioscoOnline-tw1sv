@@ -29,14 +29,8 @@ public class HibernateConfig {
     if (dbUser == null) dbUser = "user";
     if (dbPassword == null) dbPassword = "user";
 
-    //    String url = String.format(
-    //      "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
-    //      dbHost,
-    //      dbPort,
-    //      dbName
-    //    );esto lo cambio para poder visualizar tildes y caracteres especiales en la vista
     String url = String.format(
-      "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci",
+      "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
       dbHost,
       dbPort,
       dbName
