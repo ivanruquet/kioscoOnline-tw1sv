@@ -1,6 +1,8 @@
 package com.tallerwebi.dominio.Pagos;
 
-public interface ServicioMercadoPago {
+import com.tallerwebi.dominio.Carrito.ItemCarrito;
+import java.util.List;
 
-    String crearPreferenciaDePago();
+public interface ServicioMercadoPago {
+  String crearPreferenciaDePago(List<ItemCarrito> carrito);
 }

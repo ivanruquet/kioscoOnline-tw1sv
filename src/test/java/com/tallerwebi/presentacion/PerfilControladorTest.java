@@ -26,7 +26,6 @@ public class PerfilControladorTest {
   @BeforeEach
   public void init() {
     servicioHijoMock = Mockito.mock(ServicioHijo.class);
-
     perfilControlador = new PerfilControlador(servicioHijoMock);
     usuarioMock = Mockito.mock(Usuario.class);
     sessionMock = Mockito.mock(HttpSession.class);
