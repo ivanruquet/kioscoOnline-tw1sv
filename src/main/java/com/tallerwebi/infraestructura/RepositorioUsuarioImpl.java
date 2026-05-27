@@ -55,7 +55,7 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
   @Override
   public Boolean existeUsuarioPorDni(Long dni) {
-    String hql = "FROM Usuario u WHERE u.dni=:dni";
+    String hql = "FROM Usuario u WHERE u.datosPersonales.dni=:dni";
     Query query = sessionFactory.getCurrentSession().createQuery(hql);
     query.setParameter("dni", dni);
     return !query.getResultList().isEmpty();
