@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Mi Perfil - KioNet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/variablesColor.css}" />
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
+    <link rel="stylesheet" th:href="@{/css/perfil.css}" />
+</head>
+
+
+<body>
+<div class="container-fluid">
+
+    <div th:replace="fragmentos/header :: header"></div>
+
+    <main class="main">
+        <section class="panel-cliente">
+            <div th:replace="fragmentos/panelIzqCliente :: panelCliente"></div>
+
+            <a href="/spring/home" class="btn-volver"> Ir a Tienda</a>
+
+        </section>
+        <div class="seccion-hijos">
+            <div class="welcome-banner">
+                <h1>Mis hijos</h1>
+            </div>
+
+            <p th:if="${mensajeError}" th:text="${mensajeError}" class="mensaje-error"></p>
+            <!-- tarjetas de hijos -->
+
+            <div class="hijos-grid" th:if="${hijos}">
+                <div class="hijo-card" th:each="hijo : ${hijos}">
+                    <img th:if="${hijo.fotoPerfil != null}" th:src="${hijo.fotoPerfil}" class="hijo-avatar" alt="foto hijo">
+                    <div th:unless="${hijo.fotoPerfil != null}" class="hijo-avatar-iniciales">
+                        <span th:text="${#strings.substring(hijo.nombre,0,1)}"></span>
+                    </div>
+                    <p class="hijo-nombre" th:text="${hijo.nombre}"></p>
+                    <span class="hijo-badge" th:text="${hijo.curso}"></span>
+                </div>
+
+            </div>
+            <div class="agregar-hijo-banner">
+                <div>
+                    <strong>¿Tenés un nuevo hijo en el colegio?</strong>
+                </div>
+                <a href="/spring/agregarHijo" class="btn-agregar">+ Agregar hijo</a>
+            </div>
+
+
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+@import url('variablesColor.css');
+
+.btn-editar {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-editar:hover {
+    border-color: var(--primary);
+    color: var(--purple-lt);
+}
+
+.btn-editar svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Mostrar/ocultar vistas */
+.vista-lectura { display: block; }
+.vista-edicion { display: none; }
+
+.en-edicion .vista-lectura { display: none; }
+.en-edicion .vista-edicion { display: block; }
+
+/* Formulario inline */
+.form-edicion {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.campo-edicion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+}
+
+.campo-edicion:last-of-type {
+    border-bottom: none;
+}
+
+.campo-edicion .dato-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--muted);
+    flex-shrink: 0;
+}
+
+.campo-edicion input {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    outline: none;
+    text-align: right;
+    width: 60%;
+    transition: border-color 0.2s;
+}
+
+.campo-edicion input:focus {
+    border-color: var(--primary);
+}
+
+/* Foto: preview + input */
+.foto-edicion-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+    width: 60%;
+}
+
+.foto-preview {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.foto-edicion-wrap input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    outline: none;
+    text-align: right;
+    transition: border-color 0.2s;
+}
+
+.foto-edicion-wrap input:focus {
+    border-color: var(--primary);
+}
+
+/* Botones guardar/cancelar */
+.acciones-edicion {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 1.25rem;
+}
+
+.btn-guardar {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-guardar:hover { opacity: 0.88; }
+
+.btn-cancelar {
+    background: #f0f0f0;
+    color: var(--text);
+    border: none;
+    border-radius: 10px;
+    padding: 9px 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-cancelar:hover { background: #e0e0e0; }

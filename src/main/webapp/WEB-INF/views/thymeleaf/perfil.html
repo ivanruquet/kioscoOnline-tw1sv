@@ -8,9 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/login.css}" />
+    <link rel="stylesheet" th:href="@{/css/variablesColor.css}" />
     <link rel="stylesheet" th:href="@{/css/home.css}" />
     <link rel="stylesheet" th:href="@{/css/perfil.css}" />
+    <link rel="stylesheet" th:href="@{/css/vistaEdicion.css}" />
+
 </head>
 
 <body>
@@ -19,23 +21,30 @@
     <div th:replace="fragmentos/header :: header"></div>
 
     <main class="main">
-
-        <!-- PANEL LATERAL IZQUIERDO (igual que home) -->
         <section class="panel-cliente">
-            <div class="perfil-widget">
-                <img th:if="${usuario.fotoPerfil != null}" th:src="${usuario.fotoPerfil}" alt="perfil" class="avatar">
-                <img th:unless="${usuario.fotoPerfil != null}" th:src="@{/imagenes/imagenesDefault/default-user.jpg}" alt="perfil" class="avatar">
-                <p class="welcome-text">Hola, <span th:text="${usuario.nombre}"></span></p>
-            </div>
-            <a href="/spring/home" class="btn-volver">← Volver al inicio</a>
+            <div th:replace="fragmentos/panelIzqCliente :: panelCliente"></div>
+
+            <a href="/spring/home" class="btn-volver"> Ir a Tienda</a>
+
         </section>
+
 
         <!-- PANEL PRINCIPAL PERFIL -->
         <section class="panel-tienda">
 
-            <div class="welcome-banner">
-                <h1>Mi Perfil</h1>
-                <h2>Administrá tu información personal</h2>
+            <div class="welcome-banner-usuario">
+                <div>
+                    <h1>Mi Perfil</h1>
+                    <h2>Administrá tu información personal</h2>
+
+                </div>
+
+                <button class="btn-editar" onclick="activarEdicion()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                    </svg>
+                    Editar
+                </button>
             </div>
 
             <div class="perfil-card">
@@ -51,89 +60,79 @@
                         <p class="perfil-email-sub" th:text="${usuario.email}"></p>
                     </div>
                 </div>
+                    <div id="perfil-datos">  <!-- este es el que recibe en-edicion -->
 
-                <div class="perfil-datos">
-                    <div class="perfil-dato">
-                        <span class="dato-label">Nombre</span>
-                        <span class="dato-valor" th:text="${usuario.nombre}"></span>
-                    </div>
-                    <div class="perfil-dato">
-                        <span class="dato-label">Apellido</span>
-                        <span class="dato-valor" th:text="${usuario.apellido}"></span>
-                    </div>
-                    <div class="perfil-dato">
-                        <span class="dato-label">Email</span>
-                        <span class="dato-valor" th:text="${usuario.email}"></span>
-                    </div>
-                    <div class="perfil-dato">
-                        <span class="dato-label">Teléfono</span>
-                        <span class="dato-valor" th:text="${usuario.celular}"></span>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="seccion-hijos">
-                <div class="welcome-banner">
-                    <h1>Mis hijos</h1>
-                    <h2>Seleccioná uno de tus hijos para realizar el pedido.</h2>
-                </div>
-
-                <p th:if="${mensajeError}" th:text="${mensajeError}" class="mensaje-error"></p>
-                <!-- tarjetas de hijos -->
-
-                <div class="hijos-grid" th:if="${hijos}">
-                    <div class="hijo-card" th:each="hijo : ${hijos}">
-                        <img th:if="${hijo.fotoPerfil != null}" th:src="${hijo.fotoPerfil}" class="hijo-avatar" alt="foto hijo">
-                        <div th:unless="${hijo.fotoPerfil != null}" class="hijo-avatar-iniciales">
-                            <span th:text="${#strings.substring(hijo.nombre,0,1)}"></span>
+                    <div class="perfil-datos vista-lectura"><!--vista lectura-->
+                        <div class="perfil-dato">
+                            <span class="dato-label">Nombre</span>
+                            <span class="dato-valor" th:text="${usuario.nombre}"></span>
                         </div>
-                        <p class="hijo-nombre" th:text="${hijo.nombre}"></p>
-                        <span class="hijo-badge" th:text="${hijo.curso}"></span>
-                        <button>Seleccionar</button>
+                        <div class="perfil-dato">
+                            <span class="dato-label">Apellido</span>
+                            <span class="dato-valor" th:text="${usuario.apellido}"></span>
+                        </div>
+                        <div class="perfil-dato">
+                            <span class="dato-label">Email</span>
+                            <span class="dato-valor" th:text="${usuario.email}"></span>
+                        </div>
+                        <div class="perfil-dato">
+                            <span class="dato-label">Celular</span>
+                            <span class="dato-valor" th:text="${usuario.celular}"></span>
+                        </div>
+                        <div class="perfil-dato">
+                            <span class="dato-label">Foto de perfil</span>
+                            <span class="dato-valor" th:text="${usuario.fotoPerfil != null ? usuario.fotoPerfil : 'Sin foto personalizada'}"></span>
+                        </div>
+                    </div><!--fin vista lectura-->
+                    <!-- VISTA EDICIÓN -->
+                    <div class="vista-edicion">
+                        <form th:action="@{/editarPerfil}" method="post" class="form-edicion">
+
+                            <div class="campo-edicion">
+                                <span class="dato-label">Email</span>
+                                <input type="email" name="email"
+                                       th:value="${usuario.email}"
+                                       placeholder="tu@email.com" />
+                            </div>
+
+                            <div class="campo-edicion">
+                                <span class="dato-label">Teléfono</span>
+                                <input type="tel" name="celular"
+                                       th:value="${usuario.celular}"
+                                       placeholder="Ej: 1123456789" />
+                            </div>
+
+                            <div class="campo-edicion">
+                                <span class="dato-label">Foto de perfil</span>
+                                <div class="foto-edicion-wrap">
+                                    <img id="fotoPreview"
+                                         th:src="${usuario.fotoPerfil != null ? usuario.fotoPerfil : '/spring/imagenes/imagenesDefault/default-user.jpg'}"
+                                         alt="preview"
+                                         class="foto-preview" />
+                                    <input type="text" name="fotoPerfil"
+                                           id="inputFoto"
+                                           th:value="${usuario.fotoPerfil}"
+                                           placeholder="https://..."
+                                           oninput="previsualizarFoto(this.value)" />
+                                </div>
+                            </div>
+
+                            <div class="acciones-edicion">
+                                <button type="button" class="btn-cancelar" onclick="cancelarEdicion()">Cancelar</button>
+                                <button type="submit" class="btn-guardar">Guardar</button>
+                            </div>
+
+                        </form>
                     </div>
-
                 </div>
-                <div class="agregar-hijo-banner">
-                    <div>
-                        <strong>¿Tenés un nuevo hijo en el colegio?</strong>
-                    </div>
-                    <a href="/spring/agregarHijo" class="btn-agregar">+ Agregar hijo</a>
-                </div>
-
-
             </div>
-
         </section>
-<!--        <section class="panel-tienda">-->
-<!--            <div class="welcome-banner">-->
-<!--                <h1>Mis hijos</h1>-->
-<!--                <h2>¿Para quién es el pedido?</h2>-->
-<!--            </div>-->
-<!--            <div class="perfilHijo-card">-->
-<!--                <div class="perfilHijo-card-header">-->
-<!--                    &lt;!&ndash;img del hijo&ndash;&gt;-->
-<!--                    <div>-->
-<!--                        <h2 class="perfilHijo-nombre">-->
-<!--                                &lt;!&ndash;nombre y curso aca&ndash;&gt;-->
-<!--                        </h2>-->
-<!--                    </div>-->
-
-<!--                    <button>Hacer pedido</button>-->
-
-<!--                <div>-->
-
-<!--            </div>-->
-
-<!--            </div>-->
-<!--        </section>-->
-
     </main>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
+<script th:src="@{/js/edicionPerfil.js}"></script>
 </body>
 </html>

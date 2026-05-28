@@ -1,0 +1,28 @@
+:root {
+    --purple:      #5B3FE4;
+    --purple-dark: #4A32C8;
+    --purple-lt:   #EEE9FF;
+    --bg:          #F0EEFE;
+    --white:       #FFFFFF;
+    --text:        #1A1A2E;
+    --muted: #6b7280;
+    --border: #ddb4f8;
+    --primary-color: #5D38DF; /* Morado del botón */
+    --primary-hover: #4A2BBA;
+    --bg-main: #F4F3FA; /* Fondo lavanda claro */
+    --bg-card: #FFFFFF; /* Blanco para tarjetas */
+
+    --text-dark: #111827; /* Textos principales */
+    --text-muted: #6B7280; /* Textos secundarios */
+
+    --border-color: #E5E7EB;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+
+    --primary: #5D38DF;
+    --primary-light: #EEE9FF;
+}
