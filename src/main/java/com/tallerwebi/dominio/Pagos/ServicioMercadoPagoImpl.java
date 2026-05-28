@@ -19,8 +19,7 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
   private static final Logger logger = LoggerFactory.getLogger(ServicioMercadoPagoImpl.class);
 
   // Dejamos tu token real para que siga funcionando la pasarela
-  private static final String TOKEN_MP =
-          "TOKEN AQUI";
+  private static final String TOKEN_MP = "TOKEN AQUI";
 
   @Override
   public String crearPreferenciaDePago(Carrito carrito) {
@@ -35,19 +34,19 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
 
       for (ItemCarrito item : carrito.getItems()) {
         itemsMercadoPago.add(
-                PreferenceItemRequest
-                        .builder()
-                        .title(item.getProducto().getNombre())
-                        .quantity(item.getCantidad())
-                        .unitPrice(BigDecimal.valueOf(item.getProducto().getPrecio()))
-                        .currencyId("ARS")
-                        .build()
+          PreferenceItemRequest
+            .builder()
+            .title(item.getProducto().getNombre())
+            .quantity(item.getCantidad())
+            .unitPrice(BigDecimal.valueOf(item.getProducto().getPrecio()))
+            .currencyId("ARS")
+            .build()
         );
       }
 
       return new PreferenceClient()
-              .create(PreferenceRequest.builder().items(itemsMercadoPago).build())
-              .getInitPoint();
+        .create(PreferenceRequest.builder().items(itemsMercadoPago).build())
+        .getInitPoint();
     } catch (Exception e) {
       logger.error("Error API Mercado Pago", e);
       return null;

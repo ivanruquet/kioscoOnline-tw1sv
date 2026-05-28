@@ -83,7 +83,10 @@
                     </div>
 
                     <form th:action="@{/pagar}" method="GET" style="width: 100%;">
-                        <button type="submit" class="btn-primary" style="width: 100%; cursor: pointer;">
+                        <button th:if="${!carrito.getItems().isEmpty()}" type="submit" class="btn-primary" style="width: 100%; cursor: pointer;">
+                            Pagar con Mercado Pago
+                        </button>
+                        <button class="btn-primary-disabled" th:if="${carrito.getItems().isEmpty()}" disabled>
                             Pagar con Mercado Pago
                         </button>
                     </form>
