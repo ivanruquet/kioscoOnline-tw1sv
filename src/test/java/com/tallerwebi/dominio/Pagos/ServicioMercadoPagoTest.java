@@ -3,8 +3,9 @@ package com.tallerwebi.dominio.Pagos;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
-import com.tallerwebi.dominio.Carrito.Carrito; // <-- NUEVO IMPORT
+import com.tallerwebi.dominio.Carrito.Carrito;
 import com.tallerwebi.dominio.Carrito.ItemCarrito;
 import com.tallerwebi.dominio.Productos.Producto;
 import java.util.ArrayList;
@@ -41,5 +42,17 @@ public class ServicioMercadoPagoTest {
     // 3. Then
     assertThat(urlCheckout, notNullValue());
     assertThat(urlCheckout, containsString("mercadopago.com"));
+  }
+
+  @Test
+  public void siElCarritoEsNuloDebeCapturarLaExcepcionYDevolverNull() {
+    // Given: Pasamos un objeto nulo a propósito para romper la estructura del loop
+    Carrito carritoNulo = null;
+
+    // When: Se ejecuta la solicitud
+    String urlCheckout = this.servicioMercadoPago.crearPreferenciaDePago(carritoNulo);
+
+    // Then: Cae en el bloque catch y retorna null de forma segura sin colgar el backend
+    assertThat(urlCheckout, nullValue());
   }
 }

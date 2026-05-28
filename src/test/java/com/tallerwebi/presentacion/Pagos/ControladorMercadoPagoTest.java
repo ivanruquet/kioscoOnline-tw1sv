@@ -1,4 +1,4 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.Pagos;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -11,7 +11,6 @@ import com.tallerwebi.dominio.Carrito.ServicioCarrito;
 import com.tallerwebi.dominio.Pagos.ServicioMercadoPago;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Usuario.Usuario;
-import com.tallerwebi.presentacion.Pagos.ControladorMercadoPago;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
@@ -85,5 +84,17 @@ public class ControladorMercadoPagoTest {
       modelAndView.getViewName(),
       equalTo("redirect:https://www.mercadopago.com.ar/checkout/v1/redirect-real")
     );
+  }
+
+  @Test
+  public void siElUsuarioNoEstaLogueadoDebeRedirigirAlLogin() {
+    // La sesión no tiene al usuario cargado
+    when(this.sessionMock.getAttribute("USUARIO")).thenReturn(null);
+
+    // Intenta pagar
+    ModelAndView modelAndView = this.controladorMercadoPago.pagar(this.sessionMock);
+
+    // Redirige al login (Cubre el primer IF del controlador)
+    assertThat(modelAndView.getViewName(), equalTo("redirect:/login"));
   }
 }

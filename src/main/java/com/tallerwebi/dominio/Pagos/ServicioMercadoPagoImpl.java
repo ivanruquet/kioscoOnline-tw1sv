@@ -4,8 +4,8 @@ import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
-import com.tallerwebi.dominio.Carrito.Carrito; // <-- CAMBIO
-import com.tallerwebi.dominio.Carrito.ItemCarrito; // <-- CAMBIO
+import com.tallerwebi.dominio.Carrito.Carrito;
+import com.tallerwebi.dominio.Carrito.ItemCarrito;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,28 +19,32 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
   private static final Logger logger = LoggerFactory.getLogger(ServicioMercadoPagoImpl.class);
 
   private static final String TOKEN_MP =
-    "TOKEN AQUI";
+    "APP_USR-4635339104323317-052622-65723bd2783dedac7f79f3df036e1846-3430140886";
 
   @Override
-  public String crearPreferenciaDePago(Carrito carrito) { // <-- CAMBIO
-    MercadoPagoConfig.setAccessToken(TOKEN_MP);
-
-    List<PreferenceItemRequest> itemsMercadoPago = new ArrayList<>();
-
-    // Recorremos los ítems del modelo carrito
-    for (ItemCarrito item : carrito.getItems()) {
-      itemsMercadoPago.add(
-        PreferenceItemRequest
-          .builder()
-          .title(item.getProducto().getNombre())
-          .quantity(item.getCantidad())
-          .unitPrice(BigDecimal.valueOf(item.getProducto().getPrecio()))
-          .currencyId("ARS")
-          .build()
-      );
+  public String crearPreferenciaDePago(Carrito carrito) {
+    // Si el carrito es nulo o viene vacío de la persistencia, salimos de forma segura
+    if (carrito == null || carrito.getItems() == null) {
+      return null;
     }
 
     try {
+      MercadoPagoConfig.setAccessToken(TOKEN_MP);
+
+      List<PreferenceItemRequest> itemsMercadoPago = new ArrayList<>();
+
+      for (ItemCarrito item : carrito.getItems()) {
+        itemsMercadoPago.add(
+          PreferenceItemRequest
+            .builder()
+            .title(item.getProducto().getNombre())
+            .quantity(item.getCantidad())
+            .unitPrice(BigDecimal.valueOf(item.getProducto().getPrecio()))
+            .currencyId("ARS")
+            .build()
+        );
+      }
+
       return new PreferenceClient()
         .create(PreferenceRequest.builder().items(itemsMercadoPago).build())
         .getInitPoint();
