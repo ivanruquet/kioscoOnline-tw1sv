@@ -1,13 +1,4 @@
-:root {
-    --purple:      #5B3FE4;
-    --purple-dark: #4A32C8;
-    --purple-lt:   #EEE9FF;
-    --bg:          #F0EEFE;
-    --white:       #FFFFFF;
-    --text:        #1A1A2E;
-    --muted:       #6B7280;
-    --border: #ddb4f8;
-}
+@import url('variablesColor.css');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -280,6 +271,9 @@ body {
     font-size: .85rem;
     margin-bottom: 1rem;
     display: flex; align-items: center; gap: .5rem;
+}
+.oculto {
+    display: none;
 }
 
 .security-badge {

@@ -8,4 +8,6 @@ public interface ServicioLogin {
   Boolean usuarioYaExiste(Usuario usuario);
 
   void registrar(Usuario usuario) throws UsuarioExistente;
+
+  void cambiarContrasenia(String email, String nuevaClave);
 }

@@ -20,7 +20,7 @@
 <div class="page-wrap">
 
     <!-- ── LEFT PANEL ── -->
-    <div th:replace="fragmentos/panelIzqLogin :: panelIzq"></div>
+    <div th:replace="fragmentos/panelIzqLogin :: panelIzqLogin"></div>
 
 
     <!-- ── RIGHT PANEL ── -->
@@ -61,10 +61,10 @@
 
                 <div class="extras">
                     <label class="remember">
-                        <input type="checkbox" name="remember">
+                        <input type="checkbox" name="rememberMe">
                         <span>Recordarme</span>
                     </label>
-                    <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
+                    <a th:href="@{/cambiarContrasenia}" class="forgot">¿Olvidaste tu contraseña?</a>
                 </div>
 
                 <button type="submit" id="btn-login" class="btn-login" disabled>

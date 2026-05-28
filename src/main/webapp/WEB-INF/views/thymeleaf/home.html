@@ -22,14 +22,11 @@
 
     <main class="main">
         <section class="panel-cliente">
-            <a href="/spring/perfil" class="perfil-widget" style="text-decoration: none;">
-                <img th:if="${usuario.fotoPerfil != null}" th:src="${usuario.fotoPerfil}" alt="perfil" class="avatar">
-                <img th:unless="${usuario.fotoPerfil != null}" th:src="@{/imagenes/imagenesDefault/default-user.jpg}" alt="perfil" class="avatar">
-                <p class="welcome-text">Hola, <span th:text="${usuario.nombre}"></span></p>
-            </a>
+            <div th:replace="fragmentos/panelIzqCliente :: panelCliente"></div>
+            <a href="/spring/perfil" class="btn-volver"> Mi perfil</a>
 
+        </section>
 
-        </section><!--FIN PANEL LATERAL CLIENTE-->
         <section class="panel-tienda">
             <div class="welcome-banner">
                 <h1>Bienvenidos a KioNet UNLAM</h1>
