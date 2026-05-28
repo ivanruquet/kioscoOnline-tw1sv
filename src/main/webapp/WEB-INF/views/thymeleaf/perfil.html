@@ -46,8 +46,13 @@
                     Editar
                 </button>
             </div>
+            <p th:if="${mensajeError != null}"
+               class="mensaje-error"
+               th:text="${mensajeError}">
+            </p>
 
             <div class="perfil-card">
+
 
                 <div class="perfil-card-header">
                     <img th:if="${usuario.fotoPerfil != null}" th:src="${usuario.fotoPerfil}" alt="foto de perfil" class="perfil-avatar">
@@ -81,12 +86,18 @@
                         </div>
                         <div class="perfil-dato">
                             <span class="dato-label">Foto de perfil</span>
-                            <span class="dato-valor" th:text="${usuario.fotoPerfil != null ? usuario.fotoPerfil : 'Sin foto personalizada'}"></span>
+                            <img
+                                 th:src="${usuario.fotoPerfil != null ? usuario.fotoPerfil : '/spring/imagenes/imagenesDefault/default-user.jpg'}"
+                                 th:data-original="${usuario.fotoPerfil != null ? usuario.fotoPerfil : '/imagenes/imagenesDefault/default-user.jpg'}"
+
+                                 alt="preview"
+                                 class="foto-preview" />
                         </div>
                     </div><!--fin vista lectura-->
-                    <!-- VISTA EDICIÓN -->
+
+                        <!-- VISTA EDICIÓN -->
                     <div class="vista-edicion">
-                        <form th:action="@{/editarPerfil}" method="post" class="form-edicion">
+                        <form th:action="@{/editarPerfil}" method="post" enctype="multipart/form-data" class="form-edicion">
 
                             <div class="campo-edicion">
                                 <span class="dato-label">Email</span>
@@ -97,7 +108,7 @@
 
                             <div class="campo-edicion">
                                 <span class="dato-label">Teléfono</span>
-                                <input type="tel" name="celular"
+                                <input type="number" name="celular"
                                        th:value="${usuario.celular}"
                                        placeholder="Ej: 1123456789" />
                             </div>
@@ -107,13 +118,14 @@
                                 <div class="foto-edicion-wrap">
                                     <img id="fotoPreview"
                                          th:src="${usuario.fotoPerfil != null ? usuario.fotoPerfil : '/spring/imagenes/imagenesDefault/default-user.jpg'}"
+                                         th:data-original="${usuario.fotoPerfil != null ? usuario.fotoPerfil : '/imagenes/imagenesDefault/default-user.jpg'}"
+
                                          alt="preview"
                                          class="foto-preview" />
+
                                     <input type="file" name="fotoPerfil"
                                            id="inputFoto"
-                                           th:value="${usuario.fotoPerfil}"
-                                           placeholder="https://..."
-                                           oninput="previsualizarFoto(this.value)" />
+                                           placeholder="">
                                 </div>
                             </div>
 

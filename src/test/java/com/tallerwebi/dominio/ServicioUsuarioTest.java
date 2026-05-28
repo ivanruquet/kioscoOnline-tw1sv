@@ -7,8 +7,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.Usuario.*;
+import java.io.ByteArrayInputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ServicioUsuarioTest {
 
@@ -53,17 +55,21 @@ public class ServicioUsuarioTest {
   }
 
   @Test
-  public void cambiarFotoPerfilDebeLLamarAlRepoYCambiarlo() {
-    String foto = "foto.jpg";
-
+  public void cambiarFotoPerfilDebeLLamarAlRepoYCambiarlo() throws Exception {
     Usuario usuario = new Usuario();
     Long id = 1L;
-    usuario.setFotoPerfil(foto);
+
+    MultipartFile fotoMock = mock(MultipartFile.class);
+
+    when(fotoMock.getOriginalFilename()).thenReturn("foto.jpg");
+
+    when(fotoMock.getInputStream()).thenReturn(new ByteArrayInputStream("imagen".getBytes()));
 
     when(repositorioUsuarioMock.buscarUsuarioPorId(id)).thenReturn(usuario);
-    servicioUsuario.actualizarFoto(id, foto);
+
+    servicioUsuario.actualizarFoto(id, fotoMock);
 
     verify(repositorioUsuarioMock, times(1)).modificar(usuario);
-    assertThat(usuario.getFotoPerfil(), equalTo(foto));
+    assertThat(usuario.getFotoPerfil(), equalTo("/imagenes/img_Perfiles/foto.jpg"));
   }
 }
