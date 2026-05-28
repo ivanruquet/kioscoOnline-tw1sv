@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio.CarritoTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.Carrito.Carrito;
@@ -10,6 +11,7 @@ import com.tallerwebi.dominio.Carrito.ServicioCarritoImpl;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.RepositorioProducto;
 import com.tallerwebi.dominio.Usuario.Usuario;
+import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -204,6 +206,81 @@ public class ServicioCarritoTest {
     servicioCarrito.disminuirCantidad(producto.getId(), usuario.getId());
 
     int resultado = carrito.getItems().get(0).getCantidad();
+
+    //validacion
+    assertEquals(1, resultado);
+  }
+
+  @Test
+  public void dadoUnProductoInexistenteCuandoLoAgregoAlCarritoEntoncesLanzaExcepcion() {
+    // preparacion
+    Long productoId = 1L;
+    Long usuarioId = 2L;
+
+    when(repositorioProductoMock.buscarProductoPorId(productoId)).thenReturn(null);
+
+    // ejecucion
+
+    // validacion
+    assertThrows(
+      ProductoNoEncontradoException.class,
+      () -> servicioCarrito.agregarProducto(productoId, usuarioId)
+    );
+  }
+
+  @Test
+  public void dadoUnProductoConCantidadUnoCuandoRestoCantidadEntoncesLaCantidadNoDisminuye() {
+    //preparacion
+    Producto producto = new Producto();
+    producto.setId(1L);
+    producto.setNombre("Alfajor");
+
+    Usuario usuario = new Usuario();
+    usuario.setId(3L);
+
+    Carrito carrito = new Carrito();
+
+    carrito.setUsuario(usuario);
+
+    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+    when(repositorioCarritoMock.buscarPorUsuario(usuario.getId())).thenReturn(carrito);
+
+    servicioCarrito.agregarProducto(producto.getId(), usuario.getId());
+
+    //ejecucion
+    servicioCarrito.disminuirCantidad(producto.getId(), usuario.getId());
+
+    int resultado = carrito.getItems().get(0).getCantidad();
+
+    //validacion
+    assertEquals(1, resultado);
+  }
+
+  @Test
+  public void dadoUnProductoQueNoExisteEnElCarritoCuandoLoEliminoEntoncesElCarritoPermaneceIgual() {
+    //preparacion
+    Producto producto = new Producto();
+    producto.setId(1L);
+    producto.setNombre("Alfajor");
+
+    Usuario usuario = new Usuario();
+    usuario.setId(3L);
+
+    Carrito carrito = new Carrito();
+
+    carrito.setUsuario(usuario);
+
+    carrito.agregarProducto(producto);
+
+    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+    when(repositorioCarritoMock.buscarPorUsuario(usuario.getId())).thenReturn(carrito);
+
+    servicioCarrito.agregarProducto(producto.getId(), usuario.getId());
+
+    //ejecucion
+    servicioCarrito.eliminarProducto(999L, usuario.getId());
+
+    int resultado = carrito.getItems().size();
 
     //validacion
     assertEquals(1, resultado);

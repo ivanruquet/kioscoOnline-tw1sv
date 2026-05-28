@@ -22,6 +22,7 @@
                 <h2 class="section-title">Tu pedido</h2>
 
                 <div class="cart-items-list">
+                    <div th:if="${carrito.getItems().isEmpty()}">No hay productos agregados al carrito!</div>
 
                     <div class="cart-item-card" th:each="item : ${carrito.items}">
                         <img class="item-image bg-pastel-purple" th:src="${item.producto.imagen}"></img>
@@ -91,6 +92,11 @@
                         ⚠️ <span th:text="${error}"></span>
                     </div>
 
+                    <!--
+                    <button class="btn-primary-disabled" th:if="${carrito.getItems().isEmpty()}" disabled>Proceder al pago</button>
+
+                    <button class="btn-primary" th:if="${!carrito.getItems().isEmpty()}">Proceder al pago</button>
+                    -->
                     <div class="secure-checkout">
                         <span>🔒 Plataforma 100% segura</span>
                         <p>Tus datos están protegidos</p>
