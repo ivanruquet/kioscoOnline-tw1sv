@@ -1,7 +1,7 @@
 package com.tallerwebi.dominio.Carrito;
 
-import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Productos.Producto;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -13,11 +13,11 @@ public class Carrito {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne
-  private Hijo hijo;
-
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<ItemCarrito> items;
+
+  @ManyToOne
+  private Usuario usuario;
 
   private static final int CANTIDAD_MINIMA_PRODUCTO = 1;
 
@@ -29,20 +29,20 @@ public class Carrito {
     return id;
   }
 
-  public Hijo getHijo() {
-    return hijo;
-  }
-
-  public void setHijo(Hijo hijo) {
-    this.hijo = hijo;
-  }
-
   public List<ItemCarrito> getItems() {
     return items;
   }
 
   public void setItems(List<ItemCarrito> items) {
     this.items = items;
+  }
+
+  public Usuario getUsuario() {
+    return usuario;
+  }
+
+  public void setUsuario(Usuario usuario) {
+    this.usuario = usuario;
   }
 
   public void agregarProducto(Producto producto) {

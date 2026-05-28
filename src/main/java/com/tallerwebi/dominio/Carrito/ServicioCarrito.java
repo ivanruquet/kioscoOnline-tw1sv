@@ -1,13 +1,15 @@
 package com.tallerwebi.dominio.Carrito;
 
 public interface ServicioCarrito {
-  void agregarProducto(long productoId, Carrito carrito);
+  Carrito obtenerOCrearCarrito(Long usuarioId);
 
-  Double calcularTotal(Carrito carrito);
+  void agregarProducto(long productoId, long usuarioId);
 
-  void eliminarProducto(long productoId, Carrito carrito);
+  Double calcularTotal(long usuarioId);
 
-  void aumentarCantidad(long productoId, Carrito carrito);
+  void eliminarProducto(long productoId, long usuarioId);
 
-  void disminuirCantidad(long productoId, Carrito carrito);
+  void aumentarCantidad(long productoId, long usuarioId);
+
+  void disminuirCantidad(long productoId, long usuarioId);
 }

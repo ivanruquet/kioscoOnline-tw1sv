@@ -5,9 +5,11 @@ import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.Carrito.Carrito;
 import com.tallerwebi.dominio.Carrito.ItemCarrito;
+import com.tallerwebi.dominio.Carrito.RepositorioCarrito;
 import com.tallerwebi.dominio.Carrito.ServicioCarritoImpl;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.RepositorioProducto;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,9 @@ public class ServicioCarritoTest {
 
   @Mock
   private RepositorioProducto repositorioProductoMock;
+
+  @Mock
+  private RepositorioCarrito repositorioCarritoMock;
 
   @InjectMocks
   private ServicioCarritoImpl servicioCarrito;
@@ -36,12 +41,18 @@ public class ServicioCarritoTest {
     producto.setId(1L);
     producto.setNombre("Galletitas");
 
+    Usuario usuario = new Usuario();
+    usuario.setId(2L);
+
     Carrito carrito = new Carrito();
 
+    carrito.setUsuario(usuario);
+
     when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+    when(repositorioCarritoMock.buscarPorUsuario(usuario.getId())).thenReturn(carrito);
 
     //ejecucion
-    servicioCarrito.agregarProducto(producto.getId(), carrito);
+    servicioCarrito.agregarProducto(producto.getId(), usuario.getId());
 
     int resultado = carrito.getItems().size();
 
@@ -62,16 +73,23 @@ public class ServicioCarritoTest {
     producto2.setNombre("Gaseosa");
     producto2.setPrecio(200.0);
 
+    Usuario usuario = new Usuario();
+    usuario.setId(3L);
+
     Carrito carrito = new Carrito();
+
+    carrito.setUsuario(usuario);
 
     when(repositorioProductoMock.buscarProductoPorId(producto1.getId())).thenReturn(producto1);
     when(repositorioProductoMock.buscarProductoPorId(producto2.getId())).thenReturn(producto2);
 
-    servicioCarrito.agregarProducto(producto1.getId(), carrito);
-    servicioCarrito.agregarProducto(producto2.getId(), carrito);
+    when(repositorioCarritoMock.buscarPorUsuario(usuario.getId())).thenReturn(carrito);
+
+    servicioCarrito.agregarProducto(producto1.getId(), usuario.getId());
+    servicioCarrito.agregarProducto(producto2.getId(), usuario.getId());
 
     //ejecucion
-    Double total = servicioCarrito.calcularTotal(carrito);
+    Double total = servicioCarrito.calcularTotal(usuario.getId());
 
     //validacion
     assertEquals(300.0, total, 0.01);
@@ -84,14 +102,21 @@ public class ServicioCarritoTest {
     producto.setId(1L);
     producto.setNombre("Alfajor");
 
+    Usuario usuario = new Usuario();
+    usuario.setId(3L);
+
     Carrito carrito = new Carrito();
+
+    carrito.setUsuario(usuario);
 
     when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
 
-    servicioCarrito.agregarProducto(producto.getId(), carrito);
+    when(repositorioCarritoMock.buscarPorUsuario(usuario.getId())).thenReturn(carrito);
+
+    servicioCarrito.agregarProducto(producto.getId(), usuario.getId());
 
     //ejecucion
-    servicioCarrito.agregarProducto(producto.getId(), carrito);
+    servicioCarrito.agregarProducto(producto.getId(), usuario.getId());
 
     int resultado = carrito.getItems().size();
 
@@ -106,14 +131,20 @@ public class ServicioCarritoTest {
     producto.setId(1L);
     producto.setNombre("Alfajor");
 
+    Usuario usuario = new Usuario();
+    usuario.setId(3L);
+
     Carrito carrito = new Carrito();
 
-    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+    carrito.setUsuario(usuario);
 
-    servicioCarrito.agregarProducto(producto.getId(), carrito);
+    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+    when(repositorioCarritoMock.buscarPorUsuario(usuario.getId())).thenReturn(carrito);
+
+    servicioCarrito.agregarProducto(producto.getId(), usuario.getId());
 
     //ejecucion
-    servicioCarrito.eliminarProducto(producto.getId(), carrito);
+    servicioCarrito.eliminarProducto(producto.getId(), usuario.getId());
 
     int resultado = carrito.getItems().size();
 
@@ -128,14 +159,20 @@ public class ServicioCarritoTest {
     producto.setId(1L);
     producto.setNombre("Alfajor");
 
+    Usuario usuario = new Usuario();
+    usuario.setId(3L);
+
     Carrito carrito = new Carrito();
 
-    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+    carrito.setUsuario(usuario);
 
-    servicioCarrito.agregarProducto(producto.getId(), carrito);
+    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+    when(repositorioCarritoMock.buscarPorUsuario(usuario.getId())).thenReturn(carrito);
+
+    servicioCarrito.agregarProducto(producto.getId(), usuario.getId());
 
     //ejecucion
-    servicioCarrito.aumentarCantidad(producto.getId(), carrito);
+    servicioCarrito.aumentarCantidad(producto.getId(), usuario.getId());
 
     int resultado = carrito.getItems().get(0).getCantidad();
 
@@ -150,15 +187,21 @@ public class ServicioCarritoTest {
     producto.setId(1L);
     producto.setNombre("Alfajor");
 
+    Usuario usuario = new Usuario();
+    usuario.setId(3L);
+
     Carrito carrito = new Carrito();
 
-    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+    carrito.setUsuario(usuario);
 
-    servicioCarrito.agregarProducto(producto.getId(), carrito);
-    servicioCarrito.aumentarCantidad(producto.getId(), carrito);
+    when(repositorioProductoMock.buscarProductoPorId(producto.getId())).thenReturn(producto);
+    when(repositorioCarritoMock.buscarPorUsuario(usuario.getId())).thenReturn(carrito);
+
+    servicioCarrito.agregarProducto(producto.getId(), usuario.getId());
+    servicioCarrito.aumentarCantidad(producto.getId(), usuario.getId());
 
     //ejecucion
-    servicioCarrito.disminuirCantidad(producto.getId(), carrito);
+    servicioCarrito.disminuirCantidad(producto.getId(), usuario.getId());
 
     int resultado = carrito.getItems().get(0).getCantidad();
 

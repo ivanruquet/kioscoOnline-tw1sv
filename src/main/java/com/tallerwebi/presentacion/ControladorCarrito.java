@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Carrito.Carrito;
 import com.tallerwebi.dominio.Carrito.ServicioCarrito;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ControladorCarrito {
 
   private final ServicioCarrito servicioCarrito;
+  private static final String USUARIO = "USUARIO";
   private static final String CARRITO = "carrito";
   private static final String PRODUCTO_ID = "productoId";
 
@@ -30,16 +32,10 @@ public class ControladorCarrito {
     HttpSession session,
     ModelMap model
   ) {
-    Carrito carrito = (Carrito) session.getAttribute(CARRITO);
-
-    if (carrito == null) {
-      carrito = new Carrito();
-    }
+    Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
     try {
-      servicioCarrito.agregarProducto(productoId, carrito);
-
-      session.setAttribute(CARRITO, carrito);
+      servicioCarrito.agregarProducto(productoId, usuario.getId());
     } catch (ProductoNoEncontradoException e) {
       model.put("error", e.getMessage());
     }
@@ -49,13 +45,11 @@ public class ControladorCarrito {
 
   @RequestMapping(path = "/carrito", method = RequestMethod.GET)
   public ModelAndView verCarrito(HttpSession session) {
-    Carrito carrito = (Carrito) session.getAttribute(CARRITO);
+    Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
-    if (carrito == null) {
-      carrito = new Carrito();
-    }
+    Carrito carrito = servicioCarrito.obtenerOCrearCarrito(usuario.getId());
 
-    Double total = servicioCarrito.calcularTotal(carrito);
+    Double total = servicioCarrito.calcularTotal(usuario.getId());
 
     ModelMap model = new ModelMap();
     model.put(CARRITO, carrito);
@@ -66,15 +60,9 @@ public class ControladorCarrito {
 
   @RequestMapping(path = "/carrito/eliminar", method = RequestMethod.POST)
   public String eliminarProducto(@RequestParam(PRODUCTO_ID) Long productoId, HttpSession session) {
-    Carrito carrito = (Carrito) session.getAttribute(CARRITO);
+    Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
-    if (carrito == null) {
-      carrito = new Carrito();
-    }
-
-    servicioCarrito.eliminarProducto(productoId, carrito);
-
-    session.setAttribute(CARRITO, carrito);
+    servicioCarrito.eliminarProducto(productoId, usuario.getId());
 
     return "redirect:/carrito";
   }
@@ -84,15 +72,9 @@ public class ControladorCarrito {
     @RequestParam(PRODUCTO_ID) Long productoId,
     HttpSession session
   ) {
-    Carrito carrito = (Carrito) session.getAttribute(CARRITO);
+    Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
-    if (carrito == null) {
-      carrito = new Carrito();
-    }
-
-    servicioCarrito.aumentarCantidad(productoId, carrito);
-
-    session.setAttribute(CARRITO, carrito);
+    servicioCarrito.aumentarCantidad(productoId, usuario.getId());
 
     return "redirect:/carrito";
   }
@@ -102,15 +84,9 @@ public class ControladorCarrito {
     @RequestParam(PRODUCTO_ID) Long productoId,
     HttpSession session
   ) {
-    Carrito carrito = (Carrito) session.getAttribute(CARRITO);
+    Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
-    if (carrito == null) {
-      carrito = new Carrito();
-    }
-
-    servicioCarrito.disminuirCantidad(productoId, carrito);
-
-    session.setAttribute(CARRITO, carrito);
+    servicioCarrito.disminuirCantidad(productoId, usuario.getId());
 
     return "redirect:/carrito";
   }

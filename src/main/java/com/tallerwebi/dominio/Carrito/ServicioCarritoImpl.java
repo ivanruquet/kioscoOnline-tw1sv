@@ -2,6 +2,8 @@ package com.tallerwebi.dominio.Carrito;
 
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.RepositorioProducto;
+import com.tallerwebi.dominio.Usuario.RepositorioUsuario;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -11,39 +13,74 @@ import org.springframework.stereotype.Service;
 public class ServicioCarritoImpl implements ServicioCarrito {
 
   private RepositorioProducto repositorioProducto;
+  private RepositorioCarrito repositorioCarrito;
+  private RepositorioUsuario repositorioUsuario;
 
-  public ServicioCarritoImpl(RepositorioProducto repositorioProducto) {
+  public ServicioCarritoImpl(
+    RepositorioProducto repositorioProducto,
+    RepositorioCarrito repositorioCarrito,
+    RepositorioUsuario repositorioUsuario
+  ) {
     this.repositorioProducto = repositorioProducto;
+    this.repositorioCarrito = repositorioCarrito;
+    this.repositorioUsuario = repositorioUsuario;
   }
 
   @Override
-  public void agregarProducto(long productoId, Carrito carrito) {
+  public Carrito obtenerOCrearCarrito(Long usuarioId) {
+    Carrito carrito = repositorioCarrito.buscarPorUsuario(usuarioId);
+
+    if (carrito == null) {
+      Usuario usuario = repositorioUsuario.buscarUsuarioPorId(usuarioId);
+
+      carrito = new Carrito();
+
+      carrito.setUsuario(usuario);
+
+      repositorioCarrito.guardar(carrito);
+    }
+
+    return carrito;
+  }
+
+  @Override
+  public void agregarProducto(long productoId, long usuarioId) {
     Producto producto = repositorioProducto.buscarProductoPorId(productoId);
 
     if (producto == null) {
       throw new ProductoNoEncontradoException("El producto no fue encontrado");
     }
 
+    Carrito carrito = obtenerOCrearCarrito(usuarioId);
+
     carrito.agregarProducto(producto);
+    repositorioCarrito.guardar(carrito);
   }
 
   @Override
-  public Double calcularTotal(Carrito carrito) {
+  public Double calcularTotal(long usuarioId) {
+    Carrito carrito = obtenerOCrearCarrito(usuarioId);
     return carrito.calcularTotal();
   }
 
   @Override
-  public void eliminarProducto(long productoId, Carrito carrito) {
+  public void eliminarProducto(long productoId, long usuarioId) {
+    Carrito carrito = obtenerOCrearCarrito(usuarioId);
     carrito.eliminarProducto(productoId);
+    repositorioCarrito.guardar(carrito);
   }
 
   @Override
-  public void aumentarCantidad(long productoId, Carrito carrito) {
+  public void aumentarCantidad(long productoId, long usuarioId) {
+    Carrito carrito = obtenerOCrearCarrito(usuarioId);
     carrito.aumentarCantidad(productoId);
+    repositorioCarrito.guardar(carrito);
   }
 
   @Override
-  public void disminuirCantidad(long productoId, Carrito carrito) {
+  public void disminuirCantidad(long productoId, long usuarioId) {
+    Carrito carrito = obtenerOCrearCarrito(usuarioId);
     carrito.disminuirCantidad(productoId);
+    repositorioCarrito.guardar(carrito);
   }
 }

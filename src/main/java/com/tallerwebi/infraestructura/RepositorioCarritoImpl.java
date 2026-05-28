@@ -23,4 +23,15 @@ public class RepositorioCarritoImpl implements RepositorioCarrito {
   public void guardar(Carrito carrito) {
     sessionFactory.getCurrentSession().saveOrUpdate(carrito);
   }
+
+  @Override
+  public Carrito buscarPorUsuario(Long usuarioId) {
+    String hql = "FROM Carrito c " + "WHERE c.usuario.id = :usuarioId";
+
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(hql, Carrito.class)
+      .setParameter("usuarioId", usuarioId)
+      .uniqueResult();
+  }
 }

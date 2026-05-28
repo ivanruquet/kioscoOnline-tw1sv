@@ -25,4 +25,9 @@ public class RepositorioHijoImpl implements RepositorioHijo {
       .setParameter("idPadre", idPadre)
       .getResultList();
   }
+
+  @Override
+  public Hijo buscarPorId(Long id) {
+    return sessionFactory.getCurrentSession().get(Hijo.class, id);
+  }
 }

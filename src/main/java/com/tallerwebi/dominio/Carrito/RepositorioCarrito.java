@@ -4,4 +4,6 @@ public interface RepositorioCarrito {
   Carrito buscarPorId(Long id);
 
   void guardar(Carrito carrito);
+
+  Carrito buscarPorUsuario(Long usuarioId);
 }
