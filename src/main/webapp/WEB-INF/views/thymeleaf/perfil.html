@@ -24,7 +24,7 @@
         <section class="panel-cliente">
             <div th:replace="fragmentos/panelIzqCliente :: panelCliente"></div>
 
-            <a href="/spring/home" class="btn-volver"> Ir a Tienda</a>
+            <a th:href="@{/home}" class="btn-volver"> Ir a Tienda</a>
 
         </section>
 
@@ -109,7 +109,7 @@
                                          th:src="${usuario.fotoPerfil != null ? usuario.fotoPerfil : '/spring/imagenes/imagenesDefault/default-user.jpg'}"
                                          alt="preview"
                                          class="foto-preview" />
-                                    <input type="text" name="fotoPerfil"
+                                    <input type="file" name="fotoPerfil"
                                            id="inputFoto"
                                            th:value="${usuario.fotoPerfil}"
                                            placeholder="https://..."

@@ -7,8 +7,8 @@ import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
+import com.tallerwebi.dominio.Usuario.ServicioUsuario;
 import com.tallerwebi.dominio.Usuario.Usuario;
-import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,12 +22,13 @@ public class PerfilControladorTest {
   private PerfilControlador perfilControlador;
   private HttpSession sessionMock;
   private ServicioHijo servicioHijoMock;
+  private ServicioUsuario servicioUsuarioMock;
 
   @BeforeEach
   public void init() {
     servicioHijoMock = Mockito.mock(ServicioHijo.class);
-
-    perfilControlador = new PerfilControlador(servicioHijoMock);
+    servicioUsuarioMock = Mockito.mock(ServicioUsuario.class);
+    perfilControlador = new PerfilControlador(servicioHijoMock, servicioUsuarioMock);
     usuarioMock = Mockito.mock(Usuario.class);
     sessionMock = Mockito.mock(HttpSession.class);
   }
@@ -91,13 +92,13 @@ public class PerfilControladorTest {
   }
 
   @Test
-  public void elPerfilDebeMostrarLaCantDeHijosDelUsuario() {
+  public void misHijosDebeMostrarLosHijosDelUsuario() {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
     //simulo un hijo
-    List<Hijo> hijoMock = Arrays.asList(Mockito.mock(Hijo.class));
+    List<Hijo> hijoMock = List.of(Mockito.mock(Hijo.class));
     when(usuarioMock.getHijos()).thenReturn(hijoMock); //cuando llamo a getHijos le pido que retorne el mock
 
-    ModelAndView modelAndView = perfilControlador.irAlPerfil(sessionMock);
+    ModelAndView modelAndView = perfilControlador.irAvistaHijos(sessionMock);
 
     List<Hijo> hijosObtenidos = ((Usuario) modelAndView.getModel().get("usuario")).getHijos();
 
@@ -110,7 +111,7 @@ public class PerfilControladorTest {
 
     when(usuarioMock.getHijos()).thenReturn(null); //cuando llamo a getHijos le pido que retorne null
 
-    ModelAndView modelAndView = perfilControlador.irAlPerfil(sessionMock);
+    ModelAndView modelAndView = perfilControlador.irAvistaHijos(sessionMock);
 
     assertThat(
       (String) modelAndView.getModel().get("mensajeError"),
@@ -119,7 +120,7 @@ public class PerfilControladorTest {
   }
 
   @Test
-  public void elPerfilDebeMostrarLaInfoDeLosHijos() {
+  public void vistaHijosDebeMostrarLaInfoDeLosHijos() {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
 
     Hijo hijoMock1 = Mockito.mock(Hijo.class);
@@ -128,15 +129,48 @@ public class PerfilControladorTest {
     Hijo hijoMock2 = Mockito.mock(Hijo.class);
     when(hijoMock2.getNombre()).thenReturn("Romina");
 
-    List<Hijo> hijosSimulados = Arrays.asList(hijoMock1, hijoMock2);
+    List<Hijo> hijosSimulados = List.of(hijoMock1, hijoMock2);
 
     when(servicioHijoMock.obtenerHijosPorUsuario(usuarioMock.getId())).thenReturn(hijosSimulados);
 
-    ModelAndView modelAndView = perfilControlador.irAlPerfil(sessionMock);
+    ModelAndView modelAndView = perfilControlador.irAvistaHijos(sessionMock);
 
     List<Hijo> hijosObtenidos = (List<Hijo>) modelAndView.getModel().get("hijos");
 
     assertThat(hijosObtenidos.get(0).getNombre(), equalToIgnoringCase("Santiago"));
     assertThat(hijosObtenidos.get(1).getNombre(), equalToIgnoringCase("Romina"));
+  }
+
+  @Test
+  public void seDebePoderCambiarElMailDelUsuario() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(usuarioMock.getId()).thenReturn(1L);
+
+    String mailNuevo = "nuevo@test.com";
+    perfilControlador.editarPerfil(mailNuevo, null, null, sessionMock);
+
+    Mockito.verify(servicioUsuarioMock).actualizarMail(1L, mailNuevo);
+  }
+
+  @Test
+  public void seDebePoderCambiarElCelularDelUsuario() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(usuarioMock.getId()).thenReturn(1L);
+
+    String nuevoCel = "1122334455";
+    perfilControlador.editarPerfil(null, nuevoCel, null, sessionMock);
+
+    Mockito.verify(servicioUsuarioMock).actualizarCelular(1L, Long.parseLong(nuevoCel));
+  }
+
+  @Test
+  public void seDebePoderCambiarLaFotoDelUsuario() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(usuarioMock.getId()).thenReturn(1L);
+
+    String foto = "foto.jpg";
+    perfilControlador.editarPerfil(null, null, foto, sessionMock);
+
+    Mockito.verify(servicioUsuarioMock).actualizarFoto(1L, foto);
   }
 }
