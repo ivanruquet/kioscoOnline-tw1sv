@@ -18,8 +18,7 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
 
   private static final Logger logger = LoggerFactory.getLogger(ServicioMercadoPagoImpl.class);
 
-  private static final String TOKEN_MP =
-    "TOKEN AQUI";
+  private static final String TOKEN_MP = "TOKEN AQUI";
 
   @Override
   public String crearPreferenciaDePago(Carrito carrito) { // <-- CAMBIO

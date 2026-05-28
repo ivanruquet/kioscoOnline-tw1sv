@@ -70,6 +70,6 @@ public class ServicioUsuarioTest {
     servicioUsuario.actualizarFoto(id, fotoMock);
 
     verify(repositorioUsuarioMock, times(1)).modificar(usuario);
-    assertThat(usuario.getFotoPerfil(), equalTo("/imagenes/img_Perfiles/foto.jpg"));
+    assertThat(usuario.getFotoPerfil(), equalTo("/spring/imagenes/img_Perfiles/foto.jpg"));
   }
 }
