@@ -1,11 +1,8 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Hijos.Hijo;
-import com.tallerwebi.dominio.Hijos.ServicioHijo;
 import com.tallerwebi.dominio.Usuario.ServicioUsuario;
 import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.NoSePudoGuardarInformacionException;
-import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class PerfilControlador {
 
-  private final ServicioHijo servicioHijo;
   private final ServicioUsuario servicioUsuario;
   private static final String VISTA_PERFIL = "perfil";
   private static final String VISTA_HIJOS = "vistaHijos";
@@ -28,8 +24,7 @@ public class PerfilControlador {
   private static final String USUARIO_MODEL = "usuario";
 
   @Autowired
-  public PerfilControlador(ServicioHijo servicioHijo, ServicioUsuario servicioUsuario) {
-    this.servicioHijo = servicioHijo;
+  public PerfilControlador(ServicioUsuario servicioUsuario) {
     this.servicioUsuario = servicioUsuario;
   }
 
@@ -44,27 +39,6 @@ public class PerfilControlador {
     model.put(USUARIO_MODEL, usuario);
 
     mv.setViewName(VISTA_PERFIL);
-    mv.addAllObjects(model);
-    return mv;
-  }
-
-  @RequestMapping(path = "/vistaHijos", method = RequestMethod.GET)
-  public ModelAndView irAvistaHijos(HttpSession session) {
-    Usuario usuario = (Usuario) session.getAttribute(USUARIO_SESSION);
-    if (usuario == null) {
-      return new ModelAndView("redirect:/login");
-    }
-    ModelMap model = new ModelMap();
-    ModelAndView mv = new ModelAndView();
-    model.put(USUARIO_MODEL, usuario);
-
-    List<Hijo> hijos = this.servicioHijo.obtenerHijosPorUsuario(usuario.getId());
-    if (hijos == null || hijos.isEmpty()) {
-      model.put("mensajeError", "Aún no tenés hijos registrados");
-    } else {
-      model.put("hijos", hijos);
-    }
-    mv.setViewName(VISTA_HIJOS);
     mv.addAllObjects(model);
     return mv;
   }

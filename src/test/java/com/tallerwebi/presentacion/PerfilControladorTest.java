@@ -25,16 +25,14 @@ public class PerfilControladorTest {
   private Usuario usuarioMock;
   private PerfilControlador perfilControlador;
   private HttpSession sessionMock;
-  private ServicioHijo servicioHijoMock;
   private ServicioUsuario servicioUsuarioMock;
   private BindingResult bindingResultMock;
   private DatosEditarPerfilDTO dto;
 
   @BeforeEach
   public void init() {
-    servicioHijoMock = Mockito.mock(ServicioHijo.class);
     servicioUsuarioMock = Mockito.mock(ServicioUsuario.class);
-    perfilControlador = new PerfilControlador(servicioHijoMock, servicioUsuarioMock);
+    perfilControlador = new PerfilControlador(servicioUsuarioMock);
     usuarioMock = Mockito.mock(Usuario.class);
     sessionMock = Mockito.mock(HttpSession.class);
     bindingResultMock = Mockito.mock(BindingResult.class);
@@ -97,56 +95,6 @@ public class PerfilControladorTest {
       ((Usuario) modelAndView.getModel().get("usuario")).getFotoPerfil(),
       equalToIgnoringCase("foto.jpg")
     );
-  }
-
-  @Test
-  public void misHijosDebeMostrarLosHijosDelUsuario() {
-    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
-    //simulo un hijo
-    List<Hijo> hijoMock = List.of(Mockito.mock(Hijo.class));
-    when(usuarioMock.getHijos()).thenReturn(hijoMock); //cuando llamo a getHijos le pido que retorne el mock
-
-    ModelAndView modelAndView = perfilControlador.irAvistaHijos(sessionMock);
-
-    List<Hijo> hijosObtenidos = ((Usuario) modelAndView.getModel().get("usuario")).getHijos();
-
-    assertThat(hijosObtenidos.size(), equalTo(1));
-  }
-
-  @Test
-  public void siNoTieneHijosDebeMostrarUnMensaje() {
-    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
-
-    when(usuarioMock.getHijos()).thenReturn(null); //cuando llamo a getHijos le pido que retorne null
-
-    ModelAndView modelAndView = perfilControlador.irAvistaHijos(sessionMock);
-
-    assertThat(
-      (String) modelAndView.getModel().get("mensajeError"),
-      equalToIgnoringCase("Aún no tenés hijos registrados")
-    );
-  }
-
-  @Test
-  public void vistaHijosDebeMostrarLaInfoDeLosHijos() {
-    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
-
-    Hijo hijoMock1 = Mockito.mock(Hijo.class);
-    when(hijoMock1.getNombre()).thenReturn("Santiago");
-
-    Hijo hijoMock2 = Mockito.mock(Hijo.class);
-    when(hijoMock2.getNombre()).thenReturn("Romina");
-
-    List<Hijo> hijosSimulados = List.of(hijoMock1, hijoMock2);
-
-    when(servicioHijoMock.obtenerHijosPorUsuario(usuarioMock.getId())).thenReturn(hijosSimulados);
-
-    ModelAndView modelAndView = perfilControlador.irAvistaHijos(sessionMock);
-
-    List<Hijo> hijosObtenidos = (List<Hijo>) modelAndView.getModel().get("hijos");
-
-    assertThat(hijosObtenidos.get(0).getNombre(), equalToIgnoringCase("Santiago"));
-    assertThat(hijosObtenidos.get(1).getNombre(), equalToIgnoringCase("Romina"));
   }
 
   @Test

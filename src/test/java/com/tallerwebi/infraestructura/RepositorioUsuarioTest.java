@@ -139,6 +139,28 @@ public class RepositorioUsuarioTest {
     this.entoncesSeLanzaUnaTransientObjectException(usuario);
   }
 
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaBuscarUsuarioPorEmail() {
+    String email = "test@test.com";
+
+    Usuario usuario = this.dadoQueTengoUnUsuario(email, "123", "USER");
+    this.dadoQueExisteElUsuario(usuario);
+
+    Usuario obtenido = repositorioUsuario.buscarUsuarioPorEmail(email);
+
+    assertThat(obtenido.getEmail(), is(equalTo(email)));
+  }
+
+  @Test
+  @Transactional
+  public void deberiaRetornarNullCuandoBuscoUsuarioPorEmailInexistente() {
+    Usuario obtenido = repositorioUsuario.buscarUsuarioPorEmail("noexiste@test.com");
+
+    assertThat(obtenido, is(nullValue()));
+  }
+
   private Boolean cuandoVerificoSiExisteUsuarioPorMail(String email) {
     return repositorioUsuario.existeUsuarioPorMail(email);
   }

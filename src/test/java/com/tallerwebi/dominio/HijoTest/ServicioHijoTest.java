@@ -9,7 +9,6 @@ import com.tallerwebi.dominio.Hijos.RepositorioHijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijoImpl;
 import com.tallerwebi.dominio.Usuario.Usuario;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,7 @@ public class ServicioHijoTest {
 
   @Test
   public void cuandoSeSoliciteHijosDebeBuscarEnElRepoYDevolverList() {
-    List<Hijo> listaHijoSimulada = Arrays.asList(hijoMock);
+    List<Hijo> listaHijoSimulada = List.of(hijoMock);
     when(repositorioHijoMock.listarHijos(usuarioMock.getId())).thenReturn(listaHijoSimulada);
 
     List<Hijo> listaHijoObtenida = servicioHijo.obtenerHijosPorUsuario(usuarioMock.getId());
