@@ -23,7 +23,9 @@
         <section class="panel-cliente">
             <div th:replace="fragmentos/panelIzqCliente :: panelCliente"></div>
 
-            <a href="/spring/home" class="btn-volver"> Ir a Tienda</a>
+<!--            <a href="/spring/home" class="btn-volver"> Ir a Tienda</a>-->
+            <a th:href="@{/perfil}" class="btn-volver"> Mi perfil</a>
+
 
         </section>
         <div class="seccion-hijos">
