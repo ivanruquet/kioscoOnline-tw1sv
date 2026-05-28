@@ -1,8 +1,9 @@
 package com.tallerwebi.presentacion.Pagos;
 
-import com.tallerwebi.dominio.Carrito.ItemCarrito;
+import com.tallerwebi.dominio.Carrito.Carrito;
+import com.tallerwebi.dominio.Carrito.ServicioCarrito;
 import com.tallerwebi.dominio.Pagos.ServicioMercadoPago;
-import java.util.List;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,17 +16,28 @@ import org.springframework.web.servlet.ModelAndView;
 public class ControladorMercadoPago {
 
   private final ServicioMercadoPago servicioMercadoPago;
+  private final ServicioCarrito servicioCarrito;
 
   @Autowired
-  public ControladorMercadoPago(ServicioMercadoPago servicioMercadoPago) {
+  public ControladorMercadoPago(
+    ServicioMercadoPago servicioMercadoPago,
+    ServicioCarrito servicioCarrito
+  ) {
     this.servicioMercadoPago = servicioMercadoPago;
+    this.servicioCarrito = servicioCarrito;
   }
 
   @RequestMapping(path = "/pagar", method = RequestMethod.GET)
   public ModelAndView pagar(HttpSession session) {
-    List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute("carrito");
+    Usuario usuario = (Usuario) session.getAttribute("USUARIO");
 
-    if (carrito == null || carrito.isEmpty()) {
+    if (usuario == null) {
+      return new ModelAndView("redirect:/login");
+    }
+
+    Carrito carrito = servicioCarrito.obtenerOCrearCarrito(usuario.getId());
+
+    if (carrito == null || carrito.getItems() == null || carrito.getItems().isEmpty()) {
       ModelMap model = new ModelMap();
       model.put("error", "El carrito no puede estar vacío");
       return new ModelAndView("redirect:/carrito", model);
@@ -33,7 +45,6 @@ public class ControladorMercadoPago {
 
     String urlPago = servicioMercadoPago.crearPreferenciaDePago(carrito);
 
-    // Si la API falla, redirigimos controladamente en lugar de colgar el servidor
     if (urlPago == null) {
       ModelMap model = new ModelMap();
       model.put("error", "No se pudo conectar con Mercado Pago. Intente más tarde.");
@@ -45,15 +56,15 @@ public class ControladorMercadoPago {
 
   @RequestMapping(path = "/pago-exitoso", method = RequestMethod.GET)
   public ModelAndView mostrarPagoExitoso(HttpSession session) {
-    List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute("carrito");
+    Usuario usuario = (Usuario) session.getAttribute("USUARIO");
 
     ModelMap model = new ModelMap();
 
-    if (carrito != null && !carrito.isEmpty()) {
-      // Le pasamos los ítems a la vista antes de vaciarlo
-      model.put("itemsComprados", carrito);
-      // Vaciamos el carrito de la sesión porque ya fue pagado
-      session.setAttribute("carrito", null);
+    if (usuario != null) {
+      Carrito carrito = servicioCarrito.obtenerOCrearCarrito(usuario.getId());
+      if (carrito != null) {
+        model.put("itemsComprados", carrito.getItems());
+      }
     }
 
     return new ModelAndView("pago-exitoso", model);

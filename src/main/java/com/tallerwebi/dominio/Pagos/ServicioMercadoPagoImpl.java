@@ -4,7 +4,8 @@ import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
-import com.tallerwebi.dominio.Carrito.ItemCarrito;
+import com.tallerwebi.dominio.Carrito.Carrito; // <-- CAMBIO
+import com.tallerwebi.dominio.Carrito.ItemCarrito; // <-- CAMBIO
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +19,16 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
   private static final Logger logger = LoggerFactory.getLogger(ServicioMercadoPagoImpl.class);
 
   private static final String TOKEN_MP =
-    "PONER TOKEN ACA";
+    "TOKEN AQUI";
 
   @Override
-  public String crearPreferenciaDePago(List<ItemCarrito> carrito) {
+  public String crearPreferenciaDePago(Carrito carrito) { // <-- CAMBIO
     MercadoPagoConfig.setAccessToken(TOKEN_MP);
 
     List<PreferenceItemRequest> itemsMercadoPago = new ArrayList<>();
 
-    for (ItemCarrito item : carrito) {
+    // Recorremos los ítems del modelo carrito
+    for (ItemCarrito item : carrito.getItems()) {
       itemsMercadoPago.add(
         PreferenceItemRequest
           .builder()

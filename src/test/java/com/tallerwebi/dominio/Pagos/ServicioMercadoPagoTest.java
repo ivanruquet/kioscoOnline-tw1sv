@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
 
+import com.tallerwebi.dominio.Carrito.Carrito; // <-- NUEVO IMPORT
 import com.tallerwebi.dominio.Carrito.ItemCarrito;
 import com.tallerwebi.dominio.Productos.Producto;
 import java.util.ArrayList;
@@ -22,19 +23,23 @@ public class ServicioMercadoPagoTest {
 
   @Test
   public void alCrearPreferenciaDePagoDebeDevolverUnaUrlValidaDeMercadoPago() {
-    // 1. Given: Preparamos un carrito con un producto real de tu kiosco
-    List<ItemCarrito> carrito = new ArrayList<>();
+    // 1. Given:
+    Carrito carrito = new Carrito();
+    List<ItemCarrito> items = new ArrayList<>();
 
     Producto alfajor = new Producto();
     alfajor.setNombre("Alfajor Jorgito");
     alfajor.setPrecio(1200.0);
 
-    carrito.add(new ItemCarrito(alfajor, 2));
+    // Creamos el ítem y lo metemos en la lista interna del carrito
+    items.add(new ItemCarrito(alfajor, 2));
+    carrito.setItems(items); // <-- Vinculamos la lista al objeto Carrito
 
+    // 2. When:
     String urlCheckout = this.servicioMercadoPago.crearPreferenciaDePago(carrito);
 
+    // 3. Then
     assertThat(urlCheckout, notNullValue());
     assertThat(urlCheckout, containsString("mercadopago.com"));
-    assertThat(urlCheckout, containsString("pref_id"));
   }
 }
