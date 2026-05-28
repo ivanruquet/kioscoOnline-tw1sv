@@ -1,3 +1,5 @@
+@import url('variablesColor.css');
+
 /* ── CONFIGURACIÓN GLOBAL DE LA TIENDA ── */
 body {
     background-color: #F8F9FD; /* El fondo claro de la foto */
@@ -35,7 +37,7 @@ body {
 }
 
 .navbar-brand img {
-    height: 65px; /* Ajustá este valor si lo querés un poco más grande o chico */
+    height: 70px; /* Ajustá este valor si lo querés un poco más grande o chico */
     width: auto;
     object-fit: contain;
 }

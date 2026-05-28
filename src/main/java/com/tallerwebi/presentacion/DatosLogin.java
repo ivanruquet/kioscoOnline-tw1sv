@@ -2,8 +2,9 @@ package com.tallerwebi.presentacion;
 
 public class DatosLogin {
 
-  private String email;
-  private String password;
+  private String email = "";
+  private String password = "";
+  private Boolean rememberMe;
 
   public DatosLogin() {}
 
@@ -26,5 +27,13 @@ public class DatosLogin {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public Boolean getRememberMe() {
+    return rememberMe;
+  }
+
+  public void setRememberMe(Boolean rememberMe) {
+    this.rememberMe = rememberMe;
   }
 }

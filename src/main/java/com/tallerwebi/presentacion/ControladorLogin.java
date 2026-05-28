@@ -1,21 +1,22 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.ServicioLogin;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Usuario.ServicioLogin;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ControladorLogin {
 
-  private ServicioLogin servicioLogin;
+  private final ServicioLogin servicioLogin;
 
   @Autowired
   public ControladorLogin(ServicioLogin servicioLogin) {
@@ -23,24 +24,44 @@ public class ControladorLogin {
   }
 
   @RequestMapping("/login")
-  public ModelAndView irALogin() {
+  public ModelAndView irALogin(HttpServletRequest request) {
     ModelMap modelo = new ModelMap();
-    modelo.put("datosLogin", new DatosLogin());
+    DatosLogin datosLogin = new DatosLogin();
+
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if ("emailRecordado".equals(cookie.getName())) {
+          datosLogin.setEmail(cookie.getValue());
+          break;
+        }
+      }
+    }
+    modelo.put("datosLogin", datosLogin);
     return new ModelAndView("login", modelo);
   }
 
   @RequestMapping(path = "/validar-login", method = RequestMethod.POST)
   public ModelAndView validarLogin(
     @ModelAttribute("datosLogin") DatosLogin datosLogin,
-    HttpServletRequest request
+    HttpServletRequest request,
+    HttpServletResponse response
   ) {
-    Usuario usuarioBuscado = servicioLogin.consultarUsuario(
+    Usuario usuarioBuscado = servicioLogin.consultarUsuarioLogin(
       datosLogin.getEmail(),
       datosLogin.getPassword()
     );
     if (usuarioBuscado != null) {
       request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
       request.getSession().setAttribute("USUARIO", usuarioBuscado);
+
+      if (Boolean.TRUE.equals(datosLogin.getRememberMe())) {
+        Cookie cookie = new Cookie("emailRecordado", datosLogin.getEmail());
+        cookie.setMaxAge(30 * 24 * 60 * 60); // 30 días
+        cookie.setPath("/");
+        response.addCookie(cookie);
+      }
+
       return new ModelAndView("redirect:/home");
     } else {
       /* Se instancia el ModelMap solo cuando es necesario (en el flujo de error) para evitar anomalías en el flujo de datos (DU-anomaly de PMD) */
@@ -54,6 +75,7 @@ public class ControladorLogin {
   public ModelAndView registrarme(@ModelAttribute("usuario") Usuario usuario) {
     ModelMap model = new ModelMap();
     try {
+      usuario.setRol("USER");
       servicioLogin.registrar(usuario);
     } catch (UsuarioExistente e) {
       model.put("error", "El usuario ya existe");
@@ -72,19 +94,6 @@ public class ControladorLogin {
     return new ModelAndView("nuevo-usuario", model);
   }
 
-  //  @RequestMapping(path = "/home", method = RequestMethod.GET)
-  //  public ModelAndView irAHome(HttpSession session) {
-  //    Usuario usuario = (Usuario) session.getAttribute("USUARIO");
-  //
-  //    ModelAndView mv = new ModelAndView();
-  //
-  //    mv.addObject("usuario", usuario);
-  //
-  //    mv.setViewName("home");
-  //
-  //    return mv;
-  //  }
-
   @RequestMapping(path = "/", method = RequestMethod.GET)
   public ModelAndView inicio() {
     return new ModelAndView("redirect:/login");
@@ -95,5 +104,32 @@ public class ControladorLogin {
     request.getSession().invalidate();
 
     return new ModelAndView("redirect:/login");
+  }
+
+  @RequestMapping(path = "/verificar-email", method = RequestMethod.POST)
+  @ResponseBody
+  public ResponseEntity<String> verificarEmail(@RequestParam String email) {
+    Usuario usuario = new Usuario();
+    usuario.setEmail(email);
+    if (servicioLogin.usuarioYaExiste(usuario)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.notFound().build();
+  }
+
+  @RequestMapping(path = "/cambiarContrasenia", method = RequestMethod.GET)
+  public ModelAndView irACambiarContrasenia() {
+    return new ModelAndView("cambiarContrasenia");
+  }
+
+  @RequestMapping(path = "/actualizar-contrasenia", method = RequestMethod.POST)
+  public ModelAndView actualizarContrasenia(
+    @RequestParam String email,
+    @RequestParam String nuevaClave
+  ) {
+    servicioLogin.cambiarContrasenia(email, nuevaClave);
+    ModelMap model = new ModelMap();
+    model.put("exito", "Su contraseña fue cambiada exitosamente");
+    return new ModelAndView("cambiarContrasenia", model);
   }
 }

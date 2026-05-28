@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio.Productos;
 
+import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,21 @@ public class ServicioProductoImpl implements ServicioProducto {
 
   @Override
   public List<Producto> obtenerListadoProductos() {
-    return this.repositorioProducto.listarProductos();
+    List<Producto> productosTodos = this.repositorioProducto.listarProductos();
+    if (productosTodos.isEmpty()) {
+      throw new ProductoNoEncontradoException("No se encontraron productos en la base de datos");
+    }
+    return productosTodos;
   }
 
   @Override
   public List<Producto> obtenerListadoProductosFiltrado(String categoria) {
-    return this.repositorioProducto.listarProductosFiltrados(categoria);
+    List<Producto> productosFiltrados =
+      this.repositorioProducto.listarProductosFiltrados(categoria);
+    if (productosFiltrados.isEmpty()) {
+      throw new ProductoNoEncontradoException("No se encontraron productos en esta categoria");
+    }
+    return productosFiltrados;
   }
 
   @Override
@@ -33,6 +43,12 @@ public class ServicioProductoImpl implements ServicioProducto {
 
   @Override
   public List<Producto> buscarProductosPorNombre(String texto) {
-    return this.repositorioProducto.buscarProductos(texto);
+    List<Producto> productosBuscados = this.repositorioProducto.buscarProductos(texto);
+    if (productosBuscados.isEmpty()) {
+      throw new ProductoNoEncontradoException(
+        "No se encontró ninguna coincidencia para: " + texto + ". Intente otra búsqueda"
+      );
+    }
+    return productosBuscados;
   }
 }

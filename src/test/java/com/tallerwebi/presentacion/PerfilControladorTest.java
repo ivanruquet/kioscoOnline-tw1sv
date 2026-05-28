@@ -1,14 +1,23 @@
 package com.tallerwebi.presentacion;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Hijos.Hijo;
+import com.tallerwebi.dominio.Hijos.ServicioHijo;
+import com.tallerwebi.dominio.Usuario.ServicioUsuario;
+import com.tallerwebi.dominio.Usuario.Usuario;
+import com.tallerwebi.dominio.excepcion.NoSePudoGuardarInformacionException;
+import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 public class PerfilControladorTest {
@@ -16,12 +25,18 @@ public class PerfilControladorTest {
   private Usuario usuarioMock;
   private PerfilControlador perfilControlador;
   private HttpSession sessionMock;
+  private ServicioUsuario servicioUsuarioMock;
+  private BindingResult bindingResultMock;
+  private DatosEditarPerfilDTO dto;
 
   @BeforeEach
   public void init() {
-    perfilControlador = new PerfilControlador();
+    servicioUsuarioMock = Mockito.mock(ServicioUsuario.class);
+    perfilControlador = new PerfilControlador(servicioUsuarioMock);
     usuarioMock = Mockito.mock(Usuario.class);
     sessionMock = Mockito.mock(HttpSession.class);
+    bindingResultMock = Mockito.mock(BindingResult.class);
+    dto = new DatosEditarPerfilDTO();
   }
 
   @Test
@@ -80,5 +95,125 @@ public class PerfilControladorTest {
       ((Usuario) modelAndView.getModel().get("usuario")).getFotoPerfil(),
       equalToIgnoringCase("foto.jpg")
     );
+  }
+
+  @Test
+  public void seDebePoderCambiarElMailDelUsuario() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(usuarioMock.getId()).thenReturn(1L);
+
+    when(bindingResultMock.hasErrors()).thenReturn(false);
+
+    String mailNuevo = "nuevo@test.com";
+    Usuario usuarioActualizado = new Usuario();
+    usuarioActualizado.setEmail(mailNuevo);
+
+    when(servicioUsuarioMock.buscarPorId(1L)).thenReturn(usuarioActualizado);
+
+    dto.setEmail(mailNuevo);
+
+    perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+    verify(servicioUsuarioMock).actualizarMail(1L, mailNuevo);
+    verify(sessionMock).setAttribute("USUARIO", usuarioActualizado);
+  }
+
+  @Test
+  public void siNoSePudoGuardarMailDebeMostrarMensajeDeErrorException() {
+    String msjError = "No se pudo guardar el nuevo mail ";
+
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(usuarioMock.getId()).thenReturn(1L);
+
+    when(bindingResultMock.hasErrors()).thenReturn(false);
+
+    String mailNuevo = "nuevo@test.com";
+    dto.setEmail(mailNuevo);
+
+    Mockito
+      .doThrow(new NoSePudoGuardarInformacionException(msjError))
+      .when(servicioUsuarioMock)
+      .actualizarMail(1L, mailNuevo);
+
+    ModelAndView mv = perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+    assertThat((String) mv.getModel().get("mensajeError"), equalToIgnoringCase(msjError));
+  }
+
+  @Test
+  public void seDebePoderCambiarElCelularDelUsuario() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(usuarioMock.getId()).thenReturn(1L);
+    when(bindingResultMock.hasErrors()).thenReturn(false);
+
+    String nuevoCel = "1122334455";
+    Usuario usuarioActualizado = new Usuario();
+    usuarioActualizado.setCelular(Long.parseLong(nuevoCel));
+    when(servicioUsuarioMock.buscarPorId(1L)).thenReturn(usuarioActualizado);
+    dto.setCelular(nuevoCel);
+    perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+
+    verify(servicioUsuarioMock).actualizarCelular(1L, Long.parseLong(nuevoCel));
+
+    verify(sessionMock).setAttribute("USUARIO", usuarioActualizado);
+  }
+
+  @Test
+  public void siNoSePudoGuardarCelularDebeMostrarMensajeDeErrorException() {
+    String msjError = "No se pudo guardar el nuevo celular ";
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(usuarioMock.getId()).thenReturn(1L);
+
+    when(bindingResultMock.hasErrors()).thenReturn(false);
+
+    String celNuevo = "123456789";
+    dto.setCelular(celNuevo);
+
+    Mockito
+      .doThrow(new NoSePudoGuardarInformacionException(msjError))
+      .when(servicioUsuarioMock)
+      .actualizarCelular(1L, Long.parseLong(celNuevo));
+
+    ModelAndView mv = perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+
+    assertThat((String) mv.getModel().get("mensajeError"), equalToIgnoringCase(msjError));
+  }
+
+  @Test
+  public void seDebePoderCambiarLaFotoDelUsuario() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(usuarioMock.getId()).thenReturn(1L);
+    when(bindingResultMock.hasErrors()).thenReturn(false);
+
+    MultipartFile fotoMock = Mockito.mock(MultipartFile.class);
+    when(fotoMock.isEmpty()).thenReturn(false);
+    dto.setFotoPerfil(fotoMock);
+
+    perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+
+    verify(servicioUsuarioMock).actualizarFoto(1L, fotoMock);
+  }
+
+  @Test
+  public void siNoSePudoGuardarFotoDebeMostrarMensajeDeErrorException() {
+    String msjError = "No se pudo guardar la nueva foto de perfil";
+
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(usuarioMock.getId()).thenReturn(1L);
+
+    when(bindingResultMock.hasErrors()).thenReturn(false);
+
+    MultipartFile fotoMock = Mockito.mock(MultipartFile.class);
+
+    when(fotoMock.isEmpty()).thenReturn(false);
+
+    dto.setFotoPerfil(fotoMock);
+
+    Mockito
+      .doThrow(new NoSePudoGuardarInformacionException(msjError))
+      .when(servicioUsuarioMock)
+      .actualizarFoto(1L, fotoMock);
+
+    ModelAndView mv = perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+
+    assertThat((String) mv.getModel().get("mensajeError"), equalToIgnoringCase(msjError));
   }
 }

@@ -1,13 +1,4 @@
-:root {
-    --purple:      #5B3FE4;
-    --purple-dark: #4A32C8;
-    --purple-lt:   #EEE9FF;
-    --bg:          #F0EEFE;
-    --white:       #FFFFFF;
-    --text:        #1A1A2E;
-    --muted:       #6B7280;
-    --border: #ddb4f8;
-}
+@import url('variablesColor.css');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -61,10 +52,17 @@ body {
     gap: .85rem;
 }
 .brand-icon {
-    width: 56px; height: 56px;
+    width: 80px; height: auto;
     background: var(--purple-lt);
     border-radius: 14px;
     display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+
+}
+.logo-img {
+    width: 70px; /* Ajustá este valor si lo querés un poco más grande o chico */
+    height: auto;
+    object-fit: contain;
 }
 .brand-text h1 { font-size: 1.45rem; font-weight: 800; color: var(--text); line-height: 1.1; }
 .brand-text p  { font-size: .82rem; color: var(--muted); }
@@ -273,6 +271,9 @@ body {
     font-size: .85rem;
     margin-bottom: 1rem;
     display: flex; align-items: center; gap: .5rem;
+}
+.oculto {
+    display: none;
 }
 
 .security-badge {

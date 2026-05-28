@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>¡Pago Exitoso!</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; text-align: center; padding: 50px; }
+        .card { background: white; max-width: 500px; margin: 0 auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2ecc71; margin-bottom: 10px; }
+        ul { list-style: none; padding: 0; text-align: left; max-width: 300px; margin: 20px auto; }
+        li { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        .btn { display: inline-block; background: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>¡Tu pago fue exitoso! 🎉</h1>
+    <p>Gracias por tu compra en el Kiosco. Acá tenés el detalle de tus productos:</p>
+
+    <ul>
+        <li th:each="item : ${itemsComprados}">
+            <span>
+                <strong th:text="${item.producto.nombre}">Nombre Producto</strong>
+                <span th:text="'(x' + ${item.cantidad} + ')'">(x1)</span>
+            </span>
+            <span th:text="'$' + ${item.producto.precio * item.cantidad}">$0.00</span>
+        </li>
+    </ul>
+
+    <a th:href="@{/home}" class="btn">Volver al Inicio</a>
+</div>
+
+</body>
+</html>

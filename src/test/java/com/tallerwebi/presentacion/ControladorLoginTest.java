@@ -1,17 +1,23 @@
 package com.tallerwebi.presentacion;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.ServicioLogin;
-import com.tallerwebi.dominio.Usuario;
+import com.microsoft.playwright.Response;
+import com.tallerwebi.dominio.Usuario.ServicioLogin;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 
 public class ControladorLoginTest {
@@ -22,6 +28,7 @@ public class ControladorLoginTest {
   private HttpServletRequest requestMock;
   private HttpSession sessionMock;
   private ServicioLogin servicioLoginMock;
+  private HttpServletResponse responseMock;
 
   @BeforeEach
   public void init() {
@@ -32,15 +39,20 @@ public class ControladorLoginTest {
     sessionMock = mock(HttpSession.class);
     servicioLoginMock = mock(ServicioLogin.class);
     controladorLogin = new ControladorLogin(servicioLoginMock);
+    responseMock = mock(HttpServletResponse.class);
   }
 
   @Test
-  public void loginConUsuarioYPasswordInorrectosDeberiaLlevarALoginNuevamente() {
+  public void loginConUsuarioYPasswordIncorrectosDeberiaLlevarALoginNuevamente() {
     // preparacion
-    when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(null);
+    when(servicioLoginMock.consultarUsuarioLogin(anyString(), anyString())).thenReturn(null);
 
     // ejecucion
-    ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
+    ModelAndView modelAndView = controladorLogin.validarLogin(
+      datosLoginMock,
+      requestMock,
+      responseMock
+    );
 
     // validacion
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("login"));
@@ -58,11 +70,15 @@ public class ControladorLoginTest {
     when(usuarioEncontradoMock.getRol()).thenReturn("ADMIN");
 
     when(requestMock.getSession()).thenReturn(sessionMock);
-    when(servicioLoginMock.consultarUsuario(anyString(), anyString()))
+    when(servicioLoginMock.consultarUsuarioLogin(anyString(), anyString()))
       .thenReturn(usuarioEncontradoMock);
 
     // ejecucion
-    ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
+    ModelAndView modelAndView = controladorLogin.validarLogin(
+      datosLoginMock,
+      requestMock,
+      responseMock
+    );
 
     // validacion
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
@@ -116,7 +132,7 @@ public class ControladorLoginTest {
   @Test
   public void irALoginDeberiaRetornarVistaLoginConDatosLogin() {
     // ejecucion
-    ModelAndView modelAndView = controladorLogin.irALogin();
+    ModelAndView modelAndView = controladorLogin.irALogin(requestMock);
 
     // validacion
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("login"));
@@ -132,15 +148,6 @@ public class ControladorLoginTest {
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
     assertThat(modelAndView.getModel().get("usuario"), instanceOf(Usuario.class));
   }
-
-  //  @Test
-  //  public void irAHomeDeberiaRetornarVistaHome() {
-  //    // ejecucion
-  //    ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
-  //
-  //    // validacion
-  //    assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
-  //  }
 
   @Test
   public void inicioDeberiaRedirigirALogin() {
@@ -158,5 +165,100 @@ public class ControladorLoginTest {
 
     verify(sessionMock, times(1)).invalidate();
     assertThat(mv.getViewName(), equalToIgnoringCase("redirect:/login"));
+  }
+
+  //test de la cookie del recordarme
+  @Test
+  public void loginConRememberMeDeberiaGuardarLaCookie() {
+    datosLoginMock.setRememberMe(true); //marco el check
+
+    Usuario usuarioEncontradoMock = mock(Usuario.class);
+    when(usuarioEncontradoMock.getRol()).thenReturn("USER");
+    when(requestMock.getSession()).thenReturn(sessionMock);
+    when(servicioLoginMock.consultarUsuarioLogin(anyString(), anyString()))
+      .thenReturn(usuarioEncontradoMock);
+
+    controladorLogin.validarLogin(datosLoginMock, requestMock, responseMock);
+
+    verify(responseMock, times(1)).addCookie(any(Cookie.class));
+  }
+
+  @Test
+  public void loginSinRememberMeNoDeberiaGuardarLaCookie() {
+    datosLoginMock.setRememberMe(false); // ← no marcó el checkbox
+
+    Usuario usuarioEncontradoMock = mock(Usuario.class);
+    when(usuarioEncontradoMock.getRol()).thenReturn("USER");
+    when(requestMock.getSession()).thenReturn(sessionMock);
+    when(servicioLoginMock.consultarUsuarioLogin(anyString(), anyString()))
+      .thenReturn(usuarioEncontradoMock);
+
+    controladorLogin.validarLogin(datosLoginMock, requestMock, responseMock);
+
+    // verificamos que NO se agregó ninguna cookie
+    verify(responseMock, times(0)).addCookie(any(Cookie.class));
+  }
+
+  @Test
+  public void irALoginConCookieDeberiaPrecargarEmail() {
+    // preparacion
+    Cookie cookie = new Cookie("emailRecordado", "ro@unlam.com");
+    when(requestMock.getCookies()).thenReturn(new Cookie[] { cookie });
+
+    // ejecucion
+    ModelAndView modelAndView = controladorLogin.irALogin(requestMock);
+
+    // validacion
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("login"));
+    DatosLogin datos = (DatosLogin) modelAndView.getModel().get("datosLogin");
+    assertThat(datos.getEmail(), equalToIgnoringCase("ro@unlam.com"));
+  }
+
+  @Test
+  public void irALoginSinCookieDeberiaRetornarEmailVacio() {
+    // preparacion
+    when(requestMock.getCookies()).thenReturn(null);
+
+    // ejecucion
+    ModelAndView modelAndView = controladorLogin.irALogin(requestMock);
+
+    // validacion
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("login"));
+    DatosLogin datos = (DatosLogin) modelAndView.getModel().get("datosLogin");
+    assertThat(datos.getEmail(), equalToIgnoringCase(""));
+  }
+
+  @Test
+  public void verificarMailParaCambioDeClaveDeberiaRetornarOkSiElUsuarioExiste() {
+    when(servicioLoginMock.usuarioYaExiste(any(Usuario.class))).thenReturn(true);
+    ResponseEntity<String> respuesta = controladorLogin.verificarEmail("ro@unlam.com");
+
+    assertThat(respuesta.getStatusCode(), equalTo(HttpStatus.OK));
+  }
+
+  @Test
+  public void verificarMailParaCambioDeClaveDeberiaRetornarOkSiElUsuarioNoExiste() {
+    when(servicioLoginMock.usuarioYaExiste(any(Usuario.class))).thenReturn(false);
+    ResponseEntity<String> respuesta = controladorLogin.verificarEmail("ro@unlam.com");
+
+    assertThat(respuesta.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+  }
+
+  @Test
+  public void olvidasteTuContraseniaDebeRetornarVistaContraseniaOlvidada() {
+    ModelAndView mv = controladorLogin.irACambiarContrasenia();
+    assertThat(mv.getViewName(), equalToIgnoringCase("cambiarContrasenia"));
+  }
+
+  @Test
+  public void actualizarContraseniaDebeLlamarAlServicioYMostrarMensaje() {
+    ModelAndView mv = controladorLogin.actualizarContrasenia("ro@test.com", "nuevaClave");
+
+    verify(servicioLoginMock, times(1)).cambiarContrasenia("ro@test.com", "nuevaClave");
+    assertThat(mv.getViewName(), equalToIgnoringCase("cambiarContrasenia"));
+    assertThat(
+      mv.getModel().get("exito").toString(),
+      equalToIgnoringCase("Su contraseña fue cambiada exitosamente")
+    );
   }
 }

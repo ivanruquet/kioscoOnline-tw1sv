@@ -6,8 +6,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.tallerwebi.dominio.RepositorioUsuario;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.Usuario.RepositorioUsuario;
+import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
@@ -74,21 +74,41 @@ public class RepositorioUsuarioTest {
   @Test
   @Transactional
   @Rollback
-  public void deberiaEncontrarUnUsuarioExistenteCuandoBuscoPorEmail() {
+  public void deberiaRetornarTrueSiExisteUsuarioConEseMail() {
     String email = "test@test.com";
     Usuario usuario = this.dadoQueTengoUnUsuario(email, "123", "USER");
     this.dadoQueExisteElUsuario(usuario);
 
-    Usuario obtenido = this.cuandoObtengoUnUsuarioPorEmail(email);
+    Boolean existe = this.cuandoVerificoSiExisteUsuarioPorMail(email);
 
-    this.entoncesElUsuarioObtenidoEsCorrecto(obtenido, usuario);
+    assertThat(existe, is(true));
   }
 
   @Test
   @Transactional
-  public void noDeberiaEncontrarUnUsuarioInexistenteCuandoBuscoPorEmail() {
-    Usuario obtenido = this.cuandoObtengoUnUsuarioPorEmail("test@test.com");
-    this.entoncesElUsuarioObtenidoEsNull(obtenido);
+  public void deberiaRetornarFalseSiNoExisteUsuarioConEseMail() {
+    Boolean existe = this.cuandoVerificoSiExisteUsuarioPorMail("noexiste@test.com");
+    assertThat(existe, is(false));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaRetornarTrueSiExisteUsuarioConEseDNI() {
+    Usuario usuario = this.dadoQueTengoUnUsuario("test@test.com", "123", "USER");
+    usuario.setDni(1234567890L);
+    this.dadoQueExisteElUsuario(usuario);
+
+    Boolean existe = this.cuandoVerificoSiExisteUsuarioPorDNI(1234567890L);
+
+    assertThat(existe, is(true));
+  }
+
+  @Test
+  @Transactional
+  public void deberiaRetornarFalseSiNoExisteUsuarioConEseDNI() {
+    Boolean existe = this.cuandoVerificoSiExisteUsuarioPorDNI(99999L);
+    assertThat(existe, is(false));
   }
 
   @Test
@@ -99,13 +119,12 @@ public class RepositorioUsuarioTest {
     Usuario usuario = this.dadoQueTengoUnUsuario(email, "123", "USER");
     this.dadoQueExisteElUsuario(usuario);
 
-    usuario.setPassword("4567");
-    usuario.setActivo(true);
-    usuario.setRol("ADMIN");
+    usuario.setEmail("nuevo@test.com");
+    usuario.setCelular(12345678L);
 
     this.cuandoModificoUnUsuario(usuario);
 
-    Usuario obtenido = this.cuandoObtengoUnUsuarioPorEmail(email);
+    Usuario obtenido = this.cuandoObtengoUnUsuarioPorId(usuario.getId());
     this.entoncesElUsuarioObtenidoEsCorrecto(obtenido, usuario);
   }
 
@@ -120,12 +139,50 @@ public class RepositorioUsuarioTest {
     this.entoncesSeLanzaUnaTransientObjectException(usuario);
   }
 
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaBuscarUsuarioPorEmail() {
+    String email = "test@test.com";
+
+    Usuario usuario = this.dadoQueTengoUnUsuario(email, "123", "USER");
+    this.dadoQueExisteElUsuario(usuario);
+
+    Usuario obtenido = repositorioUsuario.buscarUsuarioPorEmail(email);
+
+    assertThat(obtenido.getEmail(), is(equalTo(email)));
+  }
+
+  @Test
+  @Transactional
+  public void deberiaRetornarNullCuandoBuscoUsuarioPorEmailInexistente() {
+    Usuario obtenido = repositorioUsuario.buscarUsuarioPorEmail("noexiste@test.com");
+
+    assertThat(obtenido, is(nullValue()));
+  }
+
+  private Boolean cuandoVerificoSiExisteUsuarioPorMail(String email) {
+    return repositorioUsuario.existeUsuarioPorMail(email);
+  }
+
+  private Boolean cuandoVerificoSiExisteUsuarioPorDNI(Long dni) {
+    return repositorioUsuario.existeUsuarioPorDni(dni);
+  }
+
   private Usuario dadoQueTengoUnUsuario(String email, String password, String rol) {
     Usuario usuario = new Usuario();
     usuario.setEmail(email);
+    usuario.setDni(1234567899L);
     usuario.setPassword(password);
     usuario.setRol(rol);
+    usuario.setNombre("Test");
+    usuario.setApellido("Usuario");
+    usuario.setCelular(1234567890L);
     return usuario;
+  }
+
+  private Usuario cuandoObtengoUnUsuarioPorId(Long id) {
+    return repositorioUsuario.buscarUsuarioPorId(id);
   }
 
   private void dadoQueExisteElUsuario(Usuario usuario) {
@@ -137,11 +194,7 @@ public class RepositorioUsuarioTest {
   }
 
   private Usuario cuandoBuscoUnUsuario(String email, String password) {
-    return repositorioUsuario.buscarUsuario(email, password);
-  }
-
-  private Usuario cuandoObtengoUnUsuarioPorEmail(String email) {
-    return repositorioUsuario.buscar(email);
+    return repositorioUsuario.buscarUsuarioLogin(email, password);
   }
 
   private void cuandoModificoUnUsuario(Usuario usuario) {

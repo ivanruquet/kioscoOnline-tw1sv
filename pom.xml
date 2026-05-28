@@ -25,9 +25,33 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.1.7.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.5</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mercadopago</groupId>
+            <artifactId>sdk-java</artifactId>
+            <version>2.1.29</version>
         </dependency>
 
         <dependency>
@@ -107,6 +131,12 @@
             <version>${playwright.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
         <!-- compile only, deployed container will provide this -->
         <!--
         <dependency>
@@ -151,6 +181,9 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+                    <argLine>@{argLine} -Dfile.encoding=UTF-8</argLine>
+                    <!--agrego esto por el problema de los carac.especiales y las tildes-->
+
                 </configuration>
             </plugin>
 
@@ -402,6 +435,13 @@
                     <webApp>
                         <contextPath>/spring</contextPath>
                     </webApp>
+                    <!--agrego esto por el problema de los caracteres especiales y las tildes-->
+                    <systemProperties>
+                        <systemProperty>
+                            <name>file.encoding</name>
+                            <value>UTF-8</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
 

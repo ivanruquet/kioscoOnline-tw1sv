@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.Usuario;
 
 import com.tallerwebi.dominio.Hijos.Hijo;
 import java.util.List;
@@ -11,11 +11,14 @@ public class Usuario {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String email;
 
   @Column(nullable = false)
   private String password;
+
+  @Embedded
+  private DatosPersonales datosPersonales = new DatosPersonales();
 
   @Column(nullable = false)
   private String rol;
@@ -23,29 +26,17 @@ public class Usuario {
   @Column(nullable = false)
   private Boolean activo = false;
 
-  @Column(nullable = false)
-  private String nombre;
-
-  @Column(nullable = false)
-  private String apellido;
-
-  @Column(nullable = false)
-  private Long celular;
-
-  @Column
-  private String fotoPerfil;
-
   //Usuario 1 -------- * Hijos
   @OneToMany(mappedBy = "padre")
-  private List<Hijo> hijo;
+  private List<Hijo> hijos;
 
   //getter y setter
-  public List<Hijo> getHijo() {
-    return hijo;
+  public List<Hijo> getHijos() {
+    return hijos;
   }
 
-  public void setHijo(List<Hijo> hijo) {
-    this.hijo = hijo;
+  public void setHijos(List<Hijo> hijos) {
+    this.hijos = hijos;
   }
 
   public Long getId() {
@@ -56,28 +47,52 @@ public class Usuario {
     this.id = id;
   }
 
-  public Long getCelular() {
-    return celular;
+  public DatosPersonales getDatosPersonales() {
+    return datosPersonales;
   }
 
-  public void setCelular(Long celular) {
-    this.celular = celular;
+  public void setDatosPersonales(DatosPersonales datosPersonales) {
+    this.datosPersonales = datosPersonales;
   }
 
-  public String getApellido() {
-    return apellido;
+  public Long getDni() {
+    return datosPersonales.getDni();
   }
 
-  public void setApellido(String apellido) {
-    this.apellido = apellido;
+  public void setDni(Long dni) {
+    datosPersonales.setDni(dni);
   }
 
   public String getNombre() {
-    return nombre;
+    return datosPersonales.getNombre();
   }
 
   public void setNombre(String nombre) {
-    this.nombre = nombre;
+    datosPersonales.setNombre(nombre);
+  }
+
+  public String getApellido() {
+    return datosPersonales.getApellido();
+  }
+
+  public void setApellido(String apellido) {
+    datosPersonales.setApellido(apellido);
+  }
+
+  public Long getCelular() {
+    return datosPersonales.getCelular();
+  }
+
+  public void setCelular(Long celular) {
+    datosPersonales.setCelular(celular);
+  }
+
+  public String getFotoPerfil() {
+    return datosPersonales.getFotoPerfil();
+  }
+
+  public void setFotoPerfil(String foto) {
+    datosPersonales.setFotoPerfil(foto);
   }
 
   public String getEmail() {
@@ -102,14 +117,6 @@ public class Usuario {
 
   public void setRol(String rol) {
     this.rol = rol;
-  }
-
-  public String getFotoPerfil() {
-    return fotoPerfil;
-  }
-
-  public void setFotoPerfil(String foto) {
-    this.fotoPerfil = foto;
   }
 
   public Boolean getActivo() {

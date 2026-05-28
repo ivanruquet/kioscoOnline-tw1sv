@@ -1,6 +1,19 @@
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+ALTER DATABASE tallerwebi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE Producto CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE CategoriaProductos CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE Usuario CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE Hijo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 INSERT INTO Usuario
-    (id,nombre,apellido,celular, email, password, rol, activo,fotoPerfil)
-VALUES(null, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', 'test', 'ADMIN', true,'imagenes/img_Perfiles/testFoto.png');
+(id,dni,nombre,apellido,celular, email, password, rol, activo,fotoPerfil)
+VALUES(null,1234567890, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', 'test', 'ADMIN', true,'imagenes/img_Perfiles/testFoto.png');
+
+
+INSERT INTO Hijo (id,curso, fechaNac, fotoPerfil, nombre, idPadre)
+VALUES (null,'3°C','2020-06-18',null,'Santiago',1);
 
 -- Insert de Categorías
 INSERT INTO CategoriaProductos (id, nombreCategoria)
