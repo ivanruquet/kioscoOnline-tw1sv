@@ -2,6 +2,7 @@ package com.tallerwebi.dominio.HijoTest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.Hijos.Hijo;
@@ -9,6 +10,7 @@ import com.tallerwebi.dominio.Hijos.RepositorioHijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijoImpl;
 import com.tallerwebi.dominio.Usuario.Usuario;
+import com.tallerwebi.dominio.excepcion.HijoExistenteException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,5 +39,27 @@ public class ServicioHijoTest {
 
     List<Hijo> listaHijoObtenida = servicioHijo.obtenerHijosPorUsuario(usuarioMock.getId());
     assertThat(listaHijoObtenida, hasSize(1));
+  }
+
+  @Test
+  public void guardarHijoSiNoExisteDeberiaGuardarlo() {
+    when(hijoMock.getDni()).thenReturn(12345678L);
+    when(repositorioHijoMock.existeHijoPorDni(12345678L)).thenReturn(false);
+
+    servicioHijo.guardarHijo(hijoMock, usuarioMock);
+
+    verify(repositorioHijoMock, times(1)).guardar(hijoMock);
+  }
+
+  @Test
+  public void guardarHijoSiYaExisteDeberiaLanzarExcepcion() {
+    when(hijoMock.getDni()).thenReturn(12345678L);
+    when(repositorioHijoMock.existeHijoPorDni(12345678L)).thenReturn(true);
+
+    assertThrows(
+      HijoExistenteException.class,
+      () -> servicioHijo.guardarHijo(hijoMock, usuarioMock)
+    );
+    verify(repositorioHijoMock, times(0)).guardar(hijoMock);
   }
 }

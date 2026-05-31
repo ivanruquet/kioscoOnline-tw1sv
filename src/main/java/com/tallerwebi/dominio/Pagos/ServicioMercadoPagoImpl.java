@@ -19,7 +19,8 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
   private static final Logger logger = LoggerFactory.getLogger(ServicioMercadoPagoImpl.class);
 
   // Dejamos tu token real para que siga funcionando la pasarela
-  private static final String TOKEN_MP = "TOKEN AQUI";
+  private static final String TOKEN_MP =
+    "APP_USR-4635339104323317-052622-65723bd2783dedac7f79f3df036e1846-3430140886";
 
   @Override
   public String crearPreferenciaDePago(Carrito carrito) {

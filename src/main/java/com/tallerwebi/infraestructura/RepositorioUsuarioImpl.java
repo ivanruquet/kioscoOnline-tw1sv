@@ -19,23 +19,6 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
   }
 
   @Override
-  public Usuario buscarUsuarioLogin(String email, String password) {
-    //    /* Se utiliza sessionFactory.getCurrentSession() directamente para que el recurso sea gestionado por Spring y PMD no exija cerrarlo manualmente */
-    //    return (Usuario) sessionFactory
-    //      .getCurrentSession()
-    //      .createCriteria(Usuario.class)
-    //      .add(Restrictions.eq("email", email))
-    //      .add(Restrictions.eq("password", password))
-    //      .uniqueResult(); DE LOS PROFES
-    String hql = "FROM Usuario WHERE email=:email AND password=:password";
-    Query query = sessionFactory.getCurrentSession().createQuery(hql);
-    query.setParameter("email", email);
-    query.setParameter("password", password);
-    List<Usuario> usuariosResultado = query.getResultList();
-    return usuariosResultado.isEmpty() ? null : usuariosResultado.get(0);
-  }
-
-  @Override
   public void guardar(Usuario usuario) {
     sessionFactory.getCurrentSession().save(usuario);
   }

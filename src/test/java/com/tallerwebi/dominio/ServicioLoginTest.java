@@ -2,7 +2,9 @@ package com.tallerwebi.dominio;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.Usuario.RepositorioUsuario;
@@ -12,6 +14,7 @@ import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.ModelAndView;
 
 public class ServicioLoginTest {
@@ -22,7 +25,8 @@ public class ServicioLoginTest {
   @BeforeEach
   public void init() {
     this.repositorioUsuarioMock = mock(RepositorioUsuario.class);
-    this.servicioLogin = new ServicioLoginImpl(this.repositorioUsuarioMock);
+    this.servicioLogin =
+      new ServicioLoginImpl(this.repositorioUsuarioMock, new BCryptPasswordEncoder());
   }
 
   @Test
@@ -31,15 +35,16 @@ public class ServicioLoginTest {
     String email = "test@test.com";
     String password = "password";
     Usuario usuarioEsperado = new Usuario();
-    when(this.repositorioUsuarioMock.buscarUsuarioLogin(email, password))
-      .thenReturn(usuarioEsperado);
+    usuarioEsperado.setPassword(new BCryptPasswordEncoder().encode(password)); // ← hash
+
+    when(this.repositorioUsuarioMock.buscarUsuarioPorEmail(email)).thenReturn(usuarioEsperado);
 
     // ejecucion
     Usuario usuarioObtenido = this.servicioLogin.consultarUsuarioLogin(email, password);
 
     // validacion
     assertThat(usuarioObtenido, equalTo(usuarioEsperado));
-    verify(this.repositorioUsuarioMock, times(1)).buscarUsuarioLogin(email, password);
+    verify(this.repositorioUsuarioMock, times(1)).buscarUsuarioPorEmail(email);
   }
 
   @Test
@@ -57,6 +62,9 @@ public class ServicioLoginTest {
 
     // validacion
     verify(this.repositorioUsuarioMock, times(1)).guardar(usuario);
+    // verificamos que el password fue hasheado
+    assertThat(usuario.getPassword(), not(equalTo("password")));
+    assertTrue(new BCryptPasswordEncoder().matches("password", usuario.getPassword()));
   }
 
   @Test
@@ -100,6 +108,7 @@ public class ServicioLoginTest {
     servicioLogin.cambiarContrasenia(email, nuevaClave);
 
     verify(repositorioUsuarioMock, times(1)).modificar(usuEncontrado);
-    assertThat(usuEncontrado.getPassword(), equalTo(nuevaClave));
+    // ya no comparamos texto plano, verificamos que el hash corresponde
+    assertTrue(new BCryptPasswordEncoder().matches(nuevaClave, usuEncontrado.getPassword()));
   }
 }

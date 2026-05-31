@@ -3,6 +3,7 @@ package com.tallerwebi.infraestructura;
 import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.RepositorioHijo;
 import java.util.List;
+import javax.persistence.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,5 +30,26 @@ public class RepositorioHijoImpl implements RepositorioHijo {
   @Override
   public Hijo buscarPorId(Long id) {
     return sessionFactory.getCurrentSession().get(Hijo.class, id);
+  }
+
+  @Override
+  public void guardar(Hijo hijo) {
+    sessionFactory.getCurrentSession().save(hijo);
+  }
+
+  @Override
+  public Boolean existeHijoPorDni(long dni) {
+    String hql = "FROM Hijo h WHERE h.dni=:dni";
+    Query query = sessionFactory.getCurrentSession().createQuery(hql);
+    query.setParameter("dni", dni);
+
+    //         el return seria esto: al tener el ! se lee lo contrario
+    //         List resultados = query.getResultList();
+    //        if (resultados.isEmpty()) {
+    //            return false; // no existe
+    //        } else {
+    //            return true;  // existe
+    //        }
+    return !query.getResultList().isEmpty();
   }
 }

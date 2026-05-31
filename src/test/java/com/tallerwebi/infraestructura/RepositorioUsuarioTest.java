@@ -53,22 +53,25 @@ public class RepositorioUsuarioTest {
   @Test
   @Transactional
   @Rollback
-  public void deberiaEncontrarUnUsuarioExistenteCuandoBuscoPorEmailYPassword() {
+  public void deberiaEncontrarUnUsuarioExistenteCuandoBuscoPorEmail() {
     String email = "test@test.com";
-    String password = "123";
-    Usuario usuario = this.dadoQueTengoUnUsuario(email, password, "USER");
+    Usuario usuario = this.dadoQueTengoUnUsuario(email, "123", "USER");
     this.dadoQueExisteElUsuario(usuario);
 
-    Usuario obtenido = this.cuandoBuscoUnUsuario(email, password);
+    Usuario obtenido = repositorioUsuario.buscarUsuarioPorEmail(email);
 
-    this.entoncesElUsuarioObtenidoEsCorrecto(obtenido, usuario);
+    assertThat(obtenido.getEmail(), is(equalTo(email)));
   }
 
   @Test
   @Transactional
-  public void noDeberiaEncontrarUnUsuarioInexistenteCuandoBuscoPorEmailYPassword() {
-    Usuario obtenido = this.cuandoBuscoUnUsuario("test@test.com", "123");
+  public void noDeberiaEncontrarUnUsuarioInexistenteCuandoBuscoPorEmail() {
+    Usuario obtenido = repositorioUsuario.buscarUsuarioPorEmail("noexiste@test.com");
     this.entoncesElUsuarioObtenidoEsNull(obtenido);
+  }
+
+  private Boolean cuandoVerificoSiExisteUsuarioPorMail(String email) {
+    return repositorioUsuario.existeUsuarioPorMail(email);
   }
 
   @Test
@@ -139,32 +142,6 @@ public class RepositorioUsuarioTest {
     this.entoncesSeLanzaUnaTransientObjectException(usuario);
   }
 
-  @Test
-  @Transactional
-  @Rollback
-  public void deberiaBuscarUsuarioPorEmail() {
-    String email = "test@test.com";
-
-    Usuario usuario = this.dadoQueTengoUnUsuario(email, "123", "USER");
-    this.dadoQueExisteElUsuario(usuario);
-
-    Usuario obtenido = repositorioUsuario.buscarUsuarioPorEmail(email);
-
-    assertThat(obtenido.getEmail(), is(equalTo(email)));
-  }
-
-  @Test
-  @Transactional
-  public void deberiaRetornarNullCuandoBuscoUsuarioPorEmailInexistente() {
-    Usuario obtenido = repositorioUsuario.buscarUsuarioPorEmail("noexiste@test.com");
-
-    assertThat(obtenido, is(nullValue()));
-  }
-
-  private Boolean cuandoVerificoSiExisteUsuarioPorMail(String email) {
-    return repositorioUsuario.existeUsuarioPorMail(email);
-  }
-
   private Boolean cuandoVerificoSiExisteUsuarioPorDNI(Long dni) {
     return repositorioUsuario.existeUsuarioPorDni(dni);
   }
@@ -191,10 +168,6 @@ public class RepositorioUsuarioTest {
 
   private void cuandoGuardoUnUsuario(Usuario usuario) {
     repositorioUsuario.guardar(usuario);
-  }
-
-  private Usuario cuandoBuscoUnUsuario(String email, String password) {
-    return repositorioUsuario.buscarUsuarioLogin(email, password);
   }
 
   private void cuandoModificoUnUsuario(Usuario usuario) {
