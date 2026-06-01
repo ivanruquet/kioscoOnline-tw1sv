@@ -39,8 +39,8 @@ public class RepositorioHijosTest {
   public void deberiaListarLosHijosDeUnUsuario() {
     Usuario padre = dadoQueExisteUnPadre();
 
-    dadoQueExisteUnHijo("Santi", "5to A", padre);
-    dadoQueExisteUnHijo("Mora", "6to A", padre);
+    dadoQueExisteUnHijo("Santi", 12345L, padre);
+    dadoQueExisteUnHijo("Mora", 123545L, padre);
 
     List<Hijo> hijos = repositorioHijo.listarHijos(padre.getId());
 
@@ -53,7 +53,7 @@ public class RepositorioHijosTest {
   public void deberiaBuscarHijoPorId() {
     Usuario padre = dadoQueExisteUnPadre();
 
-    Hijo hijo = dadoQueExisteUnHijo("Santiago", "5to A", padre);
+    Hijo hijo = dadoQueExisteUnHijo("Santiago", 12345L, padre);
 
     Hijo obtenido = repositorioHijo.buscarPorId(hijo.getId());
 
@@ -69,11 +69,34 @@ public class RepositorioHijosTest {
     assertThat(hijo, nullValue());
   }
 
-  private Hijo dadoQueExisteUnHijo(String nombre, String curso, Usuario padre) {
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaRetornarTrueSiExisteHijoConEseDni() {
+    Usuario padre = dadoQueExisteUnPadre();
+
+    Hijo hijo = dadoQueExisteUnHijo("Santiago", 12345L, padre);
+
+    Boolean existe = repositorioHijo.existeHijoPorDni(12345L);
+
+    assertThat(existe, is(true));
+  }
+
+  @Test
+  @Transactional
+  public void deberiaRetornarFalseSiNoExisteHijoConEseDni() {
+    Boolean existe = repositorioHijo.existeHijoPorDni(99999L);
+
+    assertThat(existe, is(false));
+  }
+
+  private Hijo dadoQueExisteUnHijo(String nombre, Long dni, Usuario padre) {
     Hijo hijo = new Hijo();
     hijo.setNombre(nombre);
-    hijo.setCurso(curso);
+    hijo.setDni(dni);
     hijo.setPadre(padre);
+    hijo.setApellido(padre.getApellido());
+    hijo.setCurso("3°A");
 
     sessionFactory.getCurrentSession().save(hijo);
 

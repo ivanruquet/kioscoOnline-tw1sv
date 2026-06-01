@@ -9,11 +9,11 @@ ALTER TABLE Hijo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 INSERT INTO Usuario
 (id,dni,nombre,apellido,celular, email, password, rol, activo,fotoPerfil)
-VALUES(null,1234567890, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', 'test', 'ADMIN', true,'imagenes/img_Perfiles/testFoto.png');
+VALUES(null,1234567890, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', '$2b$10$rJB22an3TIUZ34l7doj44.FIAeTPMUcqZofxul6GLaQvHn8F0gxi6', 'ADMIN', true,'imagenes/img_Perfiles/testFoto.png');
 
 
-INSERT INTO Hijo (id,curso, fechaNac, fotoPerfil, nombre, idPadre)
-VALUES (null,'3°C','2020-06-18',null,'Santiago',1);
+INSERT INTO Hijo (id,curso, fechaNac, fotoPerfil, nombre, idPadre,dni,apellido)
+VALUES (null,'3°C','2020-06-18',null,'Santiago',1,12345,'Sujeto');
 
 -- Insert de Categorías
 INSERT INTO CategoriaProductos (id, nombreCategoria)

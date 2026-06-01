@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +19,8 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
 
   private static final Logger logger = LoggerFactory.getLogger(ServicioMercadoPagoImpl.class);
 
-  // Dejamos tu token real para que siga funcionando la pasarela
-  private static final String TOKEN_MP = "TOKEN AQUI";
+  @Value("${mp.access.token}")
+  private String accessToken;
 
   @Override
   public String crearPreferenciaDePago(Carrito carrito) {
@@ -28,7 +29,7 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
     }
 
     try {
-      MercadoPagoConfig.setAccessToken(TOKEN_MP);
+      MercadoPagoConfig.setAccessToken(accessToken);
 
       List<PreferenceItemRequest> itemsMercadoPago = new ArrayList<>();
 

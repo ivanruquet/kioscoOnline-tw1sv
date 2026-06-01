@@ -66,7 +66,6 @@ public class ControladorMercadoPago {
         model.put("itemsComprados", carrito.getItems());
       }
     }
-
     return new ModelAndView("pago-exitoso", model);
   }
 }

@@ -15,7 +15,10 @@ public class Hijo {
   private String nombre;
 
   @Column(nullable = false)
-  private String curso; //CREO QUE LO MEJOR SERIA TENER UNA TABLA CURSO CON LOS CURSOS YA PRECARGADOS
+  private String curso; //CREO QUE LO MEJOR SERÍA TENER UNA TABLA CURSO CON LOS CURSOS YA PRECARGADOS
+
+  @Column(nullable = false, unique = true)
+  private Long dni;
 
   @Column
   private String fotoPerfil;
@@ -27,6 +30,12 @@ public class Hijo {
   @ManyToOne
   @JoinColumn(name = "idPadre")
   private Usuario padre;
+
+  @Column(nullable = false)
+  private String apellido;
+
+  @Column
+  private String codigoRetiro;
 
   public String getNombre() {
     return nombre;
@@ -74,5 +83,29 @@ public class Hijo {
 
   public void setPadre(Usuario padre) {
     this.padre = padre;
+  }
+
+  public String getApellido() {
+    return apellido;
+  }
+
+  public void setApellido(String apellido) {
+    this.apellido = apellido;
+  }
+
+  public String getCodigoRetiro() {
+    return codigoRetiro;
+  }
+
+  public void setCodigoRetiro(String codigoRetiro) {
+    this.codigoRetiro = codigoRetiro;
+  }
+
+  public Long getDni() {
+    return dni;
+  }
+
+  public void setDni(Long dni) {
+    this.dni = dni;
   }
 }

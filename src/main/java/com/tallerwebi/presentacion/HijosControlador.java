@@ -3,10 +3,12 @@ package com.tallerwebi.presentacion;
 import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
 import com.tallerwebi.dominio.Usuario.Usuario;
+import com.tallerwebi.dominio.excepcion.HijoExistenteException;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,6 +34,7 @@ public class HijosControlador {
     ModelMap model = new ModelMap();
     ModelAndView mv = new ModelAndView();
     model.put(USUARIO_MODEL, usuario);
+    model.put("hijo", new Hijo()); // ← para el formulario oculto, agrego un hijo vacio
 
     List<Hijo> hijos = this.servicioHijo.obtenerHijosPorUsuario(usuario.getId());
     if (hijos == null || hijos.isEmpty()) {
@@ -42,5 +45,23 @@ public class HijosControlador {
     mv.setViewName(VISTA_HIJOS);
     mv.addAllObjects(model);
     return mv;
+  }
+
+  @RequestMapping(path = "/guardarHijo", method = RequestMethod.POST)
+  public ModelAndView guardarHijos(@ModelAttribute("hijo") Hijo hijo, HttpSession session) {
+    Usuario usuario = (Usuario) session.getAttribute(USUARIO_SESSION);
+
+    if (usuario == null) {
+      return new ModelAndView("redirect:/login");
+    }
+    try {
+      servicioHijo.guardarHijo(hijo, usuario);
+    } catch (HijoExistenteException e) {
+      ModelMap model = new ModelMap();
+      model.put("error", "El hijo ya se encuentra registrado");
+      return new ModelAndView("vistaHijos", model);
+    }
+
+    return new ModelAndView("redirect:/vistaHijos");
   }
 }
