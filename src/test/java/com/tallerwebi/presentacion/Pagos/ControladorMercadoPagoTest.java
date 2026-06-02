@@ -14,8 +14,8 @@ import com.tallerwebi.dominio.Usuario.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
 public class ControladorMercadoPagoTest {
@@ -26,7 +26,7 @@ public class ControladorMercadoPagoTest {
   private HttpSession sessionMock;
   private Usuario usuarioMock;
 
-  @Before
+  @BeforeEach
   public void init() {
     this.servicioMercadoPago = mock(ServicioMercadoPago.class);
     this.servicioCarrito = mock(ServicioCarrito.class); // <-- Inicializamos el mock del carrito
@@ -96,5 +96,76 @@ public class ControladorMercadoPagoTest {
 
     // Redirige al login (Cubre el primer IF del controlador)
     assertThat(modelAndView.getViewName(), equalTo("redirect:/login"));
+  }
+
+  @Test
+  public void siMercadoPagoFallaDebeRedirigirAlCarritoConMensajeDeError() {
+    // 1. Given
+    Carrito carrito = new Carrito();
+    List<ItemCarrito> items = new ArrayList<>();
+    Producto producto = new Producto();
+    items.add(new ItemCarrito(producto, 1));
+    carrito.setItems(items);
+
+    when(servicioCarrito.obtenerOCrearCarrito(1L)).thenReturn(carrito);
+
+    // 2. Given
+    when(servicioMercadoPago.crearPreferenciaDePago(carrito)).thenReturn(null);
+
+    // 3. When
+    ModelAndView mav = controladorMercadoPago.pagar(sessionMock);
+
+    // 4. Then
+    assertThat(mav.getViewName(), equalTo("redirect:/carrito"));
+    assertThat(
+      mav.getModel().get("error").toString(),
+      equalTo("No se pudo conectar con Mercado Pago. Intente más tarde.")
+    );
+  }
+
+  @Test
+  public void siElUsuarioNoEstaLogueadoDebeRedirigirAlLoginCuandoEntraAlPagoExitoso() {
+    // La sesión no tiene al usuario cargado
+    when(this.sessionMock.getAttribute("USUARIO")).thenReturn(null);
+
+    // Intenta ingresar a pagar-exitoso sin estar logeado
+    ModelAndView modelAndView = this.controladorMercadoPago.mostrarPagoExitoso(this.sessionMock);
+    // Redirige al login ()
+    assertThat(modelAndView.getViewName(), equalTo("redirect:/login"));
+  }
+
+  @Test
+  public void ElUsuarioEstaLogueadoCuandoEntraAlPagoExitosoSinItemsEnElCarrito() {
+    // La sesión ya tiene al usuario cargado
+    Carrito carritoVacio = new Carrito();
+    carritoVacio.setItems(new ArrayList<>());
+    //tiene carrito vacio
+    when(this.servicioCarrito.obtenerOCrearCarrito(1L)).thenReturn(carritoVacio);
+    // Intenta ingresar a pagar-exitoso estando logeado pero sin carrito con items
+    ModelAndView mav = this.controladorMercadoPago.mostrarPagoExitoso(this.sessionMock);
+    // Redirige al carrito con error ()
+    assertThat(mav.getViewName(), equalTo("redirect:/carrito"));
+    assertThat(
+      mav.getModel().get("error").toString(),
+      equalTo("Debés agregar items y realizar una compra primero.")
+    );
+  }
+
+  @Test
+  public void ElUsuarioEstaLogueadoCuandoEntraAlPagoExitosoConItemsEnElCarritoDebeDevolverEstosEnElModel() {
+    Carrito carritoConProducto = new Carrito();
+    List<ItemCarrito> items = new ArrayList<>();
+    Producto producto = new Producto();
+    items.add(new ItemCarrito(producto, 1));
+    carritoConProducto.setItems(items);
+
+    when(this.servicioCarrito.obtenerOCrearCarrito(1L)).thenReturn(carritoConProducto);
+
+    // 2. When
+    ModelAndView modelAndView = this.controladorMercadoPago.mostrarPagoExitoso(this.sessionMock);
+
+    // 3. Then
+    assertThat(modelAndView.getViewName(), equalTo("pago-exitoso"));
+    assertThat(modelAndView.getModel().get("itemsComprados"), equalTo(items));
   }
 }

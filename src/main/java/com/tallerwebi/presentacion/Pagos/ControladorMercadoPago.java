@@ -58,14 +58,20 @@ public class ControladorMercadoPago {
   public ModelAndView mostrarPagoExitoso(HttpSession session) {
     Usuario usuario = (Usuario) session.getAttribute("USUARIO");
 
-    ModelMap model = new ModelMap();
-
-    if (usuario != null) {
-      Carrito carrito = servicioCarrito.obtenerOCrearCarrito(usuario.getId());
-      if (carrito != null) {
-        model.put("itemsComprados", carrito.getItems());
-      }
+    if (usuario == null) {
+      return new ModelAndView("redirect:/login");
     }
+
+    Carrito carrito = servicioCarrito.obtenerOCrearCarrito(usuario.getId());
+
+    if (carrito == null || carrito.getItems().isEmpty()) {
+      ModelMap model = new ModelMap();
+      model.put("error", "Debés agregar items y realizar una compra primero.");
+      return new ModelAndView("redirect:/carrito", model);
+    }
+
+    ModelMap model = new ModelMap();
+    model.put("itemsComprados", carrito.getItems());
     return new ModelAndView("pago-exitoso", model);
   }
 }

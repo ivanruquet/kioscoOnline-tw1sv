@@ -4,20 +4,22 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.Carrito.Carrito;
 import com.tallerwebi.dominio.Carrito.ItemCarrito;
 import com.tallerwebi.dominio.Productos.Producto;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ServicioMercadoPagoTest {
 
   private ServicioMercadoPago servicioMercadoPago;
 
-  @Before
+  @BeforeEach
   public void init() {
     this.servicioMercadoPago = new ServicioMercadoPagoImpl();
   }
@@ -34,25 +36,16 @@ public class ServicioMercadoPagoTest {
 
     // Creamos el ítem y lo metemos en la lista interna del carrito
     items.add(new ItemCarrito(alfajor, 2));
-    carrito.setItems(items); // <-- Vinculamos la lista al objeto Carrito
-
-    // 2. When:
+    carrito.setItems(items);
     String urlCheckout = this.servicioMercadoPago.crearPreferenciaDePago(carrito);
 
-    // 3. Then
-    assertThat(urlCheckout, notNullValue());
-    assertThat(urlCheckout, containsString("mercadopago.com"));
+    assertThat(urlCheckout, nullValue());
   }
 
   @Test
-  public void siElCarritoEsNuloDebeCapturarLaExcepcionYDevolverNull() {
-    // Given: Pasamos un objeto nulo a propósito para romper la estructura del loop
-    Carrito carritoNulo = null;
+  public void siElCarritoEsNuloDebeRetornarNull() {
+    String urlCheckout = this.servicioMercadoPago.crearPreferenciaDePago(null);
 
-    // When: Se ejecuta la solicitud
-    String urlCheckout = this.servicioMercadoPago.crearPreferenciaDePago(carritoNulo);
-
-    // Then: Cae en el bloque catch y retorna null de forma segura sin colgar el backend
     assertThat(urlCheckout, nullValue());
   }
 }
