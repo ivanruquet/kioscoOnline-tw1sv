@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio.Carrito;
 
+import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Productos.Producto;
 import javax.persistence.*;
 
@@ -12,6 +13,10 @@ public class ItemCarrito {
 
   @ManyToOne
   private Producto producto;
+
+
+    @ManyToOne
+    private Hijo hijo;
 
   private Integer cantidad;
 
@@ -37,4 +42,20 @@ public class ItemCarrito {
   public Integer getCantidad() {
     return cantidad;
   }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Hijo getHijo() {
+        return hijo;
+    }
+
+    public void setHijo(Hijo hijo) {
+        this.hijo = hijo;
+    }
 }

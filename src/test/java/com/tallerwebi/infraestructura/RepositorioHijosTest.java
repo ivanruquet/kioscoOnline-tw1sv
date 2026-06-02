@@ -3,6 +3,7 @@ package com.tallerwebi.infraestructura;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import com.tallerwebi.dominio.Hijos.Curso;
 import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.RepositorioHijo;
 import com.tallerwebi.dominio.Usuario.DatosPersonales;
@@ -96,7 +97,7 @@ public class RepositorioHijosTest {
     hijo.setDni(dni);
     hijo.setPadre(padre);
     hijo.setApellido(padre.getApellido());
-    hijo.setCurso("3°A");
+    hijo.setCurso(Curso.CUARTO_D);
 
     sessionFactory.getCurrentSession().save(hijo);
 

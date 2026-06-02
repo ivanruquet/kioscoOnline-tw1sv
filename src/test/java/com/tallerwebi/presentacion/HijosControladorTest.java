@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.Hijos.Curso;
 import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
 import com.tallerwebi.dominio.Usuario.Usuario;
@@ -98,7 +99,7 @@ public class HijosControladorTest {
   public void guardarHijoDeberiaLlamarAlServicioYRecargarVistaHijos() {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
     Hijo hijoMock = mock(Hijo.class);
-    ModelAndView modelAndView = hijosControlador.guardarHijos(hijoMock, sessionMock);
+    ModelAndView modelAndView = hijosControlador.guardarHijos(hijoMock, "4", "D", sessionMock);
 
     verify(servicioHijoMock, times(1)).guardarHijo(hijoMock, usuarioMock);
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/vistaHijos"));
@@ -109,7 +110,7 @@ public class HijosControladorTest {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(null);
     Hijo hijoMock = mock(Hijo.class);
 
-    ModelAndView mv = hijosControlador.guardarHijos(hijoMock, sessionMock);
+    ModelAndView mv = hijosControlador.guardarHijos(hijoMock, "4", "D", sessionMock);
 
     assertThat(mv.getViewName(), equalToIgnoringCase("redirect:/login"));
   }
@@ -121,12 +122,34 @@ public class HijosControladorTest {
 
     doThrow(HijoExistenteException.class).when(servicioHijoMock).guardarHijo(hijoMock, usuarioMock);
 
-    ModelAndView modelAndView = hijosControlador.guardarHijos(hijoMock, sessionMock);
+    ModelAndView modelAndView = hijosControlador.guardarHijos(hijoMock, "4", "D", sessionMock);
 
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("vistaHijos"));
     assertThat(
       modelAndView.getModel().get("error").toString(),
       equalToIgnoringCase("El hijo ya se encuentra registrado")
     );
+  }
+
+  @Test
+  public void guardarHijoDeberiaGuardarElCursoCorrectamente() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    Hijo hijoMock = mock(Hijo.class);
+    when(hijoMock.getCurso()).thenReturn(Curso.CUARTO_D);
+
+    ModelAndView mv = hijosControlador.guardarHijos(hijoMock, "4", "D", sessionMock);
+
+    verify(servicioHijoMock, times(1)).guardarHijo(hijoMock, usuarioMock);
+    assertThat(mv.getViewName(), equalToIgnoringCase("redirect:/vistaHijos"));
+  }
+
+  @Test
+  public void guardarHijoDeberiaSetearElCursoAntesDeGuardarlo() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    Hijo hijoMock = mock(Hijo.class);
+
+    hijosControlador.guardarHijos(hijoMock, "3", "B", sessionMock);
+
+    verify(hijoMock, times(1)).setCurso(Curso.TERCERO_B);
   }
 }

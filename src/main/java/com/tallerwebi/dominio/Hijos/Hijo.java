@@ -14,9 +14,6 @@ public class Hijo {
   @Column(nullable = false)
   private String nombre;
 
-  @Column(nullable = false)
-  private String curso; //CREO QUE LO MEJOR SERÍA TENER UNA TABLA CURSO CON LOS CURSOS YA PRECARGADOS
-
   @Column(nullable = false, unique = true)
   private Long dni;
 
@@ -36,6 +33,10 @@ public class Hijo {
 
   @Column
   private String codigoRetiro;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Curso curso;
 
   public String getNombre() {
     return nombre;
@@ -69,11 +70,11 @@ public class Hijo {
     this.fechaNac = fechaNac;
   }
 
-  public String getCurso() {
+  public Curso getCurso() {
     return curso;
   }
 
-  public void setCurso(String curso) {
+  public void setCurso(Curso curso) {
     this.curso = curso;
   }
 

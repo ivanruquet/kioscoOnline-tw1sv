@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class ServicioCarritoImpl implements ServicioCarrito {
 
-  private RepositorioProducto repositorioProducto;
-  private RepositorioCarrito repositorioCarrito;
-  private RepositorioUsuario repositorioUsuario;
+  private final RepositorioProducto repositorioProducto;
+  private final RepositorioCarrito repositorioCarrito;
+  private final RepositorioUsuario repositorioUsuario;
 
   public ServicioCarritoImpl(
     RepositorioProducto repositorioProducto,
