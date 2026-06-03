@@ -1,0 +1,190 @@
+@import url('variablesColor.css');
+
+.modal-card .campo-edicion input,
+.modal-card .campo-edicion select {
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    width: 100%;
+    box-sizing: border-box;
+}
+.mensaje-error {
+    color: #E24B4A;
+    font-size: .85rem;
+    margin-bottom: 1rem;
+}
+
+.agregar-hijo-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f9fafb;
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-agregar {
+    white-space: nowrap;
+    background: var(--white);
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    border-radius: 10px;
+    padding: .5rem 1.1rem;
+    font-size: .875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+}
+
+.btn-agregar:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.visible {
+    display: flex;
+}
+
+.modal-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 520px;
+    border: 1px solid var(--border);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.btn-cerrar-modal {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    padding: .25rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-cerrar-modal:hover {
+    background: #f3f4f6;
+    color: var(--text);
+}
+
+/* ── FORM ── */
+.form-hijo {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+}
+
+.campo-edicion {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.dato-label {
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.campo-edicion input,
+.campo-edicion select {
+    width: 100%;
+    padding: .55rem .75rem;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: .875rem;
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    transition: border-color .2s;
+}
+
+.campo-edicion input:focus,
+.campo-edicion select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.campo-edicion input[type=file] {
+    padding: .4rem .5rem;
+}
+
+.acciones-edicion {
+    display: flex;
+    justify-content: flex-end;
+    gap: .75rem;
+    margin-top: .5rem;
+}
+
+.btn-cancelar {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: .5rem 1.1rem;
+    font-size: .875rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    transition: background .2s;
+}
+
+.btn-cancelar:hover {
+    background: #f3f4f6;
+    color: var(--text);
+}
+
+.btn-guardar {
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    padding: .5rem 1.25rem;
+    font-size: .875rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.btn-guardar:hover {
+    background: var(--primary-hover);
+}

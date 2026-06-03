@@ -1,5 +1,6 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.Hijos.Curso;
 import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
 import com.tallerwebi.dominio.Usuario.Usuario;
@@ -11,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -48,13 +50,21 @@ public class HijosControlador {
   }
 
   @RequestMapping(path = "/guardarHijo", method = RequestMethod.POST)
-  public ModelAndView guardarHijos(@ModelAttribute("hijo") Hijo hijo, HttpSession session) {
+  public ModelAndView guardarHijos(
+    @ModelAttribute("hijo") Hijo hijo,
+    @RequestParam String anio,
+    @RequestParam String division,
+    HttpSession session
+  ) {
     Usuario usuario = (Usuario) session.getAttribute(USUARIO_SESSION);
 
     if (usuario == null) {
       return new ModelAndView("redirect:/login");
     }
     try {
+      String cursoNombre = obtenerNombreCurso(anio) + "_" + division;
+      Curso curso = Curso.valueOf(cursoNombre);
+      hijo.setCurso(curso);
       servicioHijo.guardarHijo(hijo, usuario);
     } catch (HijoExistenteException e) {
       ModelMap model = new ModelMap();
@@ -63,5 +73,24 @@ public class HijosControlador {
     }
 
     return new ModelAndView("redirect:/vistaHijos");
+  }
+
+  private String obtenerNombreCurso(String anio) {
+    switch (anio) {
+      case "1":
+        return "PRIMERO";
+      case "2":
+        return "SEGUNDO";
+      case "3":
+        return "TERCERO";
+      case "4":
+        return "CUARTO";
+      case "5":
+        return "QUINTO";
+      case "6":
+        return "SEXTO";
+      default:
+        throw new IllegalArgumentException("Año inválido: " + anio);
+    }
   }
 }

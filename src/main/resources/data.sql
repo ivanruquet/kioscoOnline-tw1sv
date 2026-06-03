@@ -13,7 +13,10 @@ VALUES(null,1234567890, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', '$2b$10$
 
 
 INSERT INTO Hijo (id,curso, fechaNac, fotoPerfil, nombre, idPadre,dni,apellido)
-VALUES (null,'3°C','2020-06-18',null,'Santiago',1,12345,'Sujeto');
+VALUES (null,'TERCERO_C','2020-06-18',null,'Santiago',1,12345,'Sujeto');
+
+INSERT INTO Hijo (id,curso, fechaNac, fotoPerfil, nombre, idPadre,dni,apellido)
+VALUES (null,'CUARTO_C','2022-07-28',null,'Ariana',1,223345,'Sujeto');
 
 -- Insert de Categorías
 INSERT INTO CategoriaProductos (id, nombreCategoria)
