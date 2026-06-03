@@ -1,0 +1,240 @@
+@import url('variablesColor.css');
+
+.alerta-error {
+    background: #FCEBEB;
+    border: 1px solid #F09595;
+    border-radius: 10px;
+    padding: .75rem 1rem;
+    font-size: .85rem;
+    color: #A32D2D;
+    margin-bottom: 1rem;
+}
+
+.carrito-vacio {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 3rem;
+    text-align: center;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tabla-wrap {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.tabla-scroll {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead tr {
+    background: #F8F9FD;
+}
+
+th {
+    padding: .85rem 1rem;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+th.col-producto {
+    text-align: left;
+    min-width: 200px;
+}
+
+th.col-hijo {
+    min-width: 130px;
+}
+
+th.col-eliminar {
+    width: 48px;
+}
+
+td {
+    padding: .85rem 1rem;
+    font-size: .875rem;
+    color: var(--text);
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: #FAFAFA;
+}
+
+tbody tr.fila-error {
+    background: #FCEBEB;
+}
+
+td.producto-cell {
+    text-align: left;
+}
+
+.producto-info {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.producto-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #F8F9FD;
+    border: 1px solid var(--border);
+    padding: 4px;
+}
+
+.producto-nombre {
+    font-weight: 600;
+    font-size: .875rem;
+    color: var(--text);
+}
+
+.producto-precio {
+    font-size: .75rem;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+.hijo-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.hijo-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--purple-lt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--purple);
+}
+
+.qty-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    transition: all .15s;
+}
+
+.qty-btn:hover {
+    background: var(--purple-lt);
+    border-color: var(--purple);
+    color: var(--purple);
+}
+
+.qty-num {
+    font-size: .9rem;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+    color: var(--text);
+}
+
+.btn-trash {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 6px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+}
+
+.btn-trash:hover {
+    color: #E24B4A;
+    background: #FCEBEB;
+}
+
+.tabla-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border);
+    background: #F8F9FD;
+}
+
+.btn-agregar-productos {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: .6rem 1.1rem;
+    font-size: .875rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-agregar-productos:hover {
+    border-color: var(--purple);
+    color: var(--purple);
+}
+
+.btn-confirmar {
+    background: var(--purple);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    padding: .6rem 1.5rem;
+    font-size: .875rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background .15s;
+}
+
+.btn-confirmar:hover {
+    background: var(--purple-dark);
+}

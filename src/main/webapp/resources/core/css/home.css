@@ -97,32 +97,30 @@ body {
     gap: 0.75rem;
 }
 
-.cart-icon {
-    background-color: #FAFAFA; /* Cambiado a gris muy claro neutro acorde al buscador */
-    border: 1px solid var(--border);
-    padding: 0.5rem;
-    border-radius: 10px;
-    color: var(--purple);
+.btn-carrito {
     display: flex;
-}
-
-.cart-link {
-    font-size: 0.8rem;
-    color: var(--muted);
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--purple);
+    color: var(--white);
     text-decoration: none;
-    font-weight: 500;
-}
-
-.cart-link:hover {
-    text-decoration: underline;
-    color: var(--purple);
-}
-
-.cart-total {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 700;
-    margin: 0;
+    font-family: 'Inter', sans-serif;
+    border: none;
+    padding: .85rem 1.25rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .2s, transform .15s, box-shadow .2s;
 }
+
+.btn-carrito:hover {
+    background: var(--purple-dark);
+    box-shadow: 0 6px 20px rgba(91, 63, 228, .35);
+    transform: translateY(-1px);
+    color: var(--white);
+}
+
 
 /* ── DISTRIBUCIÓN DEL CONTENIDO PRINCIPAL (MAIN) ── */
 .main {
@@ -203,14 +201,13 @@ body {
     text-align: center;
     width: 100%;
     box-sizing: border-box;
-    background: var(--purple);
-    color: #fff;
+    background: var(--white);
+    color: red;
+    border-color: red;
     text-decoration: none;
     font-size: 1rem;
     font-weight: 700;
     font-family: 'Inter', sans-serif;
-
-    border: none;
     padding: .85rem;
     border-radius: 10px;
     cursor: pointer;
@@ -218,8 +215,9 @@ body {
     transition: background .2s, transform .15s, box-shadow .2s;}
 
 .btn-logout:hover:not(:disabled) {
-    background: var(--purple-dark);
-    box-shadow: 0 6px 20px rgba(91,63,228,.35);
+    background: red;
+    color: var(--white);
+    box-shadow: 0 6px 20px rgba(77, 5, 18, 0.35);
     transform: translateY(-1px);
 }
 .btn-logout:disabled { opacity: .6; cursor: not-allowed; }
@@ -391,4 +389,12 @@ body {
     height: 1px;
     background-color: var(--border);
     margin: 3rem 0;
+}
+.btn-add-product.agregado,
+.btn-add-product:disabled {
+    background-color: var(--purple-lt);
+    color: var(--purple);
+    border-color: var(--purple);
+    cursor: not-allowed;
+    opacity: 0.75;
 }

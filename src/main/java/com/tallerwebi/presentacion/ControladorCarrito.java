@@ -6,11 +6,13 @@ import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -27,20 +29,19 @@ public class ControladorCarrito {
   }
 
   @RequestMapping(path = "/carrito/agregar", method = RequestMethod.POST)
-  public String agregarProducto(
+  @ResponseBody
+  public ResponseEntity<String> agregarProducto(
     @RequestParam(PRODUCTO_ID) Long productoId,
-    HttpSession session,
-    ModelMap model
+    HttpSession session
   ) {
     Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
     try {
       servicioCarrito.agregarProducto(productoId, usuario.getId());
+      return ResponseEntity.ok("ok");
     } catch (ProductoNoEncontradoException e) {
-      model.put("error", e.getMessage());
+      return ResponseEntity.status(400).body(e.getMessage());
     }
-
-    return "redirect:/home";
   }
 
   @RequestMapping(path = "/carrito", method = RequestMethod.GET)
