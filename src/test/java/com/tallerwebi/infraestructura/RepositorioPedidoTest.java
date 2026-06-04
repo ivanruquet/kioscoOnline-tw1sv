@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.*;
 
 import com.tallerwebi.dominio.Hijos.Curso;
 import com.tallerwebi.dominio.Hijos.Hijo;
+import com.tallerwebi.dominio.Pedidos.EstadoPedido;
 import com.tallerwebi.dominio.Pedidos.ItemPedido;
 import com.tallerwebi.dominio.Pedidos.Pedido;
 import com.tallerwebi.dominio.Pedidos.RepositorioPedido;
@@ -86,7 +87,68 @@ public class RepositorioPedidoTest {
     assertThat(pedidos, hasSize(1));
     assertThat(pedidos.get(0).getHijo().getNombre(), equalTo("Santi"));
   }
+  @Test
+  @Transactional
+  @Rollback
+  public void dadoUnUsuarioConPedidosPreviosAlGenerarUnoNuevoElPendienteDebeSerCancelado(){
+      Usuario usuario = dadoQueExisteUnUsuario();
+      Hijo hijo = dadoQueExisteUnHijo(usuario);
+      Producto producto = dadoQueExisteUnProducto();
+      Pedido pedido = new Pedido();
+      pedido.setUsuario(usuario);
+      pedido.setHijo(hijo);
 
+      ItemPedido itemPedido = new ItemPedido(producto, 2);
+      itemPedido.setPedido(pedido);
+
+      pedido.agregarItem(itemPedido);
+      pedido.calcularSubtotal();
+      pedido.setEstado(EstadoPedido.PAGO_PENDIENTE); // ← esto falta
+
+      sessionFactory.getCurrentSession().save(pedido);
+
+      repositorioPedido.eliminarPedidosPendientes(usuario.getId());
+      // Limpiamos el caché de la sesión para forzar que vuelva a leer de la BD
+      sessionFactory.getCurrentSession().flush();
+      sessionFactory.getCurrentSession().clear();
+
+
+      List<Pedido> pedidosPendiente = repositorioPedido.obtenerPedidosPorUsuario(usuario.getId());
+      assertThat(pedidosPendiente, hasSize(0));
+
+      Pedido pedidoActualizado = sessionFactory.getCurrentSession().get(Pedido.class, pedido.getId());
+      assertThat(pedidoActualizado.getEstado(), equalTo(EstadoPedido.CANCELADO));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void dadoUnPedidoConPagoPendienteLuegoDeSerPagadoDebeCambiarSuEstadoAPagado(){
+      Usuario usuario = dadoQueExisteUnUsuario();
+      Hijo hijo = dadoQueExisteUnHijo(usuario);
+      Producto producto = dadoQueExisteUnProducto();
+      Pedido pedido = new Pedido();
+      pedido.setUsuario(usuario);
+      pedido.setHijo(hijo);
+
+      ItemPedido itemPedido = new ItemPedido(producto, 2);
+      itemPedido.setPedido(pedido);
+
+      pedido.agregarItem(itemPedido);
+      pedido.calcularSubtotal();
+      pedido.setEstado(EstadoPedido.PAGO_PENDIENTE);
+
+      sessionFactory.getCurrentSession().save(pedido);
+
+      repositorioPedido.marcarPedidoPagado(usuario.getId());
+      sessionFactory.getCurrentSession().flush();
+      sessionFactory.getCurrentSession().clear();
+
+      Pedido pedidoActualizado = sessionFactory.getCurrentSession().get(Pedido.class, pedido.getId());
+      assertThat(pedidoActualizado.getEstado(), equalTo(EstadoPedido.PAGADO));
+
+
+  }
   //METODOS AUXILIARES
   private Usuario dadoQueExisteUnUsuario() {
     DatosPersonales datos = new DatosPersonales();
