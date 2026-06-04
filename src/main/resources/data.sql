@@ -9,7 +9,7 @@ ALTER TABLE Hijo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 INSERT INTO Usuario
 (id,dni,nombre,apellido,celular, email, password, rol, activo,fotoPerfil)
-VALUES(null,1234567890, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', '$2b$10$rJB22an3TIUZ34l7doj44.FIAeTPMUcqZofxul6GLaQvHn8F0gxi6', 'ADMIN', true,'imagenes/img_Perfiles/testFoto.png');
+VALUES(null,1234567890, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', '$2b$10$rJB22an3TIUZ34l7doj44.FIAeTPMUcqZofxul6GLaQvHn8F0gxi6', 'ADMIN', true,'https://res.cloudinary.com/dqrka5zry/image/upload/v1780520000/istockphoto-1447126543-612x612_ek0kjw.jpg');
 
 
 INSERT INTO Hijo (id,curso, fechaNac, fotoPerfil, nombre, idPadre,dni,apellido)
@@ -37,23 +37,23 @@ VALUES (5, 'Varios');
 -- Insert de productos
 INSERT INTO Producto (id, nombre, descripcion, precio,categoria_id,imagen,cantidad)
 VALUES (null, 'Rollo Mogul', 'Gomitas de frutas surtidas', 600.00,1,
-        'imagenes/img_Productos/GOMITAS-MOGUL-ROLLO-FRUTALES-X35GR-1-145.webp',5);
+        'https://res.cloudinary.com/dqrka5zry/image/upload/v1780514334/GOMITAS-MOGUL-ROLLO-FRUTALES-X35GR-1-145_cpjdhr.jpg',5);
 
 INSERT INTO Producto (id, nombre, descripcion, precio,categoria_id,imagen,cantidad)
 VALUES (null, 'Alfajor Jorgito Negro', 'Alfajor de chocolate relleno con dulce de leche', 1200.00,1,
-        'imagenes/img_Productos/alf-jorgito-negro.jpg',5);
+        'https://res.cloudinary.com/dqrka5zry/image/upload/v1780514266/alf-jorgito-negro_bf2cig.jpg',5);
 
 INSERT INTO Producto (id, nombre, descripcion, precio,categoria_id,imagen,cantidad)
 VALUES (null, 'Chupetín Pico Dulce', 'Chupetín duro sabor frutal', 500.00,1,
-        'imagenes/img_Productos/pico-dulce.jpg',5);
+        'https://res.cloudinary.com/dqrka5zry/image/upload/v1780514267/pico-dulce_r18ww8.jpg',5);
 
 
 
 INSERT INTO Producto (id, nombre, descripcion, precio, categoria_id,imagen,cantidad)
 VALUES (null, 'Jugo Baggio 200ml Multifruta', 'Jugo de fruta listo para tomar de 200ml', 800.00, 2,
-        'imagenes/img_Productos/jugo-baggio-multi.jpg',5);
+        'https://res.cloudinary.com/dqrka5zry/image/upload/v1780514267/jugo-baggio-multi_zk6pjh.jpg',5);
 
 
 INSERT INTO Producto (id, nombre, descripcion, precio, categoria_id,imagen,cantidad)
 VALUES (null, 'Cuaderno Éxito N°1', 'Cuaderno tapa dura de 48 hojas rayadas', 8000.00, 3,
-        'imagenes/img_Productos/cuad-exito-n1.jpg',5);
+        'https://res.cloudinary.com/dqrka5zry/image/upload/v1780514267/cuad-exito-n1_sra7m3.jpg',5);
