@@ -15,15 +15,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class ServicioUsuarioTest {
 
+  private ServicioImagenes servicioImagenesMock;
   private ServicioUsuario servicioUsuario;
-  private ServicioImagenes repositorioImagenesMock;
   private RepositorioUsuario repositorioUsuarioMock;
 
   @BeforeEach
   public void init() {
     this.repositorioUsuarioMock = mock(RepositorioUsuario.class);
+    this.servicioImagenesMock = mock(ServicioImagenes.class);
     this.servicioUsuario =
-      new ServicioUsuarioImpl(this.repositorioUsuarioMock, repositorioImagenesMock);
+      new ServicioUsuarioImpl(this.repositorioUsuarioMock, servicioImagenesMock);
   }
 
   @Test
@@ -66,13 +67,14 @@ public class ServicioUsuarioTest {
 
     when(fotoMock.getOriginalFilename()).thenReturn("foto.jpg");
 
-    when(fotoMock.getInputStream()).thenReturn(new ByteArrayInputStream("imagen".getBytes()));
-
     when(repositorioUsuarioMock.buscarUsuarioPorId(id)).thenReturn(usuario);
+
+    when(servicioImagenesMock.subirImagen(fotoMock, "KionetTWI/img_perfiles"))
+      .thenReturn("https://res.cloudinary.com/test/foto.jpg");
 
     servicioUsuario.actualizarFoto(id, fotoMock);
 
     verify(repositorioUsuarioMock, times(1)).modificar(usuario);
-    assertThat(usuario.getFotoPerfil(), equalTo("/spring/imagenes/img_Perfiles/foto.jpg"));
+    assertThat(usuario.getFotoPerfil(), equalTo("https://res.cloudinary.com/test/foto.jpg"));
   }
 }

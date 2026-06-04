@@ -1,5 +1,8 @@
 package com.tallerwebi.integracion.config;
 
+import com.cloudinary.Cloudinary;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -79,5 +82,14 @@ public class SpringWebTestConfig implements WebMvcConfigurer {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public Cloudinary cloudinary() {
+    Map<String, String> config = new HashMap<>();
+    config.put("cloud_name", "test");
+    config.put("api_key", "test");
+    config.put("api_secret", "test");
+    return new Cloudinary(config);
   }
 }
