@@ -30,6 +30,10 @@ public class VistaWeb {
     this.obtenerElemento(selectorCSS).type(texto);
   }
 
+  protected void seleccionarOpcion(String selectorCSS, String valor) {
+    page.locator(selectorCSS).selectOption(valor);
+  }
+
   private Locator obtenerElemento(String selectorCSS) {
     return page.locator(selectorCSS);
   }
