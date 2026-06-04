@@ -32,4 +32,8 @@ public class VistaLogin extends VistaWeb {
   public void darClickEnRegistrarse() {
     this.darClickEnElElemento("#btn-register");
   }
+
+  public void darClickEnOlvidasteContrasenia() {
+    this.darClickEnElElemento("a.forgot");
+  }
 }

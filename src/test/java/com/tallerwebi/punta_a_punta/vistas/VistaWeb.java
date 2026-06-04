@@ -27,7 +27,9 @@ public class VistaWeb {
   }
 
   protected void escribirEnElElemento(String selectorCSS, String texto) {
-    this.obtenerElemento(selectorCSS).type(texto);
+    Locator locator = this.obtenerElemento(selectorCSS);
+    locator.fill(texto);
+    locator.press("End"); // simula una tecla real para disparar el keyup
   }
 
   protected void seleccionarOpcion(String selectorCSS, String valor) {

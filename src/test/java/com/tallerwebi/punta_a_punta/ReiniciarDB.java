@@ -42,8 +42,8 @@ public class ReiniciarDB {
         sqlCommands
       );
 
+      //Process process = Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c", comando });
       String os = System.getProperty("os.name").toLowerCase();
-
       Process process;
 
       if (os.contains("win")) {
@@ -51,8 +51,6 @@ public class ReiniciarDB {
       } else {
         process = Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c", comando });
       }
-
-      //      Process process = Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c", comando });
       int exitCode = process.waitFor();
 
       BufferedReader errorReader = new BufferedReader(
