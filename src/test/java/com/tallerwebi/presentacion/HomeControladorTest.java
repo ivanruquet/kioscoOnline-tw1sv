@@ -4,12 +4,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.Carrito.Carrito;
+import com.tallerwebi.dominio.Carrito.ItemCarrito;
+import com.tallerwebi.dominio.Carrito.ServicioCarrito;
 import com.tallerwebi.dominio.Productos.CategoriaProductos;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.ServicioProducto;
 import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,16 +30,21 @@ public class HomeControladorTest {
 
   private CategoriaProductos categoriaProductoMock;
   private ServicioProducto servicioProductoMock;
+  private ServicioCarrito servicioCarritoMock;
 
   @BeforeEach
   public void init() {
     servicioProductoMock = Mockito.mock(ServicioProducto.class);
-    homeControlador = new HomeControlador(servicioProductoMock);
+    servicioCarritoMock = Mockito.mock(ServicioCarrito.class); // ← primero esto
+    homeControlador = new HomeControlador(servicioProductoMock, servicioCarritoMock);
     usuarioMock = Mockito.mock(Usuario.class);
     productoMock = Mockito.mock(Producto.class);
     productoMock2 = Mockito.mock(Producto.class);
     sessionMock = Mockito.mock(HttpSession.class);
     categoriaProductoMock = Mockito.mock(CategoriaProductos.class);
+    Carrito carritoMock = Mockito.mock(Carrito.class);
+    when(carritoMock.getItems()).thenReturn(new ArrayList<>());
+    when(servicioCarritoMock.obtenerOCrearCarrito(any())).thenReturn(carritoMock);
   }
 
   @Test
@@ -88,7 +96,7 @@ public class HomeControladorTest {
     //preparacion
     when(productoMock.getNombre()).thenReturn("Mogul");
 
-    List<Producto> productos = Arrays.asList(productoMock);
+    List<Producto> productos = List.of(productoMock);
 
     when(servicioProductoMock.obtenerListadoProductos()).thenReturn(productos);
     //ejecucion
@@ -121,7 +129,7 @@ public class HomeControladorTest {
 
     when(categoriaProductoMock.getNombreCategoria()).thenReturn("algo");
 
-    List<CategoriaProductos> categoriasSimuladas = Arrays.asList(categoriaProductoMock);
+    List<CategoriaProductos> categoriasSimuladas = List.of(categoriaProductoMock);
 
     when(servicioProductoMock.obtenerListadoCategorias()).thenReturn(categoriasSimuladas);
 
@@ -145,7 +153,7 @@ public class HomeControladorTest {
 
     when(productoMock.getCategoria()).thenReturn(categoriaProductoMock);
 
-    List<Producto> productosFiltrados = Arrays.asList(productoMock);
+    List<Producto> productosFiltrados = List.of(productoMock);
 
     when(servicioProductoMock.obtenerListadoProductosFiltrado(categoria))
       .thenReturn(productosFiltrados);
@@ -183,7 +191,7 @@ public class HomeControladorTest {
     when(productoMock.getNombre()).thenReturn("Cuaderno Universitario");
     when(productoMock2.getNombre()).thenReturn("Cuaderno Exito");
 
-    List<Producto> productosBuscados = Arrays.asList(productoMock, productoMock2);
+    List<Producto> productosBuscados = List.of(productoMock, productoMock2);
     when(servicioProductoMock.buscarProductosPorNombre(texto)).thenReturn(productosBuscados);
 
     ModelAndView modelAndView = homeControlador.irAHome(sessionMock, null, texto);
@@ -217,5 +225,27 @@ public class HomeControladorTest {
 
     String mensajeError = (String) modelAndView.getModel().get("errorBusquedaProductos");
     assertThat(mensajeError, equalToIgnoringCase(mensajeException));
+  }
+
+  @Test
+  public void elHomeDebeCargarLosIdsDeProductosQueYaEstanEnElCarrito() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+
+    Producto productoEnCarritoMock = mock(Producto.class);
+    when(productoEnCarritoMock.getId()).thenReturn(1L);
+
+    ItemCarrito itemMock = mock(ItemCarrito.class);
+    when(itemMock.getProducto()).thenReturn(productoEnCarritoMock);
+
+    Carrito carritoMock = mock(Carrito.class);
+    when(carritoMock.getItems()).thenReturn(List.of(itemMock));
+    when(servicioCarritoMock.obtenerOCrearCarrito(any())).thenReturn(carritoMock);
+
+    ModelAndView mv = homeControlador.irAHome(sessionMock, null, null);
+
+    List<Long> idsEnCarrito = (List<Long>) mv.getModel().get("idsEnCarrito");
+
+    assertThat(idsEnCarrito.size(), org.hamcrest.Matchers.equalTo(1));
+    assertThat(idsEnCarrito.get(0), org.hamcrest.Matchers.equalTo(1L));
   }
 }

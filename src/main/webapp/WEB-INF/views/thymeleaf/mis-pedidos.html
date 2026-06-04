@@ -11,7 +11,6 @@
     <link rel="stylesheet" th:href="@{/css/home.css}" />
     <link rel="stylesheet" th:href="@{/css/perfil.css}" />
     <link rel="stylesheet" th:href="@{/css/mis-pedidos.css}" />
-
 </head>
 
 <body>
@@ -35,7 +34,7 @@
             </div>
 
             <!-- SIN PEDIDOS -->
-            <div th:if="${ultimoPedido == null or ultimoPedido.isEmpty()}" class="perfil-card">
+            <div th:if="${pedidos == null or pedidos.isEmpty()}" class="perfil-card">
                 <div class="empty-state">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -47,31 +46,39 @@
             </div>
 
             <!-- CON PEDIDOS -->
-            <div th:if="${ultimoPedido != null and !ultimoPedido.isEmpty()}">
+            <div th:if="${pedidos != null and !pedidos.isEmpty()}">
 
-                <div class="pedido-card">
+                <div class="pedido-card" th:each="pedido : ${pedidos}">
                     <div class="pedido-card-header">
                         <div>
-                            <h3>Último pedido</h3>
-                            <span>Kiosco UNLAM</span>
+                            <h3 th:text="'Pedido #' + ${pedido.id}">Pedido</h3>
+                            <span th:text="${pedido.hijo.nombre}">Hijo</span>
                         </div>
-                        <span class="pedido-estado">✓ Aprobado</span>
+                        <div>
+                            <!-- Badge de estado con color según valor -->
+                            <span class="estado-badge"
+                                  th:classappend="${pedido.estado.name()}"
+                                  th:text="${pedido.estado}">
+                            </span>
+                            <span class="pedido-fecha"
+                                  th:text="${#dates.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}">
+                            </span>
+                        </div>
                     </div>
 
                     <div class="pedido-items">
-                        <div class="pedido-item" th:each="item : ${ultimoPedido}">
+                        <div class="pedido-item" th:each="item : ${pedido.items}">
                             <div class="item-info">
                                 <span class="item-cantidad" th:text="'x' + ${item.cantidad}">x1</span>
                                 <span class="item-nombre" th:text="${item.producto.nombre}">Producto</span>
                             </div>
-                            <span class="item-precio" th:text="'$' + ${item.producto.precio * item.cantidad}">$0</span>
+                            <span class="item-precio" th:text="'$' + ${item.subtotal}">$0</span>
                         </div>
                     </div>
 
                     <div class="pedido-footer">
                         <span class="pedido-total-label">Total del pedido</span>
-                        <span class="pedido-total-valor"
-                              th:text="'$' + ${#aggregates.sum(ultimoPedido.![producto.precio * cantidad])}">$0</span>
+                        <span class="pedido-total-valor" th:text="'$' + ${pedido.subtotal}">$0</span>
                     </div>
                 </div>
 

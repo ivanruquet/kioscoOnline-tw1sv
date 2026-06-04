@@ -1,9 +1,11 @@
 package com.tallerwebi.presentacion.Pagos;
 
-import com.tallerwebi.dominio.Carrito.Carrito;
 import com.tallerwebi.dominio.Carrito.ServicioCarrito;
 import com.tallerwebi.dominio.Pagos.ServicioMercadoPago;
+import com.tallerwebi.dominio.Pedidos.Pedido;
+import com.tallerwebi.dominio.Pedidos.ServicioPedido;
 import com.tallerwebi.dominio.Usuario.Usuario;
+import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,14 +19,17 @@ public class ControladorMercadoPago {
 
   private final ServicioMercadoPago servicioMercadoPago;
   private final ServicioCarrito servicioCarrito;
+  private final ServicioPedido servicioPedido;
 
   @Autowired
   public ControladorMercadoPago(
     ServicioMercadoPago servicioMercadoPago,
-    ServicioCarrito servicioCarrito
+    ServicioCarrito servicioCarrito,
+    ServicioPedido servicioPedido
   ) {
     this.servicioMercadoPago = servicioMercadoPago;
     this.servicioCarrito = servicioCarrito;
+    this.servicioPedido = servicioPedido;
   }
 
   @RequestMapping(path = "/pagar", method = RequestMethod.GET)
@@ -35,15 +40,15 @@ public class ControladorMercadoPago {
       return new ModelAndView("redirect:/login");
     }
 
-    Carrito carrito = servicioCarrito.obtenerOCrearCarrito(usuario.getId());
+    List<Pedido> pedidos = servicioPedido.obtenerPedidosPendientesDePago(usuario.getId());
 
-    if (carrito == null || carrito.getItems() == null || carrito.getItems().isEmpty()) {
+    if (pedidos.isEmpty()) {
       ModelMap model = new ModelMap();
-      model.put("error", "El carrito no puede estar vacío");
+      model.put("error", "No hay pedidos para pagar");
       return new ModelAndView("redirect:/carrito", model);
     }
 
-    String urlPago = servicioMercadoPago.crearPreferenciaDePago(carrito);
+    String urlPago = servicioMercadoPago.crearPreferenciaDePago(pedidos);
 
     if (urlPago == null) {
       ModelMap model = new ModelMap();
@@ -62,17 +67,18 @@ public class ControladorMercadoPago {
       return new ModelAndView("redirect:/login");
     }
 
-    Carrito carrito = servicioCarrito.obtenerOCrearCarrito(usuario.getId());
+    List<Pedido> pedidos = servicioPedido.obtenerPedidosPendientesDePago(usuario.getId());
 
-    if (carrito == null || carrito.getItems().isEmpty()) {
-      ModelMap model = new ModelMap();
-      model.put("error", "Debés agregar items y realizar una compra primero.");
-      return new ModelAndView("redirect:/carrito", model);
+    if (pedidos == null || pedidos.isEmpty()) {
+      return new ModelAndView("redirect:/home");
     }
+    // Marcás los pedidos como pagados
+    servicioPedido.marcarComoPagados(usuario.getId());
 
+    // Recién acá vaciás el carrito
+    servicioCarrito.vaciarCarrito(usuario.getId());
     ModelMap model = new ModelMap();
-    model.put("itemsComprados", carrito.getItems());
-    session.setAttribute("ultimoPedido", carrito.getItems());
+    model.put("pedidos", pedidos); // mostrás los pedidos, no el carrito
     return new ModelAndView("pago-exitoso", model);
   }
 }

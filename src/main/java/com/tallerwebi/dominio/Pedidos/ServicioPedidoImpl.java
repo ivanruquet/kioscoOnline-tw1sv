@@ -1,0 +1,72 @@
+package com.tallerwebi.dominio.Pedidos;
+
+import com.tallerwebi.dominio.Hijos.Hijo;
+import com.tallerwebi.dominio.Hijos.RepositorioHijo;
+import com.tallerwebi.dominio.Productos.Producto;
+import com.tallerwebi.dominio.Productos.RepositorioProducto;
+import com.tallerwebi.dominio.Usuario.Usuario;
+import com.tallerwebi.presentacion.DistribucionCarrito.ItemDistribucionDTO;
+import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service("servicioPedido")
+@Transactional
+public class ServicioPedidoImpl implements ServicioPedido {
+
+  private final RepositorioPedido repositorioPedido;
+  private final RepositorioHijo repositorioHijo;
+  private final RepositorioProducto repositorioProducto;
+
+  public ServicioPedidoImpl(
+    RepositorioPedido repositorioPedido,
+    RepositorioHijo repositorioHijo,
+    RepositorioProducto repositorioProducto
+  ) {
+    this.repositorioPedido = repositorioPedido;
+    this.repositorioHijo = repositorioHijo;
+    this.repositorioProducto = repositorioProducto;
+  }
+
+  @Override
+  public void crearPedido(Long hijoId, List<ItemDistribucionDTO> items, Usuario usuario) {
+    Hijo hijo = repositorioHijo.buscarPorId(hijoId);
+
+    Pedido pedido = new Pedido();
+    pedido.setUsuario(usuario);
+    pedido.setHijo(hijo);
+    pedido.setEstado(EstadoPedido.PAGO_PENDIENTE);
+
+    for (ItemDistribucionDTO item : items) {
+      Producto producto = repositorioProducto.buscarProductoPorId(item.getProductoId());
+
+      ItemPedido itemPedido = new ItemPedido(producto, item.getCantidad());
+      itemPedido.setPedido(pedido);
+
+      pedido.agregarItem(itemPedido);
+    }
+    pedido.calcularSubtotal();
+
+    repositorioPedido.guardar(pedido);
+  }
+
+  @Override
+  public List<Pedido> obtenerPedidosPendientesDePago(Long usuarioId) {
+    return repositorioPedido.obtenerPedidosPorUsuario(usuarioId);
+  }
+
+  @Override
+  public void limpiarPedidosPendientes(Long usuarioId) {
+    repositorioPedido.eliminarPedidosPendientes(usuarioId);
+  }
+
+  @Override
+  public List<Pedido> obtenerTodosLosPedidos(Long usuarioId) {
+    return repositorioPedido.obtenerTodosLosPedidosPorUsuario(usuarioId);
+  }
+
+  @Override
+  public void marcarComoPagados(Long usuarioId) {
+    repositorioPedido.marcarPedidoPagado(usuarioId);
+  }
+}
