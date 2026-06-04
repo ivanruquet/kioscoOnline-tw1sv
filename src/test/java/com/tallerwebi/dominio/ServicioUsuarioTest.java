@@ -2,12 +2,14 @@ package com.tallerwebi.dominio;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.SubidaDeImgs.ServicioImagenes;
 import com.tallerwebi.dominio.Usuario.*;
+import com.tallerwebi.dominio.excepcion.NoSePudoGuardarInformacionException;
 import java.io.ByteArrayInputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,5 +78,17 @@ public class ServicioUsuarioTest {
 
     verify(repositorioUsuarioMock, times(1)).modificar(usuario);
     assertThat(usuario.getFotoPerfil(), equalTo("https://res.cloudinary.com/test/foto.jpg"));
+  }
+
+  @Test
+  public void dadoUsuarioInexistenteCuandoActualizaFotoEntoncesLanzaExcepcion() {
+    MultipartFile fotoMock = mock(MultipartFile.class);
+
+    when(repositorioUsuarioMock.buscarUsuarioPorId(99L)).thenReturn(null);
+
+    assertThrows(
+      NoSePudoGuardarInformacionException.class,
+      () -> servicioUsuario.actualizarFoto(99L, fotoMock)
+    );
   }
 }
