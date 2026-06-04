@@ -55,6 +55,15 @@ public class RepositorioPedidoImpl implements RepositorioPedido {
   }
 
   @Override
+  public List<Pedido> obtenerTodosLosPedidosPorUsuario(Long usuarioId) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("FROM Pedido WHERE usuario.id = :id ORDER BY fecha DESC", Pedido.class)
+      .setParameter("id", usuarioId)
+      .getResultList();
+  }
+
+  @Override
   public void marcarPedidoPagado(Long usuarioId) {
     sessionFactory
       .getCurrentSession()

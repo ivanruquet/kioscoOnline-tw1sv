@@ -61,6 +61,11 @@ public class ServicioPedidoImpl implements ServicioPedido {
   }
 
   @Override
+  public List<Pedido> obtenerTodosLosPedidos(Long usuarioId) {
+    return repositorioPedido.obtenerTodosLosPedidosPorUsuario(usuarioId);
+  }
+
+  @Override
   public void marcarComoPagados(Long usuarioId) {
     repositorioPedido.marcarPedidoPagado(usuarioId);
   }

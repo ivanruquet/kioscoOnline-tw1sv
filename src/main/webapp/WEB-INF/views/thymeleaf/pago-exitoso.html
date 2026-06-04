@@ -19,13 +19,19 @@
     <p>Gracias por tu compra en el Kiosco. Acá tenés el detalle de tus productos:</p>
 
     <ul>
-        <li th:each="item : ${itemsComprados}">
+        <th:block th:each="pedido : ${pedidos}">
+            <li style="background:#f0f0f0; font-weight:bold;">
+                <span th:text="'Pedido para: ' + ${pedido.hijo.nombre}">Hijo</span>
+                <span th:text="'$' + ${pedido.subtotal}">$0</span>
+            </li>
+            <li th:each="item : ${pedido.items}">
             <span>
-                <strong th:text="${item.producto.nombre}">Nombre Producto</strong>
-                <span th:text="'(x' + ${item.cantidad} + ')'">(x1)</span>
+                <strong th:text="${item.producto.nombre}">Nombre</strong>
+                <span th:text="'(x' + ${item.cantidad} + ')'"></span>
             </span>
-            <span th:text="'$' + ${item.producto.precio * item.cantidad}">$0.00</span>
-        </li>
+                <span th:text="'$' + ${item.subtotal}">$0</span>
+            </li>
+        </th:block>
     </ul>
 
     <a th:href="@{/home}" class="btn">Volver al Inicio</a>
