@@ -1,6 +1,5 @@
 package com.tallerwebi.presentacion.Pagos;
 
-import com.tallerwebi.dominio.Carrito.Carrito;
 import com.tallerwebi.dominio.Carrito.ServicioCarrito;
 import com.tallerwebi.dominio.Pagos.ServicioMercadoPago;
 import com.tallerwebi.dominio.Pedidos.Pedido;
@@ -68,16 +67,18 @@ public class ControladorMercadoPago {
       return new ModelAndView("redirect:/login");
     }
 
-    Carrito carrito = servicioCarrito.obtenerOCrearCarrito(usuario.getId());
+    List<Pedido> pedidos = servicioPedido.obtenerPedidosPendientesDePago(usuario.getId());
 
-    if (carrito == null || carrito.getItems().isEmpty()) {
-      ModelMap model = new ModelMap();
-      model.put("error", "Debés agregar items y realizar una compra primero.");
-      return new ModelAndView("redirect:/carrito", model);
+    if (pedidos == null || pedidos.isEmpty()) {
+      return new ModelAndView("redirect:/home");
     }
+    // Marcás los pedidos como pagados
+    servicioPedido.marcarComoPagados(usuario.getId());
 
+    // Recién acá vaciás el carrito
+    servicioCarrito.vaciarCarrito(usuario.getId());
     ModelMap model = new ModelMap();
-    model.put("itemsComprados", carrito.getItems());
+    model.put("pedidos", pedidos); // mostrás los pedidos, no el carrito
     return new ModelAndView("pago-exitoso", model);
   }
 }

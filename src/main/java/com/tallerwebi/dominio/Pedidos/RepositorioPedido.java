@@ -6,4 +6,6 @@ public interface RepositorioPedido {
   void guardar(Pedido pedido);
   List<Pedido> obtenerPedidosPorUsuario(Long usuarioId);
   void eliminarPedidosPendientes(Long usuarioId);
+
+  void marcarPedidoPagado(Long usuarioId);
 }

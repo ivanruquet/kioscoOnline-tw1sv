@@ -30,9 +30,6 @@ public class ServicioPedidoImpl implements ServicioPedido {
 
   @Override
   public void crearPedido(Long hijoId, List<ItemDistribucionDTO> items, Usuario usuario) {
-    //  LIMPIAR PEDIDOS VIEJOS
-    repositorioPedido.eliminarPedidosPendientes(usuario.getId());
-
     Hijo hijo = repositorioHijo.buscarPorId(hijoId);
 
     Pedido pedido = new Pedido();
@@ -56,5 +53,15 @@ public class ServicioPedidoImpl implements ServicioPedido {
   @Override
   public List<Pedido> obtenerPedidosPendientesDePago(Long usuarioId) {
     return repositorioPedido.obtenerPedidosPorUsuario(usuarioId);
+  }
+
+  @Override
+  public void limpiarPedidosPendientes(Long usuarioId) {
+    repositorioPedido.eliminarPedidosPendientes(usuarioId);
+  }
+
+  @Override
+  public void marcarComoPagados(Long usuarioId) {
+    repositorioPedido.marcarPedidoPagado(usuarioId);
   }
 }

@@ -60,7 +60,7 @@ public class ControladorMercadoPagoTest {
 
     // 3. Then
     assertThat(modelAndView.getViewName(), equalTo("redirect:/carrito"));
-    assertThat(modelAndView.getModel().get("error"), equalTo("El carrito no puede estar vacío"));
+    assertThat(modelAndView.getModel().get("error"), equalTo("No hay pedidos para pagar"));
   }
 
   @Test
@@ -76,10 +76,7 @@ public class ControladorMercadoPagoTest {
     ModelAndView modelAndView = this.controladorMercadoPago.pagar(this.sessionMock);
 
     // 3. Then
-    assertThat(
-      modelAndView.getViewName(),
-      equalTo("redirect:https://www.mercadopago.com.ar/checkout/v1/redirect-real")
-    );
+    assertThat(modelAndView.getViewName(), equalTo("redirect:https://mp.com/redirect"));
   }
 
   @Test
@@ -128,36 +125,49 @@ public class ControladorMercadoPagoTest {
 
   @Test
   public void ElUsuarioEstaLogueadoCuandoEntraAlPagoExitosoSinItemsEnElCarrito() {
-    // La sesión ya tiene al usuario cargado
-    Carrito carritoVacio = new Carrito();
-    carritoVacio.setItems(new ArrayList<>());
-    //tiene carrito vacio
-    when(this.servicioCarrito.obtenerOCrearCarrito(1L)).thenReturn(carritoVacio);
-    // Intenta ingresar a pagar-exitoso estando logeado pero sin carrito con items
-    ModelAndView mav = this.controladorMercadoPago.mostrarPagoExitoso(this.sessionMock);
-    // Redirige al carrito con error ()
-    assertThat(mav.getViewName(), equalTo("redirect:/carrito"));
-    assertThat(
-      mav.getModel().get("error").toString(),
-      equalTo("Debés agregar items y realizar una compra primero.")
-    );
+    //    // La sesión ya tiene al usuario cargado
+    //    Carrito carritoVacio = new Carrito();
+    //    carritoVacio.setItems(new ArrayList<>());
+    //    //tiene carrito vacio
+    //    when(this.servicioCarrito.obtenerOCrearCarrito(1L)).thenReturn(carritoVacio);
+    //    // Intenta ingresar a pagar-exitoso estando logeado pero sin carrito con items
+    //    ModelAndView mav = this.controladorMercadoPago.mostrarPagoExitoso(this.sessionMock);
+    //    // Redirige al carrito con error ()
+    //    assertThat(mav.getViewName(), equalTo("redirect:/carrito"));
+    //    assertThat(
+    //      mav.getModel().get("error").toString(),
+    //      equalTo("Debés agregar items y realizar una compra primero.")
+    //    );
+    when(servicioPedidoMock.obtenerPedidosPendientesDePago(1L)).thenReturn(new ArrayList<>());
+
+    ModelAndView mav = controladorMercadoPago.mostrarPagoExitoso(sessionMock);
+
+    assertThat(mav.getViewName(), equalTo("redirect:/home"));
   }
 
   @Test
   public void ElUsuarioEstaLogueadoCuandoEntraAlPagoExitosoConItemsEnElCarritoDebeDevolverEstosEnElModel() {
-    Carrito carritoConProducto = new Carrito();
-    List<ItemCarrito> items = new ArrayList<>();
-    Producto producto = new Producto();
-    items.add(new ItemCarrito(producto, 1));
-    carritoConProducto.setItems(items);
+    //    Carrito carritoConProducto = new Carrito();
+    //    List<ItemCarrito> items = new ArrayList<>();
+    //    Producto producto = new Producto();
+    //    items.add(new ItemCarrito(producto, 1));
+    //    carritoConProducto.setItems(items);
+    //
+    //    when(this.servicioCarrito.obtenerOCrearCarrito(1L)).thenReturn(carritoConProducto);
+    //
+    //    // 2. When
+    //    ModelAndView modelAndView = this.controladorMercadoPago.mostrarPagoExitoso(this.sessionMock);
+    //
+    //    // 3. Then
+    //    assertThat(modelAndView.getViewName(), equalTo("pago-exitoso"));
+    //    assertThat(modelAndView.getModel().get("itemsComprados"), equalTo(items));
+    Pedido pedido = mock(Pedido.class);
+    List<Pedido> pedidos = List.of(pedido);
+    when(servicioPedidoMock.obtenerPedidosPendientesDePago(1L)).thenReturn(pedidos);
 
-    when(this.servicioCarrito.obtenerOCrearCarrito(1L)).thenReturn(carritoConProducto);
+    ModelAndView mav = controladorMercadoPago.mostrarPagoExitoso(sessionMock);
 
-    // 2. When
-    ModelAndView modelAndView = this.controladorMercadoPago.mostrarPagoExitoso(this.sessionMock);
-
-    // 3. Then
-    assertThat(modelAndView.getViewName(), equalTo("pago-exitoso"));
-    assertThat(modelAndView.getModel().get("itemsComprados"), equalTo(items));
+    assertThat(mav.getViewName(), equalTo("pago-exitoso"));
+    assertThat(mav.getModel().get("pedidos"), equalTo(pedidos));
   }
 }

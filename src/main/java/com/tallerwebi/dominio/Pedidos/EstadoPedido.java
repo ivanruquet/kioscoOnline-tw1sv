@@ -6,5 +6,5 @@ public enum EstadoPedido {
   RECIBIDO,
   PEDIDO_ARMADO,
   ENTREGADO,
-    CANCELADO,
+  CANCELADO,
 }

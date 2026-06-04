@@ -7,4 +7,7 @@ import java.util.List;
 public interface ServicioPedido {
   void crearPedido(Long hijoId, List<ItemDistribucionDTO> items, Usuario usuario);
   List<Pedido> obtenerPedidosPendientesDePago(Long usuarioId);
+  void limpiarPedidosPendientes(Long usuarioId);
+
+  void marcarComoPagados(Long id);
 }

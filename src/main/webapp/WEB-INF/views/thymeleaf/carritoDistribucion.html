@@ -81,8 +81,8 @@
                                         <input type="hidden"
                                                th:name="'hijoId'+ ${hijo.id}+'_prodId'+ ${producto.id}"
                                                th:data-hijo-id="${hijo.id}"
-                                               class="qty-input" value="0">
-                                        <span class="qty-num">0</span>
+                                               class="qty-input" th:value="${cantidadesPrevias[hijo.id + '_' + producto.id] ?: 0}">
+                                        <span class="qty-num" th:text="${cantidadesPrevias[hijo.id + '_' + producto.id] ?: 0}" ></span>
                                         <button type="button" class="qty-btn" onclick="cambiar(this, 1)">+</button>
                                     </div>
                                 </td>

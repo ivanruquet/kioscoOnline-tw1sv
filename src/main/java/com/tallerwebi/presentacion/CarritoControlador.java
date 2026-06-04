@@ -1,6 +1,5 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Carrito.Carrito;
 import com.tallerwebi.dominio.Carrito.ServicioCarrito;
 import com.tallerwebi.dominio.Pedidos.ItemPedido;
 import com.tallerwebi.dominio.Pedidos.Pedido;
@@ -56,9 +55,12 @@ public class CarritoControlador {
     if (usuario == null) {
       return new ModelAndView("redirect:/login");
     }
-    Carrito carrito = servicioCarrito.obtenerOCrearCarrito(usuario.getId());
     List<Pedido> pedidos = servicioPedido.obtenerPedidosPendientesDePago(usuario.getId());
 
+    // Si no hay pedidos, no dejamos entrar al carrito
+    if (pedidos == null || pedidos.isEmpty()) {
+      return new ModelAndView("redirect:/distribucion");
+    }
     Double total = pedidos
       .stream()
       .flatMap(p -> p.getItems().stream())
@@ -66,7 +68,6 @@ public class CarritoControlador {
       .sum();
 
     ModelMap model = new ModelMap();
-    model.put(CARRITO, carrito);
     model.put("total", total);
     model.put("pedidos", pedidos);
 

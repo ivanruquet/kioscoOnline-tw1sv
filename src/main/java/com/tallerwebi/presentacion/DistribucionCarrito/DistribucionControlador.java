@@ -5,6 +5,8 @@ import com.tallerwebi.dominio.Carrito.ItemCarrito;
 import com.tallerwebi.dominio.Carrito.ServicioCarrito;
 import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
+import com.tallerwebi.dominio.Pedidos.ItemPedido;
+import com.tallerwebi.dominio.Pedidos.Pedido;
 import com.tallerwebi.dominio.Pedidos.ServicioPedido;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Usuario.Usuario;
@@ -56,10 +58,22 @@ public class DistribucionControlador {
       .map(ItemCarrito::getProducto)
       .collect(Collectors.toList());
 
+    List<Pedido> pedidosPrevios = servicioPedido.obtenerPedidosPendientesDePago(usuario.getId());
+
+    // Armar un mapa hijoId_productoId -> cantidad para el HTML
+    Map<String, Integer> cantidadesPrevias = new HashMap<>();
+    for (Pedido p : pedidosPrevios) {
+      for (ItemPedido item : p.getItems()) {
+        String key = p.getHijo().getId() + "_" + item.getProducto().getId();
+        cantidadesPrevias.put(key, item.getCantidad());
+      }
+    }
+
     ModelMap model = new ModelMap();
     model.put("productos", productos);
     model.put("hijos", hijos);
     model.put("usuario", usuario);
+    model.put("cantidadesPrevias", cantidadesPrevias); // ← NUEVO
 
     return new ModelAndView("carritoDistribucion", model);
   }
@@ -76,6 +90,7 @@ public class DistribucionControlador {
     }
 
     Map<Long, List<ItemDistribucionDTO>> listaPorHijo = new HashMap<>();
+    servicioPedido.limpiarPedidosPendientes(usuario.getId());
 
     for (Map.Entry<String, String> param : params.entrySet()) {
       String nombreParametro = param.getKey();
@@ -109,7 +124,6 @@ public class DistribucionControlador {
         servicioPedido.crearPedido(entry.getKey(), entry.getValue(), usuario);
       }
     }
-    servicioCarrito.vaciarCarrito(usuario.getId());
 
     return new ModelAndView("redirect:/carrito");
   }

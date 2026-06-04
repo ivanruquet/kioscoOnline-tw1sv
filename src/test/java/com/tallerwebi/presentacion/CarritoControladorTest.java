@@ -62,9 +62,8 @@ public class CarritoControladorTest {
   @Test
   public void siHayUsuarioDebeMostrarLaVistaDePedidos() {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
-    when(serviCarritomock.obtenerOCrearCarrito(any())).thenReturn(carritoMock);
-    when(carritoMock.getItems()).thenReturn(new ArrayList<>());
-    when(serviPedidoMock.obtenerPedidosPendientesDePago(any())).thenReturn(new ArrayList<>());
+    when(serviPedidoMock.obtenerPedidosPendientesDePago(any()))
+      .thenReturn(List.of(mock(Pedido.class)));
 
     ModelAndView mv = carritoControlador.verCarrito(sessionMock);
 

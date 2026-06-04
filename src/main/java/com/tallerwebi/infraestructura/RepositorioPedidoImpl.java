@@ -40,16 +40,32 @@ public class RepositorioPedidoImpl implements RepositorioPedido {
 
   @Override
   public void eliminarPedidosPendientes(Long usuarioId) {
-      sessionFactory.getCurrentSession()
-              .createQuery(
-                      "update Pedido p " +
-                              "set p.estado = :cancelado " +
-                              "where p.usuario.id = :usuarioId " +
-                              "and p.estado = :pendiente"
-              )
-              .setParameter("usuarioId", usuarioId)
-              .setParameter("cancelado", EstadoPedido.CANCELADO)
-              .setParameter("pendiente", EstadoPedido.PAGO_PENDIENTE)
-              .executeUpdate();
+    sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "update Pedido p " +
+        "set p.estado = :cancelado " +
+        "where p.usuario.id = :usuarioId " +
+        "and p.estado = :pendiente"
+      )
+      .setParameter("usuarioId", usuarioId)
+      .setParameter("cancelado", EstadoPedido.CANCELADO)
+      .setParameter("pendiente", EstadoPedido.PAGO_PENDIENTE)
+      .executeUpdate();
+  }
+
+  @Override
+  public void marcarPedidoPagado(Long usuarioId) {
+    sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "update Pedido p set p.estado = :pagado " +
+        "where p.usuario.id = :usuarioId " +
+        "and p.estado = :pendiente"
+      )
+      .setParameter("pagado", EstadoPedido.PAGADO)
+      .setParameter("usuarioId", usuarioId)
+      .setParameter("pendiente", EstadoPedido.PAGO_PENDIENTE)
+      .executeUpdate();
   }
 }
