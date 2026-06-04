@@ -3,6 +3,7 @@ package com.tallerwebi.dominio.Hijos;
 import com.tallerwebi.dominio.Usuario.Usuario;
 import java.util.Date;
 import javax.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Hijo {
@@ -20,6 +21,7 @@ public class Hijo {
   @Column
   private String fotoPerfil;
 
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   @Column
   private Date fechaNac;
 

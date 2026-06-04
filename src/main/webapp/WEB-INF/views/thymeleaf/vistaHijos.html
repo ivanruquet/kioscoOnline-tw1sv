@@ -70,7 +70,8 @@
                             </svg>
                         </button>
                     </div>
-                <form th:action="@{/guardarHijo}" method="post" enctype="multipart/form-data" class="form-hijo">
+                    <!--enctype="multipart/form-data"-->
+                <form th:action="@{/guardarHijo}" method="post"  class="form-hijo">
                     <div class="form-grid">
                         <div class="campo-edicion">
                             <span class="dato-label">Nombre</span>
@@ -90,10 +91,10 @@
                         </div>
                     </div>
 
-                    <div class="campo-edicion">
-                        <span class="dato-label">Foto de perfil</span>
-                        <input type="file" name="fotoPerfil" accept="image/*">
-                    </div>
+<!--                    <div class="campo-edicion">-->
+<!--                        <span class="dato-label">Foto de perfil</span>-->
+<!--                        <input type="file" name="fotoPerfil" accept="image/*">-->
+<!--                    </div>-->
 
                     <div class="campo-edicion">
                         <span class="dato-label">Curso</span>

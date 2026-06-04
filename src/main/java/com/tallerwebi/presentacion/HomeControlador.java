@@ -1,11 +1,14 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.Carrito.Carrito;
+import com.tallerwebi.dominio.Carrito.ServicioCarrito;
 import com.tallerwebi.dominio.Productos.CategoriaProductos;
 import com.tallerwebi.dominio.Productos.Producto;
 import com.tallerwebi.dominio.Productos.ServicioProducto;
 import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.ProductoNoEncontradoException;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,10 +23,12 @@ public class HomeControlador {
 
   private static final String VISTA_HOME = "home";
   private final ServicioProducto servicioProducto;
+  private final ServicioCarrito servicioCarrito;
 
   @Autowired
-  public HomeControlador(ServicioProducto servicioProducto) {
+  public HomeControlador(ServicioProducto servicioProducto, ServicioCarrito servicioCarrito) {
     this.servicioProducto = servicioProducto;
+    this.servicioCarrito = servicioCarrito;
   }
 
   @RequestMapping(path = "/home", method = RequestMethod.GET)
@@ -42,6 +47,7 @@ public class HomeControlador {
     this.cargarCategorias(modelo);
     this.cargarProductos(modelo, categoria);
     this.cargarResultadoBusqueda(modelo, busqueda);
+    this.cargarIdsCarrito(modelo, usuario);
 
     return new ModelAndView(VISTA_HOME, modelo);
   }
@@ -78,5 +84,15 @@ public class HomeControlador {
     } catch (ProductoNoEncontradoException e) {
       modelo.put("errorBusquedaProductos", e.getMessage());
     }
+  }
+
+  private void cargarIdsCarrito(ModelMap modelo, Usuario usuario) {
+    Carrito carrito = servicioCarrito.obtenerOCrearCarrito(usuario.getId());
+    List<Long> idsEnCarrito = carrito
+      .getItems()
+      .stream()
+      .map(item -> item.getProducto().getId())
+      .collect(Collectors.toList());
+    modelo.put("idsEnCarrito", idsEnCarrito);
   }
 }

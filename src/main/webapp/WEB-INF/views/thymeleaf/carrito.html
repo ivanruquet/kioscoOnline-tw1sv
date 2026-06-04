@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,92 +14,88 @@
 <div class="container-fluid">
     <div th:replace="fragmentos/header :: header"></div>
 
-
     <div class="app-container">
         <main class="cart-layout">
 
             <section class="cart-items-section">
-                <h2 class="section-title">Tu pedido</h2>
+                <h2 class="section-title">Distribución de pedidos confirmada</h2>
 
-                <div class="cart-items-list">
-                    <div th:if="${carrito.getItems().isEmpty()}">No hay productos agregados al carrito!</div>
+                <div th:if="${#lists.isEmpty(pedidos)}" class="cart-items-list">
+                    <p>No hay pedidos pendientes.</p>
+                    <a th:href="@{/home}" class="btn-primary" style="text-align:center; text-decoration:none; display:block; padding: 1rem;">
+                        + Agregar productos
+                    </a>
+                </div>
 
-                    <div class="cart-item-card" th:each="item : ${carrito.items}">
-                        <img class="item-image bg-pastel-purple" th:src="${item.producto.imagen}"></img>
-                        <div class="item-details">
-                            <h3 class="item-name" th:text="${item.producto.nombre}"></h3>
-                        </div>
-                        <div class="item-actions">
-                            <div class="quantity-control">
-                                <form th:action="@{/carrito/disminuir}" method="post">
-                                    <input type="hidden"
-                                           name="productoId"
-                                           th:value="${item.producto.id}">
+                <div th:unless="${#lists.isEmpty(pedidos)}" class="cart-items-list">
+                    <div class="cart-item-card" th:each="pedido : ${pedidos}" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
 
-                                    <button class="qty-btn" type="submit">-</button>
-                                </form>
-                                <span class="qty-number" th:text="${item.cantidad}"></span>
-                                <form th:action="@{/carrito/aumentar}" method="post">
-                                    <input type="hidden"
-                                           name="productoId"
-                                           th:value="${item.producto.id}">
-
-                                    <button class="qty-btn" type="submit">+</button>
-                                </form>
+                        <!-- Nombre del hijo -->
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background-color: #EFE9FD; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #7C3AED;">
+                                <span th:text="${#strings.substring(pedido.hijo.nombre, 0, 1)}"></span>
                             </div>
-                            <p class="item-price">
-                                $<span th:text="${item.producto.precio}"></span>
-                            </p>
-                            <form th:action="@{/carrito/eliminar}" method="post">
-                                <input type="hidden"
-                                       name="productoId"
-                                       th:value="${item.producto.id}">
+                            <span style="font-size: 1.1rem; font-weight: 700;" th:text="${pedido.hijo.nombre}"></span>
+                        </div>
 
-                                <button type="submit" class="remove-btn">🗑️</button>
-                            </form>
+                        <!-- Items del pedido -->
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tbody>
+                            <tr th:each="item : ${pedido.items}" style="border-bottom: 1px solid #f0f0f0;">
+                                <td style="padding: 0.5rem 0; color: #444;" th:text="${item.producto.nombre}"></td>
+                                <td style="padding: 0.5rem; color: #888; text-align: center;"
+                                    th:text="${item.cantidad} + 'x $' + ${item.precioUnitario}"></td>
+                                <td style="padding: 0.5rem 0; font-weight: 600; text-align: right;"
+                                    th:text="'$' + ${item.subtotal}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Subtotal del hijo -->
+                        <div style="display: flex; justify-content: flex-end; width: 100%; font-weight: 700; color: #333;">
+                            Subtotal: $<span th:text="${pedido.subtotal}"></span>
                         </div>
                     </div>
+
+                    <!-- Botón modificar -->
+                    <a th:href="@{/distribucion}" class="btn-primary-disabled"
+                       style="text-align: center; text-decoration: none; display: block; padding: 0.75rem; margin-top: 0.5rem;">
+                        Modificar pedidos
+                    </a>
                 </div>
             </section>
 
             <aside class="cart-summary-section">
                 <div class="summary-card">
-                    <h2 class="summary-title">Resumen de compra</h2>
+                    <h2 class="summary-title">Subtotales</h2>
 
-                    <div class="summary-row">
-                        <span>Subtotal</span>
-                        <span>
-                            $<span th:text="${total}"></span>
-                        </span>
+                    <!-- Subtotal por hijo -->
+                    <div th:each="pedido : ${pedidos}" class="summary-row">
+                        <span th:text="${pedido.hijo.nombre}"></span>
+                        <span>$<span th:text="${pedido.subtotal}"></span></span>
                     </div>
 
                     <hr class="summary-divider">
 
                     <div class="summary-row total-row">
-                        <span>Total</span>
-                        <span>
-                            $<span th:text="${total}"></span>
-                        </span>
+                        <span>Total pedido</span>
+                        <span>$<span th:text="${total}"></span></span>
                     </div>
 
                     <form th:action="@{/pagar}" method="GET" style="width: 100%;">
-                        <button th:if="${!carrito.getItems().isEmpty()}" type="submit" class="btn-primary" style="width: 100%; cursor: pointer;">
-                            Pagar con Mercado Pago
+                        <button th:if="${!#lists.isEmpty(pedidos)}" type="submit" class="btn-primary" style="width: 100%; cursor: pointer;">
+                            Proceder al pago
                         </button>
-                        <button class="btn-primary-disabled" th:if="${carrito.getItems().isEmpty()}" disabled>
-                            Pagar con Mercado Pago
+                        <button class="btn-primary-disabled" th:if="${#lists.isEmpty(pedidos)}" disabled>
+                            Proceder al pago
                         </button>
                     </form>
 
-                    <div th:if="${error}" class="alert-error-custom" style="background-color: #ffdbdb; color: #d92d2d; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 14px; text-align: center; font-weight: 500; border: 1px solid #f5baba;">
+                    <div th:if="${error}" class="alert-error-custom"
+                         style="background-color: #ffdbdb; color: #d92d2d; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 14px; text-align: center; font-weight: 500; border: 1px solid #f5baba;">
                         ⚠️ <span th:text="${error}"></span>
                     </div>
 
-                    <!--
-                    <button class="btn-primary-disabled" th:if="${carrito.getItems().isEmpty()}" disabled>Proceder al pago</button>
-
-                    <button class="btn-primary" th:if="${!carrito.getItems().isEmpty()}">Proceder al pago</button>
-                    -->
                     <div class="secure-checkout">
                         <span>🔒 Plataforma 100% segura</span>
                         <p>Tus datos están protegidos</p>
@@ -109,8 +105,6 @@
 
         </main>
     </div>
-
 </div>
-
 </body>
 </html>

@@ -4,8 +4,7 @@ import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
-import com.tallerwebi.dominio.Carrito.Carrito;
-import com.tallerwebi.dominio.Carrito.ItemCarrito;
+import com.tallerwebi.dominio.Pedidos.Pedido;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,8 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
   private String accessToken;
 
   @Override
-  public String crearPreferenciaDePago(Carrito carrito) {
-    if (carrito == null || carrito.getItems() == null) {
+  public String crearPreferenciaDePago(List<Pedido> pedidos) {
+    if (pedidos == null || pedidos.isEmpty()) {
       return null;
     }
 
@@ -33,16 +32,28 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
 
       List<PreferenceItemRequest> itemsMercadoPago = new ArrayList<>();
 
-      for (ItemCarrito item : carrito.getItems()) {
-        itemsMercadoPago.add(
-          PreferenceItemRequest
-            .builder()
-            .title(item.getProducto().getNombre())
-            .quantity(item.getCantidad())
-            .unitPrice(BigDecimal.valueOf(item.getProducto().getPrecio()))
-            .currencyId("ARS")
-            .build()
-        );
+      for (Pedido pedido : pedidos) {
+        if (pedido.getItems() == null) {
+          continue;
+        }
+
+        pedido
+          .getItems()
+          .forEach(item ->
+            itemsMercadoPago.add(
+              PreferenceItemRequest
+                .builder()
+                .title(item.getProducto().getNombre())
+                .quantity(item.getCantidad())
+                .unitPrice(BigDecimal.valueOf(item.getPrecioUnitario()))
+                .currencyId("ARS")
+                .build()
+            )
+          );
+      }
+
+      if (itemsMercadoPago.isEmpty()) {
+        return null;
       }
 
       return new PreferenceClient()

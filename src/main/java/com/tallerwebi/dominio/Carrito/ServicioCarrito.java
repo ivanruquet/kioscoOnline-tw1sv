@@ -12,4 +12,5 @@ public interface ServicioCarrito {
   void aumentarCantidad(long productoId, long usuarioId);
 
   void disminuirCantidad(long productoId, long usuarioId);
+  void vaciarCarrito(long usuarioId);
 }
