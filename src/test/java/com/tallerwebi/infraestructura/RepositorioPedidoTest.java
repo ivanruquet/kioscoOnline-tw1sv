@@ -87,68 +87,94 @@ public class RepositorioPedidoTest {
     assertThat(pedidos, hasSize(1));
     assertThat(pedidos.get(0).getHijo().getNombre(), equalTo("Santi"));
   }
+
   @Test
   @Transactional
   @Rollback
-  public void dadoUnUsuarioConPedidosPreviosAlGenerarUnoNuevoElPendienteDebeSerCancelado(){
-      Usuario usuario = dadoQueExisteUnUsuario();
-      Hijo hijo = dadoQueExisteUnHijo(usuario);
-      Producto producto = dadoQueExisteUnProducto();
-      Pedido pedido = new Pedido();
-      pedido.setUsuario(usuario);
-      pedido.setHijo(hijo);
+  public void dadoUnUsuarioConPedidosPreviosAlGenerarUnoNuevoElPendienteDebeSerCancelado() {
+    Usuario usuario = dadoQueExisteUnUsuario();
+    Hijo hijo = dadoQueExisteUnHijo(usuario);
+    Producto producto = dadoQueExisteUnProducto();
+    Pedido pedido = new Pedido();
+    pedido.setUsuario(usuario);
+    pedido.setHijo(hijo);
 
-      ItemPedido itemPedido = new ItemPedido(producto, 2);
-      itemPedido.setPedido(pedido);
+    ItemPedido itemPedido = new ItemPedido(producto, 2);
+    itemPedido.setPedido(pedido);
 
-      pedido.agregarItem(itemPedido);
-      pedido.calcularSubtotal();
-      pedido.setEstado(EstadoPedido.PAGO_PENDIENTE); // ← esto falta
+    pedido.agregarItem(itemPedido);
+    pedido.calcularSubtotal();
+    pedido.setEstado(EstadoPedido.PAGO_PENDIENTE); // ← esto falta
 
-      sessionFactory.getCurrentSession().save(pedido);
+    sessionFactory.getCurrentSession().save(pedido);
 
-      repositorioPedido.eliminarPedidosPendientes(usuario.getId());
-      // Limpiamos el caché de la sesión para forzar que vuelva a leer de la BD
-      sessionFactory.getCurrentSession().flush();
-      sessionFactory.getCurrentSession().clear();
+    repositorioPedido.eliminarPedidosPendientes(usuario.getId());
+    // Limpiamos el caché de la sesión para forzar que vuelva a leer de la BD
+    sessionFactory.getCurrentSession().flush();
+    sessionFactory.getCurrentSession().clear();
 
+    List<Pedido> pedidosPendiente = repositorioPedido.obtenerPedidosPorUsuario(usuario.getId());
+    assertThat(pedidosPendiente, hasSize(0));
 
-      List<Pedido> pedidosPendiente = repositorioPedido.obtenerPedidosPorUsuario(usuario.getId());
-      assertThat(pedidosPendiente, hasSize(0));
-
-      Pedido pedidoActualizado = sessionFactory.getCurrentSession().get(Pedido.class, pedido.getId());
-      assertThat(pedidoActualizado.getEstado(), equalTo(EstadoPedido.CANCELADO));
+    Pedido pedidoActualizado = sessionFactory.getCurrentSession().get(Pedido.class, pedido.getId());
+    assertThat(pedidoActualizado.getEstado(), equalTo(EstadoPedido.CANCELADO));
   }
 
   @Test
   @Transactional
   @Rollback
-  public void dadoUnPedidoConPagoPendienteLuegoDeSerPagadoDebeCambiarSuEstadoAPagado(){
-      Usuario usuario = dadoQueExisteUnUsuario();
-      Hijo hijo = dadoQueExisteUnHijo(usuario);
-      Producto producto = dadoQueExisteUnProducto();
-      Pedido pedido = new Pedido();
-      pedido.setUsuario(usuario);
-      pedido.setHijo(hijo);
+  public void dadoUnPedidoConPagoPendienteLuegoDeSerPagadoDebeCambiarSuEstadoAPagado() {
+    Usuario usuario = dadoQueExisteUnUsuario();
+    Hijo hijo = dadoQueExisteUnHijo(usuario);
+    Producto producto = dadoQueExisteUnProducto();
+    Pedido pedido = new Pedido();
+    pedido.setUsuario(usuario);
+    pedido.setHijo(hijo);
 
-      ItemPedido itemPedido = new ItemPedido(producto, 2);
-      itemPedido.setPedido(pedido);
+    ItemPedido itemPedido = new ItemPedido(producto, 2);
+    itemPedido.setPedido(pedido);
 
-      pedido.agregarItem(itemPedido);
-      pedido.calcularSubtotal();
-      pedido.setEstado(EstadoPedido.PAGO_PENDIENTE);
+    pedido.agregarItem(itemPedido);
+    pedido.calcularSubtotal();
+    pedido.setEstado(EstadoPedido.PAGO_PENDIENTE);
 
-      sessionFactory.getCurrentSession().save(pedido);
+    sessionFactory.getCurrentSession().save(pedido);
 
-      repositorioPedido.marcarPedidoPagado(usuario.getId());
-      sessionFactory.getCurrentSession().flush();
-      sessionFactory.getCurrentSession().clear();
+    repositorioPedido.marcarPedidoPagado(usuario.getId());
+    sessionFactory.getCurrentSession().flush();
+    sessionFactory.getCurrentSession().clear();
 
-      Pedido pedidoActualizado = sessionFactory.getCurrentSession().get(Pedido.class, pedido.getId());
-      assertThat(pedidoActualizado.getEstado(), equalTo(EstadoPedido.PAGADO));
-
-
+    Pedido pedidoActualizado = sessionFactory.getCurrentSession().get(Pedido.class, pedido.getId());
+    assertThat(pedidoActualizado.getEstado(), equalTo(EstadoPedido.PAGADO));
   }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void dadoQueTengoUnUsuarioConPedidosDeboPoderVerSusPedidos() {
+    Usuario usuario = dadoQueExisteUnUsuario();
+    Hijo hijo = dadoQueExisteUnHijo(usuario);
+    Producto producto = dadoQueExisteUnProducto();
+    Pedido pedido = new Pedido();
+    pedido.setUsuario(usuario);
+    pedido.setHijo(hijo);
+
+    ItemPedido itemPedido = new ItemPedido(producto, 2);
+    itemPedido.setPedido(pedido);
+
+    pedido.agregarItem(itemPedido);
+    pedido.calcularSubtotal();
+    pedido.setEstado(EstadoPedido.PAGADO);
+
+    sessionFactory.getCurrentSession().save(pedido);
+    sessionFactory.getCurrentSession().flush();
+    sessionFactory.getCurrentSession().clear();
+
+    List<Pedido> pedidos = repositorioPedido.obtenerTodosLosPedidosPorUsuario(usuario.getId());
+
+    assertThat(pedidos, hasSize(1));
+  }
+
   //METODOS AUXILIARES
   private Usuario dadoQueExisteUnUsuario() {
     DatosPersonales datos = new DatosPersonales();
