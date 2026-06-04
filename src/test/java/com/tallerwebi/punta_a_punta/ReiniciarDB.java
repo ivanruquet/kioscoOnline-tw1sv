@@ -29,7 +29,15 @@ public class ReiniciarDB {
         sqlCommands
       );
 
-      Process process = Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c", comando });
+      //Process process = Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c", comando });
+      String os = System.getProperty("os.name").toLowerCase();
+      Process process;
+
+      if (os.contains("win")) {
+        process = Runtime.getRuntime().exec(new String[] { "cmd.exe", "/c", comando });
+      } else {
+        process = Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c", comando });
+      }
       int exitCode = process.waitFor();
 
       if (exitCode == 0) {
