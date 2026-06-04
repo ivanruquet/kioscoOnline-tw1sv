@@ -2,32 +2,87 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Mis Pedidos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Mis Pedidos - KioNet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/variablesColor.css}" />
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
     <link rel="stylesheet" th:href="@{/css/perfil.css}" />
+    <link rel="stylesheet" th:href="@{/css/mis-pedidos.css}" />
+
 </head>
+
 <body>
+<div class="container-fluid">
 
-<div class="perfil-card">
-    <div class="perfil-card-header">
-        <h2 class="perfil-nombre">Mis Pedidos</h2>
-    </div>
+    <div th:replace="fragmentos/header :: header"></div>
 
-    <!-- Sin pedidos -->
-    <div th:if="${ultimoPedido == null or ultimoPedido.isEmpty()}">
-        <p class="dato-label">No tenés pedidos realizados aún.</p>
-        <a th:href="@{/home}" class="btn-agregar">Ir al inicio</a>
-    </div>
+    <main class="main">
+        <section class="panel-cliente">
+            <div th:replace="fragmentos/panelIzqCliente :: panelCliente"></div>
+            <a th:href="@{/home}" class="btn-volver">Ir a Tienda</a>
+        </section>
 
-    <!-- Con pedidos -->
-    <div th:if="${ultimoPedido != null and !ultimoPedido.isEmpty()}">
-        <div class="perfil-dato" th:each="item : ${ultimoPedido}">
-            <span class="dato-label" th:text="${item.producto.nombre}">Producto</span>
-            <span class="dato-valor" th:text="'x' + ${item.cantidad}">x1</span>
-            <span class="dato-valor" th:text="'$' + ${item.producto.precio * item.cantidad}">$0</span>
-        </div>
-    </div>
+        <section class="panel-tienda">
 
+            <div class="welcome-banner-usuario">
+                <div>
+                    <h1>Mis Pedidos</h1>
+                    <h2>Historial de tus compras en KioNet</h2>
+                </div>
+            </div>
+
+            <!-- SIN PEDIDOS -->
+            <div th:if="${ultimoPedido == null or ultimoPedido.isEmpty()}" class="perfil-card">
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                    </svg>
+                    <h3>Todavía no realizaste ningún pedido</h3>
+                    <p>Explorá nuestra tienda y hacé tu primera compra</p>
+                    <a th:href="@{/home}" class="btn-ir-tienda">Ir a la tienda</a>
+                </div>
+            </div>
+
+            <!-- CON PEDIDOS -->
+            <div th:if="${ultimoPedido != null and !ultimoPedido.isEmpty()}">
+
+                <div class="pedido-card">
+                    <div class="pedido-card-header">
+                        <div>
+                            <h3>Último pedido</h3>
+                            <span>Kiosco UNLAM</span>
+                        </div>
+                        <span class="pedido-estado">✓ Aprobado</span>
+                    </div>
+
+                    <div class="pedido-items">
+                        <div class="pedido-item" th:each="item : ${ultimoPedido}">
+                            <div class="item-info">
+                                <span class="item-cantidad" th:text="'x' + ${item.cantidad}">x1</span>
+                                <span class="item-nombre" th:text="${item.producto.nombre}">Producto</span>
+                            </div>
+                            <span class="item-precio" th:text="'$' + ${item.producto.precio * item.cantidad}">$0</span>
+                        </div>
+                    </div>
+
+                    <div class="pedido-footer">
+                        <span class="pedido-total-label">Total del pedido</span>
+                        <span class="pedido-total-valor"
+                              th:text="'$' + ${#aggregates.sum(ultimoPedido.![producto.precio * cantidad])}">$0</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
 </body>
 </html>

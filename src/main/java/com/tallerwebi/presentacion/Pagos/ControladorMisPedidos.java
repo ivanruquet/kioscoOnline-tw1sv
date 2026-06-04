@@ -23,6 +23,7 @@ public class ControladorMisPedidos {
 
     List<ItemCarrito> ultimoPedido = (List<ItemCarrito>) session.getAttribute("ultimoPedido"); //por ahora es ultimopedido, cuando se implemente la clase pedido, se modificara para que se vean todos
     ModelMap model = new ModelMap();
+    model.put("usuario", usuario);
     model.put("ultimoPedido", ultimoPedido);
     return new ModelAndView("mis-pedidos", model);
   }

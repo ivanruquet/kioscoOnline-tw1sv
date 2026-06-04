@@ -1,0 +1,156 @@
+
+.pedido-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.pedido-badge {
+    background: var(--primary-light, #ede9fe);
+    color: var(--primary, #5B3FE4);
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 4px 14px;
+}
+
+.pedido-card {
+    background: white;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 1.5rem;
+}
+
+.pedido-card-header {
+    background: linear-gradient(135deg, #5B3FE4 0%, #4A32C8 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pedido-card-header h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.pedido-card-header span {
+    font-size: 0.82rem;
+    opacity: 0.85;
+}
+
+.pedido-estado {
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.pedido-items {
+    padding: 0 1.5rem;
+}
+
+.pedido-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border, #e5e7eb);
+}
+
+.pedido-item:last-child {
+    border-bottom: none;
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.item-cantidad {
+    background: var(--primary-light, #ede9fe);
+    color: var(--primary, #5B3FE4);
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 4px 10px;
+    min-width: 36px;
+    text-align: center;
+}
+
+.item-nombre {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text, #111827);
+}
+
+.item-precio {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary, #5B3FE4);
+}
+
+.pedido-footer {
+    background: #f9fafb;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border, #e5e7eb);
+}
+
+.pedido-total-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--muted, #6b7280);
+}
+
+.pedido-total-valor {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text, #111827);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted, #6b7280);
+}
+
+.empty-state svg {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+.empty-state h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text, #111827);
+}
+
+.empty-state p {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-ir-tienda {
+    background: var(--primary, #5B3FE4);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.6rem 1.4rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+}

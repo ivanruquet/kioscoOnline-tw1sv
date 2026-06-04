@@ -18,6 +18,7 @@ public class ServicioImagenesImpl implements ServicioImagenes {
     this.cloudinary = cloudinary;
   }
 
+  @Override
   public String subirImagen(MultipartFile archivo, String carpeta) {
     try {
       Map resultado = cloudinary
