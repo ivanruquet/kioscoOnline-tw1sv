@@ -72,6 +72,7 @@ public class ControladorMercadoPago {
 
     ModelMap model = new ModelMap();
     model.put("itemsComprados", carrito.getItems());
+    session.setAttribute("ultimoPedido", carrito.getItems());
     return new ModelAndView("pago-exitoso", model);
   }
 }

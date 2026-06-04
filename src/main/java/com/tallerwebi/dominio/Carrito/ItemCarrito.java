@@ -14,9 +14,8 @@ public class ItemCarrito {
   @ManyToOne
   private Producto producto;
 
-
-    @ManyToOne
-    private Hijo hijo;
+  @ManyToOne
+  private Hijo hijo;
 
   private Integer cantidad;
 
@@ -43,19 +42,19 @@ public class ItemCarrito {
     return cantidad;
   }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Hijo getHijo() {
-        return hijo;
-    }
+  public Hijo getHijo() {
+    return hijo;
+  }
 
-    public void setHijo(Hijo hijo) {
-        this.hijo = hijo;
-    }
+  public void setHijo(Hijo hijo) {
+    this.hijo = hijo;
+  }
 }

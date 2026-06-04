@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Pedidos</title>
+    <link rel="stylesheet" th:href="@{/css/perfil.css}" />
+</head>
+<body>
+
+<div class="perfil-card">
+    <div class="perfil-card-header">
+        <h2 class="perfil-nombre">Mis Pedidos</h2>
+    </div>
+
+    <!-- Sin pedidos -->
+    <div th:if="${ultimoPedido == null or ultimoPedido.isEmpty()}">
+        <p class="dato-label">No tenés pedidos realizados aún.</p>
+        <a th:href="@{/home}" class="btn-agregar">Ir al inicio</a>
+    </div>
+
+    <!-- Con pedidos -->
+    <div th:if="${ultimoPedido != null and !ultimoPedido.isEmpty()}">
+        <div class="perfil-dato" th:each="item : ${ultimoPedido}">
+            <span class="dato-label" th:text="${item.producto.nombre}">Producto</span>
+            <span class="dato-valor" th:text="'x' + ${item.cantidad}">x1</span>
+            <span class="dato-valor" th:text="'$' + ${item.producto.precio * item.cantidad}">$0</span>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
