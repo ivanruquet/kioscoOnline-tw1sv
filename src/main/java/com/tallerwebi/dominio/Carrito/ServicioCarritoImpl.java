@@ -83,4 +83,13 @@ public class ServicioCarritoImpl implements ServicioCarrito {
     carrito.disminuirCantidad(productoId);
     repositorioCarrito.guardar(carrito);
   }
+
+  @Override
+  public void vaciarCarrito(long usuarioId) {
+    Carrito carrito = obtenerOCrearCarrito(usuarioId);
+
+    carrito.getItems().clear();
+
+    repositorioCarrito.guardar(carrito);
+  }
 }
