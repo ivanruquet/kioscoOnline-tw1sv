@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.tallerwebi.dominio.SubidaDeImgs.ServicioImagenes;
 import com.tallerwebi.dominio.Usuario.*;
 import java.io.ByteArrayInputStream;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class ServicioUsuarioTest {
 
   private ServicioUsuario servicioUsuario;
+  private ServicioImagenes repositorioImagenesMock;
   private RepositorioUsuario repositorioUsuarioMock;
 
   @BeforeEach
   public void init() {
     this.repositorioUsuarioMock = mock(RepositorioUsuario.class);
-    this.servicioUsuario = new ServicioUsuarioImpl(this.repositorioUsuarioMock);
+    this.servicioUsuario =
+      new ServicioUsuarioImpl(this.repositorioUsuarioMock, repositorioImagenesMock);
   }
 
   @Test

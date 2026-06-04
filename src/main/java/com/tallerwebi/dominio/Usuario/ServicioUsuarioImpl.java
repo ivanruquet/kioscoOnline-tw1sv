@@ -1,10 +1,7 @@
 package com.tallerwebi.dominio.Usuario;
 
+import com.tallerwebi.dominio.SubidaDeImgs.ServicioImagenes;
 import com.tallerwebi.dominio.excepcion.NoSePudoGuardarInformacionException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +12,15 @@ import org.springframework.web.multipart.MultipartFile;
 public class ServicioUsuarioImpl implements ServicioUsuario {
 
   RepositorioUsuario repositorioUsuario;
+  ServicioImagenes servicioImagenes;
 
   @Autowired
-  public ServicioUsuarioImpl(RepositorioUsuario repositorioUsuario) {
+  public ServicioUsuarioImpl(
+    RepositorioUsuario repositorioUsuario,
+    ServicioImagenes servicioImagenes
+  ) {
     this.repositorioUsuario = repositorioUsuario;
+    this.servicioImagenes = servicioImagenes;
   }
 
   @Override
@@ -48,19 +50,23 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     try {
       Usuario usuario = repositorioUsuario.buscarUsuarioPorId(id);
 
-      String nombreFoto = fotoPerfil.getOriginalFilename();
-      Path rutaCarpeta = Paths.get("src/main/webapp/resources/core/imagenes/img_Perfiles");
-
-      Files.createDirectories(rutaCarpeta);
-
-      Files.copy(
-        fotoPerfil.getInputStream(),
-        rutaCarpeta.resolve(nombreFoto),
-        StandardCopyOption.REPLACE_EXISTING
+      //      String nombreFoto = fotoPerfil.getOriginalFilename();
+      //      Path rutaCarpeta = Paths.get("src/main/webapp/resources/core/imagenes/img_Perfiles");
+      //
+      //      Files.createDirectories(rutaCarpeta);
+      //
+      //      Files.copy(
+      //        fotoPerfil.getInputStream(),
+      //        rutaCarpeta.resolve(nombreFoto),
+      //        StandardCopyOption.REPLACE_EXISTING
+      //      );
+      //      String rutaGuardarEnBD = "/spring/imagenes/img_Perfiles/" + nombreFoto;
+      String rutaGuardarEnHosting = servicioImagenes.subirImagen(
+        fotoPerfil,
+        "KionetTWI/img_perfiles"
       );
-      String rutaGuardarEnBD = "/spring/imagenes/img_Perfiles/" + nombreFoto;
 
-      usuario.setFotoPerfil(rutaGuardarEnBD);
+      usuario.setFotoPerfil(rutaGuardarEnHosting);
 
       repositorioUsuario.modificar(usuario);
     } catch (Exception e) {
