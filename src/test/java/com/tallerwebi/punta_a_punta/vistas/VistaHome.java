@@ -11,4 +11,7 @@ public class VistaHome extends VistaWeb {
     public void agregarProductoAlCarrito() {
         this.darClickEnElElemento(".btn-add-product");
     }
+
+  public void irAlCarrito() {
+  }
 }

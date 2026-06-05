@@ -3,10 +3,7 @@ package com.tallerwebi.punta_a_punta;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserContext;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.*;
 import com.tallerwebi.punta_a_punta.vistas.VistaHijos;
 import com.tallerwebi.punta_a_punta.vistas.VistaLogin;
 import org.junit.jupiter.api.*;
@@ -24,7 +21,9 @@ public class VistaHijosE2E {
   @BeforeAll
   static void abrirNavegador() {
     playwright = Playwright.create();
-    browser = playwright.chromium().launch();
+    //browser = playwright.chromium().launch();
+    browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(500));
+
   }
 
   @AfterAll
