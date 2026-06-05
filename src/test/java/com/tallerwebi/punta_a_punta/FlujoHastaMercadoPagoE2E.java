@@ -1,19 +1,13 @@
 package com.tallerwebi.punta_a_punta;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.matchesPattern;
-import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
-
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
-import com.tallerwebi.dominio.Productos.Producto;
+import com.tallerwebi.punta_a_punta.vistas.VistaCarrito;
+import com.tallerwebi.punta_a_punta.vistas.VistaHijos;
 import com.tallerwebi.punta_a_punta.vistas.VistaHome;
 import com.tallerwebi.punta_a_punta.vistas.VistaLogin;
-import com.tallerwebi.punta_a_punta.vistas.VistaNuevoUsuario;
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.junit.jupiter.api.*;
 
 public class FlujoHastaMercadoPagoE2E {
@@ -23,6 +17,7 @@ public class FlujoHastaMercadoPagoE2E {
   BrowserContext context;
   VistaLogin vistaLogin;
   VistaHome vistaHome;
+  VistaCarrito vistaCarrito;
 
   @BeforeAll
   static void abrirNavegador() {
@@ -50,17 +45,33 @@ public class FlujoHastaMercadoPagoE2E {
     context.close();
   }
 
-  //terminar
+  @Test
   void deberiaRedirigirAMercadoPagoAlPagar() {
-    String email = "test@unlam.edu.ar";
-    String clave = "test";
+    dadoQueElUsuarioIniciaSesion();
+    dadoQueElUsuarioAprietaAgregarAlCarrito();
+    cuandoElUsuarioHaceClickEnVerCarrito();
+    dadoQueElUsuarioConfirmaElPedido();
+  }
 
-    vistaLogin.escribirEMAIL(email);
+  private void dadoQueElUsuarioConfirmaElPedido() {
+    vistaCarrito = new VistaCarrito(context.pages().get(0));
+    vistaCarrito.confirmarPedido();
+  }
 
-    vistaLogin.escribirClave(clave);
+  private void cuandoElUsuarioHaceClickEnVerCarrito() {
+    vistaHome.irAlCarrito();
+  }
+
+  private void dadoQueElUsuarioIniciaSesion() {
+    vistaLogin.escribirEMAIL("test@unlam.edu.ar");
+
+    vistaLogin.escribirClave("test");
 
     vistaLogin.darClickEnIniciarSesion();
+  }
 
+  private void dadoQueElUsuarioAprietaAgregarAlCarrito() {
+    vistaHome = new VistaHome(context.pages().get(0));
     vistaHome.agregarProductoAlCarrito();
   }
 }
