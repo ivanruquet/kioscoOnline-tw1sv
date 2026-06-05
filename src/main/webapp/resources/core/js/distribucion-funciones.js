@@ -1,11 +1,12 @@
+/* eslint-disable no-unused-vars */
 function cambiar(btn, delta) {
     const control = btn.parentElement;
-    const fila = btn.closest('tr');
-    const span = control.querySelector('.qty-num');
-    const input = control.querySelector('.qty-input');
+    const fila = btn.closest("tr");
+    const span = control.querySelector(".qty-num");
+    const input = control.querySelector(".qty-input");
     const stock = parseInt(control.dataset.stock);
 
-    const totalActual = Array.from(fila.querySelectorAll('.qty-num'))
+    const totalActual = Array.from(fila.querySelectorAll(".qty-num"))
         .reduce((sum, s) => sum + parseInt(s.textContent), 0);
 
     const valorActual = parseInt(span.textContent);
@@ -19,11 +20,11 @@ function cambiar(btn, delta) {
 }
 
 function eliminarFila(btn) {
-    const fila = btn.closest('tr');
+    const fila = btn.closest("tr");
     const productoId = fila.dataset.productoId;
-    fetch('/spring/carrito/eliminar', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'productoId=' + productoId
+    fetch("/spring/carrito/eliminar", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "productoId=" + productoId
     }).then(() => fila.remove());
 }
