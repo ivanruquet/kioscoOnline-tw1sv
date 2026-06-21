@@ -75,7 +75,7 @@ public class VistaCambiarContraseniaE2E {
 
     dadoQueElUsuarioIngresaLaNuevaClave("nuevaClave123");
     cuandoElUsuarioCambiaLaClave(); // avanza al paso 4
-    vistaCambiarContrasenia.esperarPaso4(); // ← agregá esto
+    vistaCambiarContrasenia.esperarPaso4();
 
     entoncesDeberiaVerElMensajeDeExito();
   }

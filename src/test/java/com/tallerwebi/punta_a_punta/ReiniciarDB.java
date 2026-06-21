@@ -25,6 +25,8 @@ public class ReiniciarDB {
         "SET FOREIGN_KEY_CHECKS = 0; " +
         "DELETE FROM Hijo; " +
         "DELETE FROM Usuario; " +
+        "DELETE FROM ItemCarrito; " +
+        "DELETE FROM Carrito; " +
         "ALTER TABLE Usuario AUTO_INCREMENT = 1; " +
         "INSERT INTO Usuario(id,dni,nombre,apellido,celular, email, password, rol, activo,fotoPerfil) " +
         "VALUES(null,1234567890, 'Pepe','Sujeto',1112341234,'test@unlam.edu.ar', '$2b$10$rJB22an3TIUZ34l7doj44.FIAeTPMUcqZofxul6GLaQvHn8F0gxi6', 'ADMIN', true,'https://res.cloudinary.com/dqrka5zry/image/upload/v1780520000/istockphoto-1447126543-612x612_ek0kjw.jpg'); " +

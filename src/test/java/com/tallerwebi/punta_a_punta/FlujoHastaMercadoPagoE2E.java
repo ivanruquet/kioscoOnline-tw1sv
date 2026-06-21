@@ -8,12 +8,16 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
-import com.tallerwebi.dominio.Productos.Producto;
+import com.tallerwebi.punta_a_punta.vistas.VistaCarrito;
+import com.tallerwebi.punta_a_punta.vistas.VistaHijos;
 import com.tallerwebi.punta_a_punta.vistas.VistaHome;
 import com.tallerwebi.punta_a_punta.vistas.VistaLogin;
+<<<<<<< HEAD
 import com.tallerwebi.punta_a_punta.vistas.VistaNuevoUsuario;
 import java.net.MalformedURLException;
 import java.net.URL;
+=======
+>>>>>>> db5817edd11bd89cacbc1f1b1b9d66125bf58800
 import org.junit.jupiter.api.*;
 
 public class FlujoHastaMercadoPagoE2E {
@@ -23,6 +27,10 @@ public class FlujoHastaMercadoPagoE2E {
   BrowserContext context;
   VistaLogin vistaLogin;
   VistaHome vistaHome;
+<<<<<<< HEAD
+=======
+  VistaCarrito vistaCarrito;
+>>>>>>> db5817edd11bd89cacbc1f1b1b9d66125bf58800
 
   @BeforeAll
   static void abrirNavegador() {
@@ -50,6 +58,7 @@ public class FlujoHastaMercadoPagoE2E {
     context.close();
   }
 
+<<<<<<< HEAD
   //terminar
   void deberiaRedirigirAMercadoPagoAlPagar() {
     String email = "test@unlam.edu.ar";
@@ -61,6 +70,35 @@ public class FlujoHastaMercadoPagoE2E {
 
     vistaLogin.darClickEnIniciarSesion();
 
+=======
+  @Test
+  void deberiaRedirigirAMercadoPagoAlPagar() {
+    dadoQueElUsuarioIniciaSesion();
+    dadoQueElUsuarioAprietaAgregarAlCarrito();
+    cuandoElUsuarioHaceClickEnVerCarrito();
+    dadoQueElUsuarioConfirmaElPedido();
+  }
+
+  private void dadoQueElUsuarioConfirmaElPedido() {
+    vistaCarrito = new VistaCarrito(context.pages().get(0));
+    vistaCarrito.confirmarPedido();
+  }
+
+  private void cuandoElUsuarioHaceClickEnVerCarrito() {
+    vistaHome.irAlCarrito();
+  }
+
+  private void dadoQueElUsuarioIniciaSesion() {
+    vistaLogin.escribirEMAIL("test@unlam.edu.ar");
+
+    vistaLogin.escribirClave("test");
+
+    vistaLogin.darClickEnIniciarSesion();
+  }
+
+  private void dadoQueElUsuarioAprietaAgregarAlCarrito() {
+    vistaHome = new VistaHome(context.pages().get(0));
+>>>>>>> db5817edd11bd89cacbc1f1b1b9d66125bf58800
     vistaHome.agregarProductoAlCarrito();
   }
 }
