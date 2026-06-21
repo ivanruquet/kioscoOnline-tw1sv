@@ -398,3 +398,133 @@ body {
     cursor: not-allowed;
     opacity: 0.75;
 }
+
+/* ── MOBILE FIRST ── */
+.btn-hamburguesa {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    padding: 0.25rem;
+}
+
+.btn-cerrar-drawer {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-bottom: 1rem;
+    color: var(--muted);
+}
+
+.drawer-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 99;
+}
+
+.drawer-overlay.active {
+    display: block;
+}
+
+.panel-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.panel-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    transition: background 0.2s;
+}
+
+.panel-nav-link:hover {
+    background: var(--purple-lt);
+    color: var(--purple);
+}
+
+.carrito-texto {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .btn-hamburguesa {
+        display: flex;
+    }
+
+    .btn-cerrar-drawer {
+        display: flex;
+    }
+
+    .main {
+        grid-template-columns: 1fr;
+    }
+
+    .panel-cliente {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        z-index: 100;
+        border-radius: 0;
+        transition: left 0.3s ease;
+        overflow-y: auto;
+    }
+
+    .panel-cliente.drawer-open {
+        left: 0;
+    }
+
+    .main-header {
+        padding: 0.75rem 1rem;
+        gap: 0.75rem;
+    }
+
+    .header-center {
+        display: none;
+    }
+
+    .logout-form-header {
+        display: none;
+    }
+
+    .carrito-texto {
+        display: none;
+    }
+
+    .btn-carrito {
+        padding: 0.6rem;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.3rem;
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .product-card {
+        padding: 0.85rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+}

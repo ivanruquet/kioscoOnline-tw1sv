@@ -1,20 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<section  th:fragment="panelCliente">
+
+<!-- Overlay oscuro (solo mobile) -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="cerrarDrawer()"></div>
+
+<section class="panel-cliente" th:fragment="panelCliente" id="panelCliente">
+
+    <!-- Botón cerrar drawer (solo mobile) -->
+    <button class="btn-cerrar-drawer" id="btnCerrarDrawer" onclick="cerrarDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+    </button>
+
     <a href="/spring/perfil" class="perfil-widget" style="text-decoration: none;">
         <img th:if="${usuario.fotoPerfil != null}" th:src="${usuario.fotoPerfil}" alt="perfil" class="avatar">
         <img th:unless="${usuario.fotoPerfil != null}" th:src="'https://res.cloudinary.com/dqrka5zry/image/upload/v1780525781/default-user_lk0vzd.jpg'" alt="perfil" class="avatar">
         <p class="welcome-text">Hola, <span th:text="${usuario.nombre}"></span></p>
     </a>
-    <div>
-        <br>
-        <a th:href="@{/vistaHijos}">Mis Hijos</a>
-        <br>
-        <a th:href="@{/mis-pedidos}">Mis Pedidos</a>
-    </div>
+
+    <nav class="panel-nav">
+        <a th:href="@{/vistaHijos}" class="panel-nav-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Mis Hijos
+        </a>
+        <a th:href="@{/mis-pedidos}" class="panel-nav-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            Mis Pedidos
+        </a>
+        <a href="/spring/perfil" class="panel-nav-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Mi Perfil
+        </a>
+    </nav>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn-volver" style="width:100%; color: red; border-color: red;">Cerrar sesión</button>
+    </form>
+
 </section>
+
 
 </body>
 </html>
