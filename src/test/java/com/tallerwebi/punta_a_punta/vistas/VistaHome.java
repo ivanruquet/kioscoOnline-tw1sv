@@ -8,12 +8,7 @@ public class VistaHome extends VistaWeb {
     super(page);
   }
 
-<<<<<<< HEAD
-  public void agregarProductoAlCarrito() {
-    this.darClickEnElElemento(".btn-add-product");
-  }
-}
-=======
+
     public void agregarProductoAlCarrito() {
         this.darClickEnElElemento(".btn-add-product");
     }
@@ -21,4 +16,3 @@ public class VistaHome extends VistaWeb {
   public void irAlCarrito() {
   }
 }
->>>>>>> db5817edd11bd89cacbc1f1b1b9d66125bf58800

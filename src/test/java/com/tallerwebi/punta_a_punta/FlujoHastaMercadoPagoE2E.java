@@ -12,12 +12,7 @@ import com.tallerwebi.punta_a_punta.vistas.VistaCarrito;
 import com.tallerwebi.punta_a_punta.vistas.VistaHijos;
 import com.tallerwebi.punta_a_punta.vistas.VistaHome;
 import com.tallerwebi.punta_a_punta.vistas.VistaLogin;
-<<<<<<< HEAD
-import com.tallerwebi.punta_a_punta.vistas.VistaNuevoUsuario;
-import java.net.MalformedURLException;
-import java.net.URL;
-=======
->>>>>>> db5817edd11bd89cacbc1f1b1b9d66125bf58800
+
 import org.junit.jupiter.api.*;
 
 public class FlujoHastaMercadoPagoE2E {
@@ -27,10 +22,8 @@ public class FlujoHastaMercadoPagoE2E {
   BrowserContext context;
   VistaLogin vistaLogin;
   VistaHome vistaHome;
-<<<<<<< HEAD
-=======
+
   VistaCarrito vistaCarrito;
->>>>>>> db5817edd11bd89cacbc1f1b1b9d66125bf58800
 
   @BeforeAll
   static void abrirNavegador() {
@@ -58,19 +51,17 @@ public class FlujoHastaMercadoPagoE2E {
     context.close();
   }
 
-<<<<<<< HEAD
   //terminar
-  void deberiaRedirigirAMercadoPagoAlPagar() {
-    String email = "test@unlam.edu.ar";
-    String clave = "test";
+//  void deberiaRedirigirAMercadoPagoAlPagar() {
+//    String email = "test@unlam.edu.ar";
+//    String clave = "test";
+//
+//    vistaLogin.escribirEMAIL(email);
+//
+//    vistaLogin.escribirClave(clave);
+//
+//    vistaLogin.darClickEnIniciarSesion();
 
-    vistaLogin.escribirEMAIL(email);
-
-    vistaLogin.escribirClave(clave);
-
-    vistaLogin.darClickEnIniciarSesion();
-
-=======
   @Test
   void deberiaRedirigirAMercadoPagoAlPagar() {
     dadoQueElUsuarioIniciaSesion();
@@ -98,7 +89,6 @@ public class FlujoHastaMercadoPagoE2E {
 
   private void dadoQueElUsuarioAprietaAgregarAlCarrito() {
     vistaHome = new VistaHome(context.pages().get(0));
->>>>>>> db5817edd11bd89cacbc1f1b1b9d66125bf58800
     vistaHome.agregarProductoAlCarrito();
   }
 }
