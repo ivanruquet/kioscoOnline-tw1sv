@@ -12,7 +12,6 @@ import com.tallerwebi.punta_a_punta.vistas.VistaCarrito;
 import com.tallerwebi.punta_a_punta.vistas.VistaHijos;
 import com.tallerwebi.punta_a_punta.vistas.VistaHome;
 import com.tallerwebi.punta_a_punta.vistas.VistaLogin;
-
 import org.junit.jupiter.api.*;
 
 public class FlujoHastaMercadoPagoE2E {
@@ -52,15 +51,15 @@ public class FlujoHastaMercadoPagoE2E {
   }
 
   //terminar
-//  void deberiaRedirigirAMercadoPagoAlPagar() {
-//    String email = "test@unlam.edu.ar";
-//    String clave = "test";
-//
-//    vistaLogin.escribirEMAIL(email);
-//
-//    vistaLogin.escribirClave(clave);
-//
-//    vistaLogin.darClickEnIniciarSesion();
+  //  void deberiaRedirigirAMercadoPagoAlPagar() {
+  //    String email = "test@unlam.edu.ar";
+  //    String clave = "test";
+  //
+  //    vistaLogin.escribirEMAIL(email);
+  //
+  //    vistaLogin.escribirClave(clave);
+  //
+  //    vistaLogin.darClickEnIniciarSesion();
 
   @Test
   void deberiaRedirigirAMercadoPagoAlPagar() {
