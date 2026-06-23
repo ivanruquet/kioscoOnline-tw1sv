@@ -246,3 +246,10 @@ body {
         gap: 0.5rem;
     }
 }
+
+/* Ocultar drawer en carrito */
+#panelCliente,
+#drawerOverlay,
+.btn-hamburguesa {
+    display: none !important;
+}
