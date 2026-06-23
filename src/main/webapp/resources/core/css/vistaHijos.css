@@ -1,18 +1,18 @@
 @import url('variablesColor.css');
+@import url('componentesYAlertas.css');
 
+/* ── CONFIGURACIONES GENERALES Y INPUTS (MODAL Y EDICIÓN INFERIOR) ── */
 .modal-card .campo-edicion input,
-.modal-card .campo-edicion select {
+.modal-card .campo-edicion select,
+.agregar-hijo-banner-edicion .campo-edicion input,
+.agregar-hijo-banner-edicion .campo-edicion select {
     border-radius: 10px;
     border: 1.5px solid var(--border);
     width: 100%;
-    box-sizing: border-box;
-}
-.mensaje-error {
-    color: #E24B4A;
-    font-size: .85rem;
-    margin-bottom: 1rem;
+    box-sizing: border-box; /* Evita que el padding sume tamaño y desborde */
 }
 
+/* ── BANNERS Y BOTONES GENERALES ── */
 .agregar-hijo-banner {
     display: flex;
     align-items: center;
@@ -43,7 +43,7 @@
     color: var(--white);
 }
 
-/* ── MODAL ── */
+/* ── COMPONENTES DEL MODAL AGREGAR ── */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -99,7 +99,7 @@
     color: var(--text);
 }
 
-/* ── FORM ── */
+/* ── FORMULARIOS Y GRILLAS COMUNES ── */
 .form-hijo {
     display: flex;
     flex-direction: column;
@@ -147,6 +147,7 @@
     padding: .4rem .5rem;
 }
 
+/* ── BOTONES DE ACCIÓN (GUARDAR/CANCELAR) ── */
 .acciones-edicion {
     display: flex;
     justify-content: flex-end;
@@ -187,4 +188,81 @@
 
 .btn-guardar:hover {
     background: var(--primary-hover);
+}
+
+/* ── TARJETA HIJO Y BOTÓN LÁPIZ VIOLETA ── */
+.hijo-card {
+    position: relative;
+}
+
+.btn-editar-hijo {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    border: 1px solid #d1d5db;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(91, 63, 228, 0.2);
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-editar-hijo:hover {
+    transform: scale(1.08);
+    filter: brightness(1.1);
+}
+
+.btn-editar-hijo svg,
+.banner-edicion svg {
+    width: 18px;
+    height: 18px;
+    color: var(--white);
+}
+
+/* ── SECCIÓN ESPECÍFICA: EDITAR INFORMACIÓN (INFERIOR) ── */
+.agregar-hijo-banner-edicion {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.agregar-hijo-banner-edicion .banner-edicion {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.agregar-hijo-banner-edicion .banner-edicion h2 {
+    color: var(--white);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.agregar-hijo-banner-edicion .form-hijo {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Grilla limpia con el espaciado correcto para la edición inferior */
+.agregar-hijo-banner-edicion .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5rem; /* Espaciado horizontal visible */
+    row-gap: 1.5rem;    /* Espaciado vertical visible */
 }

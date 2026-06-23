@@ -11,13 +11,17 @@ import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
 import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.HijoExistenteException;
+import com.tallerwebi.dominio.excepcion.HijoNoEncontradoException;
 import com.tallerwebi.presentacion.HijosControlador;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 public class HijosControladorTest {
 
@@ -25,15 +29,19 @@ public class HijosControladorTest {
   private HijosControlador hijosControlador;
   private ServicioHijo servicioHijoMock;
   private HttpSession sessionMock;
+  private DatosEditarHijoDTO datosHijoMock;
+  private BindingResult bindingResultMock;
+  private RedirectAttributes redirectAttributesMock;
 
   @BeforeEach
   public void init() {
     servicioHijoMock = mock(ServicioHijo.class);
-
     hijosControlador = new HijosControlador(servicioHijoMock);
-
     sessionMock = mock(HttpSession.class);
     usuarioMock = mock(Usuario.class);
+    datosHijoMock = mock(DatosEditarHijoDTO.class);
+    bindingResultMock = mock(BindingResult.class);
+    redirectAttributesMock = mock(RedirectAttributes.class);
   }
 
   @Test
@@ -99,8 +107,13 @@ public class HijosControladorTest {
   public void guardarHijoDeberiaLlamarAlServicioYRecargarVistaHijos() {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
     Hijo hijoMock = mock(Hijo.class);
-    ModelAndView modelAndView = hijosControlador.guardarHijos(hijoMock, "4", "D", sessionMock);
-
+    ModelAndView modelAndView = hijosControlador.guardarHijos(
+      hijoMock,
+      "CUARTO",
+      "D",
+      sessionMock,
+      redirectAttributesMock
+    );
     verify(servicioHijoMock, times(1)).guardarHijo(hijoMock, usuarioMock);
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/vistaHijos"));
   }
@@ -110,8 +123,13 @@ public class HijosControladorTest {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(null);
     Hijo hijoMock = mock(Hijo.class);
 
-    ModelAndView mv = hijosControlador.guardarHijos(hijoMock, "4", "D", sessionMock);
-
+    ModelAndView mv = hijosControlador.guardarHijos(
+      hijoMock,
+      "CUARTO",
+      "D",
+      sessionMock,
+      redirectAttributesMock
+    );
     assertThat(mv.getViewName(), equalToIgnoringCase("redirect:/login"));
   }
 
@@ -122,8 +140,13 @@ public class HijosControladorTest {
 
     doThrow(HijoExistenteException.class).when(servicioHijoMock).guardarHijo(hijoMock, usuarioMock);
 
-    ModelAndView modelAndView = hijosControlador.guardarHijos(hijoMock, "4", "D", sessionMock);
-
+    ModelAndView modelAndView = hijosControlador.guardarHijos(
+      hijoMock,
+      "CUARTO",
+      "D",
+      sessionMock,
+      redirectAttributesMock
+    );
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("vistaHijos"));
     assertThat(
       modelAndView.getModel().get("error").toString(),
@@ -137,8 +160,13 @@ public class HijosControladorTest {
     Hijo hijoMock = mock(Hijo.class);
     when(hijoMock.getCurso()).thenReturn(Curso.CUARTO_D);
 
-    ModelAndView mv = hijosControlador.guardarHijos(hijoMock, "4", "D", sessionMock);
-
+    ModelAndView mv = hijosControlador.guardarHijos(
+      hijoMock,
+      "CUARTO",
+      "D",
+      sessionMock,
+      redirectAttributesMock
+    );
     verify(servicioHijoMock, times(1)).guardarHijo(hijoMock, usuarioMock);
     assertThat(mv.getViewName(), equalToIgnoringCase("redirect:/vistaHijos"));
   }
@@ -146,10 +174,90 @@ public class HijosControladorTest {
   @Test
   public void guardarHijoDeberiaSetearElCursoAntesDeGuardarlo() {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
-    Hijo hijoMock = mock(Hijo.class);
+    Hijo hijoReal = new Hijo();
+    hijosControlador.guardarHijos(hijoReal, "TERCERO", "D", sessionMock, redirectAttributesMock);
+    assertThat(hijoReal.getCurso(), equalTo(Curso.TERCERO_D));
+  }
 
-    hijosControlador.guardarHijos(hijoMock, "3", "B", sessionMock);
+  @Test
+  public void editarHijoDeberiaLlamarAlServicioYRecargarLaVistaHijos() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(bindingResultMock.hasErrors()).thenReturn(false); // Simulamos validación exitosa
 
-    verify(hijoMock, times(1)).setCurso(Curso.TERCERO_B);
+    when(datosHijoMock.getIdHijo()).thenReturn(1L);
+    when(datosHijoMock.getAnio()).thenReturn("CUARTO");
+    when(datosHijoMock.getDivision()).thenReturn("D");
+    MultipartFile fotoMock = mock(MultipartFile.class);
+    when(datosHijoMock.getFotoPerfilH()).thenReturn(fotoMock);
+
+    ModelAndView mav = hijosControlador.editarHijo(
+      datosHijoMock,
+      bindingResultMock,
+      sessionMock,
+      redirectAttributesMock
+    );
+    verify(servicioHijoMock, times(1))
+      .editarHijo(eq(1L), any(Hijo.class), eq(fotoMock), eq(usuarioMock));
+
+    assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/vistaHijos"));
+  }
+
+  @Test
+  public void editarHijoQueNoExisteDeberiaRedirigirAVistaHijosConError() {
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(bindingResultMock.hasErrors()).thenReturn(false); // Simulamos validación exitosa
+
+    when(datosHijoMock.getIdHijo()).thenReturn(1L);
+    when(datosHijoMock.getAnio()).thenReturn("CUARTO");
+    when(datosHijoMock.getDivision()).thenReturn("D");
+    MultipartFile fotoMock = mock(MultipartFile.class);
+    when(datosHijoMock.getFotoPerfilH()).thenReturn(fotoMock);
+
+    doThrow(HijoNoEncontradoException.class)
+      .when(servicioHijoMock)
+      .editarHijo(eq(1L), any(Hijo.class), eq(fotoMock), eq(usuarioMock));
+
+    ModelAndView mav = hijosControlador.editarHijo(
+      datosHijoMock,
+      bindingResultMock,
+      sessionMock,
+      redirectAttributesMock
+    );
+    assertThat(mav.getViewName(), equalToIgnoringCase("vistaHijos"));
+    assertThat(
+      mav.getModel().get("error").toString(),
+      equalToIgnoringCase("El hijo no existe o no pertenece al usuario")
+    );
+  }
+
+  @Test
+  public void seDebePoderCambiarLaFotoDelHijo() {
+    // 1. Preparación del entorno (Sesión y Mock del archivo de imagen)
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
+    when(bindingResultMock.hasErrors()).thenReturn(false); // Simulamos validación exitosa
+    MultipartFile fotoMock = Mockito.mock(MultipartFile.class);
+    when(fotoMock.isEmpty()).thenReturn(false); // Simulamos que el usuario SÍ subió un archivo
+
+    // 2. Configuración de los comportamientos del DTO (Stubs con 'when')
+    when(datosHijoMock.getIdHijo()).thenReturn(1L);
+    when(datosHijoMock.getAnio()).thenReturn("CUARTO");
+    when(datosHijoMock.getDivision()).thenReturn("D");
+    when(datosHijoMock.getFotoPerfilH()).thenReturn(fotoMock);
+
+    // 3. Ejecución del método del controlador
+    // Pasamos el bindingResultMock inmediatamente después del DTO para cumplir la firma
+    ModelAndView mav = hijosControlador.editarHijo(
+      datosHijoMock,
+      bindingResultMock,
+      sessionMock,
+      redirectAttributesMock
+    );
+    // 4. Verificaciones (Asserts y Verifies)
+    // Verificamos que el servicio recibió exactamente el mock de la foto para procesarlo
+    verify(servicioHijoMock, times(1))
+      .editarHijo(eq(1L), any(Hijo.class), eq(fotoMock), eq(usuarioMock));
+
+    // Verificamos que al salir todo bien, nos redirija correctamente
+    assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/vistaHijos"));
   }
 }

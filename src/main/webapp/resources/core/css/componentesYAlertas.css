@@ -1,0 +1,114 @@
+/* === COMPONENTES GLOBALES - KIONET === */
+@import url('variablesColor.css');
+
+/*mensajes de error y alertas*/
+
+.alerta-mensaje {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+}
+
+.alerta-error {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+    border: 1px solid var(--error-border);
+}
+
+.alerta-exito {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+    border: 1px solid var(--success-border);
+}
+
+.mensaje-error-vacio {
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* === BANNER DE TÍTULO DE SECCIÓN === */
+.banner-titulos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+    border-radius: var(--radius-lg);
+    padding: 2.2rem;
+    color: var(--white);
+    margin-bottom: 2.5rem;
+}
+
+.banner-titulos h1 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    margin: 0 0 0.3rem 0;
+}
+
+.banner-titulos h2 {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.85;
+    margin: 0;
+}
+
+/* === BADGE DE ESTADO DE PEDIDO === */
+.estado-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+}
+
+.estado-badge.PAGO_PENDIENTE {
+    background-color: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FCD34D;
+}
+
+.estado-badge.PAGADO {
+    background-color: #DBEAFE;
+    color: #1E40AF;
+    border: 1px solid #93C5FD;
+}
+
+.estado-badge.RECIBIDO {
+    background-color: var(--purple-lt);
+    color: var(--purple-dark);
+    border: 1px solid #C4B5FD;
+}
+
+.estado-badge.PEDIDO_ARMADO {
+    background-color: var(--purple);
+    color: var(--white);
+    border: 1px solid var(--purple-dark);
+}
+
+.estado-badge.ENTREGADO {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+    border: 1px solid var(--success-border);
+}
+
+.estado-badge.CANCELADO {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+    border: 1px solid var(--error-border);
+}
+
+
+/* === RESPONSIVE: BANNER DE TÍTULO === */
+@media (max-width: 768px) {
+    .banner-titulos h1 {
+        font-size: 1.3rem;
+    }
+}

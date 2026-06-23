@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio.SubidaDeImgs;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
 import java.io.IOException;
 import java.util.Map;
@@ -28,6 +29,31 @@ public class ServicioImagenesImpl implements ServicioImagenes {
       return resultado.get("secure_url").toString();
     } catch (IOException e) {
       throw new RuntimeException("Error al subir imagen", e);
+    }
+  }
+
+  @Override
+  public String subirImagenHijo(MultipartFile archivo, String carpeta) {
+    try {
+      Map resultado = cloudinary
+        .uploader()
+        .upload(
+          archivo.getBytes(),
+          ObjectUtils.asMap(
+            "folder",
+            carpeta,
+            "transformation",
+            new Transformation()
+              .width(400) // Tamaño carnet
+              .height(400)
+              .crop("thumb") // Recorte inteligente
+              .gravity("face") //  Busca y centra el rostro del nene
+          )
+        );
+
+      return resultado.get("secure_url").toString();
+    } catch (IOException e) {
+      throw new RuntimeException("Error al subir imagen del hijo", e);
     }
   }
 }

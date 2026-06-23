@@ -1,4 +1,5 @@
 @import url('variablesColor.css');
+@import url('componentesYAlertas.css');
 
 /* ── CONFIGURACIÓN GLOBAL DE LA TIENDA ── */
 body {
@@ -226,28 +227,6 @@ body {
 .panel-tienda {
     display: flex;
     flex-direction: column;
-}
-
-/* ── RECUADRO DE BIENVENIDA ── */
-.welcome-banner {
-    background: linear-gradient(135deg, #5B3FE4 0%, #4A32C8 100%);
-    border-radius: 20px;
-    padding: 2.2rem;
-    color: var(--white);
-    margin-bottom: 2.5rem;
-}
-
-.welcome-banner h1 {
-    font-size: 1.85rem;
-    font-weight: 800;
-    margin: 0 0 0.3rem 0;
-}
-
-.welcome-banner h2 {
-    font-size: 1rem;
-    font-weight: 400;
-    opacity: 0.85;
-    margin: 0;
 }
 
 /* ── CHIPS DE CATEGORÍAS ── */
@@ -507,10 +486,6 @@ body {
 
     .btn-carrito {
         padding: 0.6rem;
-    }
-
-    .welcome-banner h1 {
-        font-size: 1.3rem;
     }
 
     .products-grid {

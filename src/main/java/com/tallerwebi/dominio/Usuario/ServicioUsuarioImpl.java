@@ -50,17 +50,6 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     try {
       Usuario usuario = repositorioUsuario.buscarUsuarioPorId(id);
 
-      //      String nombreFoto = fotoPerfil.getOriginalFilename();
-      //      Path rutaCarpeta = Paths.get("src/main/webapp/resources/core/imagenes/img_Perfiles");
-      //
-      //      Files.createDirectories(rutaCarpeta);
-      //
-      //      Files.copy(
-      //        fotoPerfil.getInputStream(),
-      //        rutaCarpeta.resolve(nombreFoto),
-      //        StandardCopyOption.REPLACE_EXISTING
-      //      );
-      //      String rutaGuardarEnBD = "/spring/imagenes/img_Perfiles/" + nombreFoto;
       String rutaGuardarEnHosting = servicioImagenes.subirImagen(
         fotoPerfil,
         "KionetTWI/img_perfiles"

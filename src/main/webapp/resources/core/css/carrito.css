@@ -1,5 +1,5 @@
 @import url('variablesColor.css');
-
+@import url('componentesYAlertas.css');
 
 /* --- Reseteo básico --- */
 * {
@@ -15,67 +15,17 @@ body {
     margin: 0;
     font-family: 'Inter', sans-serif;
 }
+.alert-error-custom {
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
+    width: 100%;
+}
 
 .app-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
-}
-
-/* --- Navegación --- */
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--white);
-    padding: 1rem 1.75rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-    border: 1px solid var(--border);
-    margin-bottom: 2.5rem;
-    gap: 1.5rem;
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.logo-icon {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-}
-
-.logo-text {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-dark);
-}
-
-/* Control del tamaño del Logo en el Header */
-.navbar-brand {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-}
-
-.navbar-brand img {
-    height: 65px; /* Ajustá este valor si lo querés un poco más grande o chico */
-    width: auto;
-    object-fit: contain;
-}
-
-.back-link {
-    text-decoration: none;
-    color: var(--primary-color);
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.back-link:hover {
-    text-decoration: underline;
 }
 
 /* --- Layout del Carrito --- */

@@ -5,15 +5,20 @@ import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
 import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.HijoExistenteException;
+import com.tallerwebi.dominio.excepcion.HijoNoEncontradoException;
 import java.util.List;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class HijosControlador {
@@ -54,7 +59,8 @@ public class HijosControlador {
     @ModelAttribute("hijo") Hijo hijo,
     @RequestParam String anio,
     @RequestParam String division,
-    HttpSession session
+    HttpSession session,
+    RedirectAttributes flash
   ) {
     Usuario usuario = (Usuario) session.getAttribute(USUARIO_SESSION);
 
@@ -62,35 +68,74 @@ public class HijosControlador {
       return new ModelAndView("redirect:/login");
     }
     try {
-      String cursoNombre = obtenerNombreCurso(anio) + "_" + division;
+      String cursoNombre = anio + "_" + division;
       Curso curso = Curso.valueOf(cursoNombre);
       hijo.setCurso(curso);
       servicioHijo.guardarHijo(hijo, usuario);
+
+      flash.addFlashAttribute("exito", "¡Hijo registrado con éxito en el sistema!");
     } catch (HijoExistenteException e) {
       ModelMap model = new ModelMap();
       model.put("error", "El hijo ya se encuentra registrado");
       return new ModelAndView("vistaHijos", model);
+    } catch (IllegalArgumentException e) {
+      return devolverVistaConError(usuario, "El año o división seleccionados no son válidos");
     }
 
     return new ModelAndView("redirect:/vistaHijos");
   }
 
-  private String obtenerNombreCurso(String anio) {
-    switch (anio) {
-      case "1":
-        return "PRIMERO";
-      case "2":
-        return "SEGUNDO";
-      case "3":
-        return "TERCERO";
-      case "4":
-        return "CUARTO";
-      case "5":
-        return "QUINTO";
-      case "6":
-        return "SEXTO";
-      default:
-        throw new IllegalArgumentException("Año inválido: " + anio);
+  @RequestMapping(path = "/editarHijo", method = RequestMethod.POST)
+  public ModelAndView editarHijo(
+    @Valid @ModelAttribute("datosEditarHijo") DatosEditarHijoDTO datosEditarHijo,
+    BindingResult bindingResult,
+    HttpSession session,
+    RedirectAttributes flash
+  ) {
+    Usuario usuario = (Usuario) session.getAttribute(USUARIO_SESSION);
+    if (usuario == null) {
+      return new ModelAndView("redirect:/login");
     }
+    // Si las anotaciones del DTO (como @NotNull) fallan, manejamos el error acá
+    if (bindingResult.hasErrors()) {
+      return devolverVistaConError(usuario, "Hay campos inválidos en el formulario de edición.");
+    }
+
+    try {
+      String cursoNombre = datosEditarHijo.getAnio() + "_" + datosEditarHijo.getDivision();
+      Curso curso = Curso.valueOf(cursoNombre);
+
+      Hijo datosNuevos = new Hijo();
+      datosNuevos.setNombre(datosEditarHijo.getNombreH());
+      datosNuevos.setApellido(datosEditarHijo.getApellidoH());
+      datosNuevos.setFechaNac(datosEditarHijo.getFechaH());
+      datosNuevos.setCurso(curso);
+      MultipartFile foto = datosEditarHijo.getFotoPerfilH();
+
+      servicioHijo.editarHijo(datosEditarHijo.getIdHijo(), datosNuevos, foto, usuario);
+      flash.addFlashAttribute("exito", "La información de tu hijo fue actualizada correctamente.");
+    } catch (HijoNoEncontradoException e) {
+      return devolverVistaConError(usuario, "El hijo no existe o no pertenece al usuario");
+    } catch (IllegalArgumentException e) {
+      return devolverVistaConError(usuario, "El año o división seleccionados no son válidos");
+    }
+
+    return new ModelAndView("redirect:/vistaHijos");
+  }
+
+  // Métodos auxiliares
+  private ModelAndView devolverVistaConError(Usuario usuario, String mensajeError) {
+    ModelMap model = new ModelMap();
+    model.put(USUARIO_MODEL, usuario);
+    model.put("hijo", new Hijo()); // Formulario modal vacío
+    model.put("error", mensajeError);
+
+    // Volvemos a buscar la lista para que no desaparezcan las tarjetas de los hijos al recargar con error
+    List<Hijo> hijos = this.servicioHijo.obtenerHijosPorUsuario(usuario.getId());
+    if (hijos != null && !hijos.isEmpty()) {
+      model.put("hijos", hijos);
+    }
+
+    return new ModelAndView(VISTA_HIJOS, model);
   }
 }

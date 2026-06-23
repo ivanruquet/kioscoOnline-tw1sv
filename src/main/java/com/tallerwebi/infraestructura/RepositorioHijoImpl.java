@@ -52,4 +52,9 @@ public class RepositorioHijoImpl implements RepositorioHijo {
     //        }
     return !query.getResultList().isEmpty();
   }
+
+  @Override
+  public void modificar(Hijo hijo) {
+    sessionFactory.getCurrentSession().update(hijo);
+  }
 }

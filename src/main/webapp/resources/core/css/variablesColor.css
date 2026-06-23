@@ -25,4 +25,15 @@
 
     --primary: #5D38DF;
     --primary-light: #EEE9FF;
+
+    /* --- 🆕 Nuevas Variables para Estados y Alertas --- */
+    /* Errores / Alertas Negativas */
+    --error-bg:      #FEE2E2;
+    --error-text:    #991B1B;
+    --error-border:  #FCA5A5;
+
+    /* Éxito / Alertas Positivas */
+    --success-bg:    #DCFCE7;
+    --success-text:  #166534;
+    --success-border:#86EFAC;
 }
