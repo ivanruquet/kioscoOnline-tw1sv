@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class PerfilControlador {
@@ -55,7 +56,8 @@ public class PerfilControlador {
   public ModelAndView editarPerfil(
     @Valid DatosEditarPerfilDTO datosEditarPerfil,
     BindingResult bindingResult,
-    HttpSession session
+    HttpSession session,
+    RedirectAttributes flash
   ) {
     Usuario usuario = (Usuario) session.getAttribute(USUARIO_SESSION);
     if (usuario == null) {
@@ -82,9 +84,12 @@ public class PerfilControlador {
     }
     Usuario usuarioActualizado = servicioUsuario.buscarPorId(usuario.getId());
     session.setAttribute(USUARIO_SESSION, usuarioActualizado);
+    flash.addFlashAttribute("exito", "¡Tu perfil se ha actualizado con éxito!");
 
     return new ModelAndView("redirect:/perfil");
   }
+
+  //metodos auxiliaressssss-------------------
 
   private ModelAndView editarFoto(Usuario usuario, MultipartFile fotoPerfil) {
     if (fotoPerfil == null || fotoPerfil.isEmpty()) {

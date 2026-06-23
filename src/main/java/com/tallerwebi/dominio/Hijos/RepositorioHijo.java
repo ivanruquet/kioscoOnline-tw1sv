@@ -8,4 +8,6 @@ public interface RepositorioHijo {
 
   void guardar(Hijo hijo);
   Boolean existeHijoPorDni(long dni);
+
+  void modificar(Hijo hijo);
 }

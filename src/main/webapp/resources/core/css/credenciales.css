@@ -1,0 +1,196 @@
+/* --- ESTILOS WEB (VISTA PREVIA) --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    margin: 0;
+    padding: 20px;
+    color: var(--text);
+}
+
+.barra-herramientas {
+    background: var(--white);
+    padding: 15px 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.filtros {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Cambiamos el botón de la vista previa a tu violeta */
+.btn-imprimir {
+    background-color: var(--purple);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background .2s;
+}
+
+.btn-imprimir:hover {
+    background-color: var(--purple-dark);
+}
+
+.btn-volver {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.btn-volver:hover {
+    color: var(--text);
+}
+
+/* --- CONTENEDOR HOJA A4 SIMULADA --- */
+.hoja-a4 {
+    background: var(--white);
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm;
+    margin: 0 auto;
+    box-shadow: var(--shadow-md);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10mm;
+    align-content: start;
+    box-sizing: border-box;
+    border-radius: var(--radius-sm);
+}
+
+/* --- DISEÑO DE LA CREDENCIAL KIONET --- */
+.credencial-card {
+    width: 85mm;
+    height: 55mm;
+    border: 2.5px solid var(--purple);
+    border-radius: 12px;
+    padding: 4mm;
+    box-sizing: border-box;
+    display: flex;
+    gap: 4mm;
+    align-items: center;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Detalle estético superior con tu violeta principal */
+.credencial-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4mm;
+    background: var(--purple);
+}
+
+.foto-lado {
+    width: 28mm;
+    height: 35mm;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    object-fit: cover;
+    margin-top: 2mm;
+}
+
+.foto-placeholder {
+    width: 28mm;
+    height: 35mm;
+    background: var(--purple-lt);
+    border: 1.5px dashed var(--purple);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--purple);
+    margin-top: 2mm;
+}
+
+.datos-lado {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2mm;
+    margin-top: 2mm;
+}
+
+.colegio-header {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--purple);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.alumno-nombre {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.alumno-curso {
+    font-size: 0.75rem;
+    background: var(--purple-lt);
+    color: var(--purple-dark);
+    padding: 1mm 2.5mm;
+    border-radius: 6px;
+    font-weight: 600;
+    display: inline-block;
+    align-self: start;
+}
+
+.uso-credencial {
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: auto;
+}
+
+/* --- REGLAS ESTRICTAS PARA IMPRESIÓN --- */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+        margin: 0;
+    }
+    .barra-herramientas {
+        display: none !important;
+    }
+    .hoja-a4 {
+        box-shadow: none;
+        margin: 0;
+        padding: 10mm;
+        width: 100%;
+        height: auto;
+        border: none;
+    }
+    .credencial-card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}

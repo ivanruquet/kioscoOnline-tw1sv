@@ -1,14 +1,5 @@
 @import url('variablesColor.css');
-
-.alerta-error {
-    background: #FCEBEB;
-    border: 1px solid #F09595;
-    border-radius: 10px;
-    padding: .75rem 1rem;
-    font-size: .85rem;
-    color: #A32D2D;
-    margin-bottom: 1rem;
-}
+@import url('componentesYAlertas.css');
 
 .carrito-vacio {
     background: var(--white);

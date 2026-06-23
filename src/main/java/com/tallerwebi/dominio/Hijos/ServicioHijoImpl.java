@@ -1,21 +1,26 @@
 package com.tallerwebi.dominio.Hijos;
 
+import com.tallerwebi.dominio.SubidaDeImgs.ServicioImagenes;
 import com.tallerwebi.dominio.Usuario.Usuario;
 import com.tallerwebi.dominio.excepcion.HijoExistenteException;
+import com.tallerwebi.dominio.excepcion.HijoNoEncontradoException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service("servicioHijo")
 @Transactional
 public class ServicioHijoImpl implements ServicioHijo {
 
   private final RepositorioHijo repoHijo;
+  private final ServicioImagenes servicioImagenes;
 
   @Autowired
-  public ServicioHijoImpl(RepositorioHijo repositorioHijo) {
+  public ServicioHijoImpl(RepositorioHijo repositorioHijo, ServicioImagenes servicioImagenes) {
     this.repoHijo = repositorioHijo;
+    this.servicioImagenes = servicioImagenes;
   }
 
   @Override
@@ -24,11 +29,44 @@ public class ServicioHijoImpl implements ServicioHijo {
   }
 
   @Override
-  public void guardarHijo(Hijo hijo, Usuario usuario) {
+  public void guardarHijo(Hijo hijo, MultipartFile fotoPerfil, Usuario usuario) {
     if (repoHijo.existeHijoPorDni(hijo.getDni())) {
       throw new HijoExistenteException();
     }
     hijo.setPadre(usuario);
+    // Si subieron una foto, la procesamos y guardamos la URL
+    if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
+      String rutaGuardarEnHosting = servicioImagenes.subirImagenHijo(
+        fotoPerfil,
+        "KionetTWI/img_hijos"
+      );
+      hijo.setFotoPerfil(rutaGuardarEnHosting);
+    }
     repoHijo.guardar(hijo);
+  }
+
+  @Override
+  public void editarHijo(Long idHijo, Hijo datosNuevos, MultipartFile fotoPerfil, Usuario usuario) {
+    Hijo hijoExistente = repoHijo.buscarPorId(idHijo);
+
+    if (hijoExistente == null || !hijoExistente.getPadre().getId().equals(usuario.getId())) {
+      throw new HijoNoEncontradoException();
+    }
+
+    hijoExistente.setNombre(datosNuevos.getNombre());
+    hijoExistente.setApellido(datosNuevos.getApellido());
+    hijoExistente.setFechaNac(datosNuevos.getFechaNac());
+    hijoExistente.setCurso(datosNuevos.getCurso());
+    hijoExistente.setDni(datosNuevos.getDni());
+
+    if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
+      String rutaGuardarEnHosting = servicioImagenes.subirImagenHijo(
+        fotoPerfil,
+        "KionetTWI/img_hijos"
+      );
+      hijoExistente.setFotoPerfil(rutaGuardarEnHosting);
+    }
+
+    repoHijo.modificar(hijoExistente);
   }
 }

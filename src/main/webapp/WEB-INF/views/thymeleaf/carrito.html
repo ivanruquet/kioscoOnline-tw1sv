@@ -91,8 +91,7 @@
                         </button>
                     </form>
 
-                    <div th:if="${error}" class="alert-error-custom"
-                         style="background-color: #ffdbdb; color: #d92d2d; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 14px; text-align: center; font-weight: 500; border: 1px solid #f5baba;">
+                    <div th:if="${error}" class="alerta-mensaje alerta-error alert-error-custom" style="margin-top: 15px; justify-content: center;">
                         ⚠️ <span th:text="${error}"></span>
                     </div>
 

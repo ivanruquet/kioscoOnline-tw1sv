@@ -91,6 +91,39 @@ public class RepositorioHijosTest {
     assertThat(existe, is(false));
   }
 
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaModificarNombreDeDatosHijoExistente() {
+    Usuario padre = dadoQueExisteUnPadre();
+    Hijo hijo = dadoQueExisteUnHijo("Santiago", 12345L, padre);
+
+    hijo.setNombre("Martin");
+
+    repositorioHijo.modificar(hijo);
+
+    Hijo hijoModif = repositorioHijo.buscarPorId(hijo.getId());
+
+    assertThat(hijoModif.getNombre(), equalTo("Martin"));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaModificarCursoDeHijoExistente() {
+    Usuario padre = dadoQueExisteUnPadre();
+    Hijo hijo = dadoQueExisteUnHijo("Santiago", 12345L, padre);
+
+    hijo.setCurso(Curso.PRIMERO_A);
+
+    repositorioHijo.modificar(hijo);
+
+    Hijo hijoModif = repositorioHijo.buscarPorId(hijo.getId());
+
+    assertThat(hijoModif.getCurso(), equalTo(Curso.PRIMERO_A));
+  }
+
+  //--------METODOS AUXILIARESSSS-------
   private Hijo dadoQueExisteUnHijo(String nombre, Long dni, Usuario padre) {
     Hijo hijo = new Hijo();
     hijo.setNombre(nombre);

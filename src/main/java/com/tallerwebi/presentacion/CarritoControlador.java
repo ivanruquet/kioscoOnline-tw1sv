@@ -70,6 +70,7 @@ public class CarritoControlador {
     ModelMap model = new ModelMap();
     model.put("total", total);
     model.put("pedidos", pedidos);
+    model.put("usuario", usuario);
 
     return new ModelAndView(CARRITO, model);
   }

@@ -3,8 +3,7 @@ package com.tallerwebi.presentacion;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.Hijos.Hijo;
 import com.tallerwebi.dominio.Hijos.ServicioHijo;
@@ -19,6 +18,7 @@ import org.mockito.Mockito;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 public class PerfilControladorTest {
 
@@ -28,6 +28,7 @@ public class PerfilControladorTest {
   private ServicioUsuario servicioUsuarioMock;
   private BindingResult bindingResultMock;
   private DatosEditarPerfilDTO dto;
+  private RedirectAttributes redirectAttributesMock;
 
   @BeforeEach
   public void init() {
@@ -37,6 +38,7 @@ public class PerfilControladorTest {
     sessionMock = Mockito.mock(HttpSession.class);
     bindingResultMock = Mockito.mock(BindingResult.class);
     dto = new DatosEditarPerfilDTO();
+    redirectAttributesMock = mock(RedirectAttributes.class);
   }
 
   @Test
@@ -112,7 +114,7 @@ public class PerfilControladorTest {
 
     dto.setEmail(mailNuevo);
 
-    perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+    perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock, redirectAttributesMock);
     verify(servicioUsuarioMock).actualizarMail(1L, mailNuevo);
     verify(sessionMock).setAttribute("USUARIO", usuarioActualizado);
   }
@@ -134,7 +136,12 @@ public class PerfilControladorTest {
       .when(servicioUsuarioMock)
       .actualizarMail(1L, mailNuevo);
 
-    ModelAndView mv = perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+    ModelAndView mv = perfilControlador.editarPerfil(
+      dto,
+      bindingResultMock,
+      sessionMock,
+      redirectAttributesMock
+    );
     assertThat((String) mv.getModel().get("mensajeError"), equalToIgnoringCase(msjError));
   }
 
@@ -149,7 +156,7 @@ public class PerfilControladorTest {
     usuarioActualizado.setCelular(Long.parseLong(nuevoCel));
     when(servicioUsuarioMock.buscarPorId(1L)).thenReturn(usuarioActualizado);
     dto.setCelular(nuevoCel);
-    perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+    perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock, redirectAttributesMock);
 
     verify(servicioUsuarioMock).actualizarCelular(1L, Long.parseLong(nuevoCel));
 
@@ -172,7 +179,12 @@ public class PerfilControladorTest {
       .when(servicioUsuarioMock)
       .actualizarCelular(1L, Long.parseLong(celNuevo));
 
-    ModelAndView mv = perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+    ModelAndView mv = perfilControlador.editarPerfil(
+      dto,
+      bindingResultMock,
+      sessionMock,
+      redirectAttributesMock
+    );
 
     assertThat((String) mv.getModel().get("mensajeError"), equalToIgnoringCase(msjError));
   }
@@ -187,7 +199,7 @@ public class PerfilControladorTest {
     when(fotoMock.isEmpty()).thenReturn(false);
     dto.setFotoPerfil(fotoMock);
 
-    perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+    perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock, redirectAttributesMock);
 
     verify(servicioUsuarioMock).actualizarFoto(1L, fotoMock);
   }
@@ -212,7 +224,12 @@ public class PerfilControladorTest {
       .when(servicioUsuarioMock)
       .actualizarFoto(1L, fotoMock);
 
-    ModelAndView mv = perfilControlador.editarPerfil(dto, bindingResultMock, sessionMock);
+    ModelAndView mv = perfilControlador.editarPerfil(
+      dto,
+      bindingResultMock,
+      sessionMock,
+      redirectAttributesMock
+    );
 
     assertThat((String) mv.getModel().get("mensajeError"), equalToIgnoringCase(msjError));
   }
