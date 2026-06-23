@@ -51,7 +51,7 @@ public class ServicioHijoTest {
     when(hijoMock.getDni()).thenReturn(12345678L);
     when(repositorioHijoMock.existeHijoPorDni(12345678L)).thenReturn(false);
 
-    servicioHijo.guardarHijo(hijoMock, usuarioMock);
+    servicioHijo.guardarHijo(hijoMock, null, usuarioMock);
 
     verify(repositorioHijoMock, times(1)).guardar(hijoMock);
   }
@@ -63,9 +63,27 @@ public class ServicioHijoTest {
 
     assertThrows(
       HijoExistenteException.class,
-      () -> servicioHijo.guardarHijo(hijoMock, usuarioMock)
+      () -> servicioHijo.guardarHijo(hijoMock, null, usuarioMock)
     );
     verify(repositorioHijoMock, times(0)).guardar(hijoMock);
+  }
+
+  @Test
+  public void guardarHijoConFotoDeberiaSubirLaImagenYGuardar() {
+    // Creamos el mock de la foto
+    MultipartFile fotoMock = mock(MultipartFile.class);
+    when(fotoMock.isEmpty()).thenReturn(false); // Decimos que NO está vacía
+
+    when(hijoMock.getDni()).thenReturn(12345678L);
+    when(repositorioHijoMock.existeHijoPorDni(12345678L)).thenReturn(false);
+    when(servicioImagenesMock.subirImagenHijo(any(), any())).thenReturn("url_de_la_foto");
+
+    // Pasamos el fotoMock
+    servicioHijo.guardarHijo(hijoMock, fotoMock, usuarioMock);
+
+    // Verificamos que se setee la foto y se guarde
+    verify(hijoMock, times(1)).setFotoPerfil("url_de_la_foto");
+    verify(repositorioHijoMock, times(1)).guardar(hijoMock);
   }
 
   @Test

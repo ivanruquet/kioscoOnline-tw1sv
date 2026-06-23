@@ -266,3 +266,32 @@
     column-gap: 1.5rem; /* Espaciado horizontal visible */
     row-gap: 1.5rem;    /* Espaciado vertical visible */
 }
+/* ── BOTÓN DE ACCIÓN EN EL BANNER (CLON DEL BOTÓN EDITAR PERFIL) ── */
+.btn-banner-accion {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--white);
+    border: 1px solid var(--white);
+    border-radius: 10px;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+/* Efecto sutil al pasar el mouse por encima */
+.btn-banner-accion:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.02);
+}
+
+.btn-banner-accion .icono-btn {
+    width: 18px;
+    height: 18px;
+    color: var(--white);
+}

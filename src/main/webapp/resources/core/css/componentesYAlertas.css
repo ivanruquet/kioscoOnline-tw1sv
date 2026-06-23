@@ -32,6 +32,11 @@
     font-style: italic;
     margin-top: 10px;
 }
+.alerta-informacion {
+    background-color: #FEF3C7; /* Fondo anaranjado claro / amarillo huevo */
+    color: #92400E;            /* Texto marrón/anaranjado oscuro */
+    border: 1px solid #FCD34D; /* Borde sutil */
+}
 
 /* === BANNER DE TÍTULO DE SECCIÓN === */
 .banner-titulos {

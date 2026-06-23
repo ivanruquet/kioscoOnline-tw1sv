@@ -32,6 +32,7 @@ public class HijosControladorTest {
   private DatosEditarHijoDTO datosHijoMock;
   private BindingResult bindingResultMock;
   private RedirectAttributes redirectAttributesMock;
+  private MultipartFile fotoMock;
 
   @BeforeEach
   public void init() {
@@ -42,6 +43,7 @@ public class HijosControladorTest {
     datosHijoMock = mock(DatosEditarHijoDTO.class);
     bindingResultMock = mock(BindingResult.class);
     redirectAttributesMock = mock(RedirectAttributes.class);
+    fotoMock = mock(MultipartFile.class);
   }
 
   @Test
@@ -111,10 +113,11 @@ public class HijosControladorTest {
       hijoMock,
       "CUARTO",
       "D",
+      fotoMock,
       sessionMock,
       redirectAttributesMock
     );
-    verify(servicioHijoMock, times(1)).guardarHijo(hijoMock, usuarioMock);
+    verify(servicioHijoMock, times(1)).guardarHijo(hijoMock, fotoMock, usuarioMock);
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/vistaHijos"));
   }
 
@@ -127,6 +130,7 @@ public class HijosControladorTest {
       hijoMock,
       "CUARTO",
       "D",
+      fotoMock,
       sessionMock,
       redirectAttributesMock
     );
@@ -138,12 +142,15 @@ public class HijosControladorTest {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
     Hijo hijoMock = mock(Hijo.class);
 
-    doThrow(HijoExistenteException.class).when(servicioHijoMock).guardarHijo(hijoMock, usuarioMock);
+    doThrow(HijoExistenteException.class)
+      .when(servicioHijoMock)
+      .guardarHijo(hijoMock, fotoMock, usuarioMock);
 
     ModelAndView modelAndView = hijosControlador.guardarHijos(
       hijoMock,
       "CUARTO",
       "D",
+      fotoMock,
       sessionMock,
       redirectAttributesMock
     );
@@ -164,10 +171,11 @@ public class HijosControladorTest {
       hijoMock,
       "CUARTO",
       "D",
+      fotoMock,
       sessionMock,
       redirectAttributesMock
     );
-    verify(servicioHijoMock, times(1)).guardarHijo(hijoMock, usuarioMock);
+    verify(servicioHijoMock, times(1)).guardarHijo(hijoMock, fotoMock, usuarioMock);
     assertThat(mv.getViewName(), equalToIgnoringCase("redirect:/vistaHijos"));
   }
 
@@ -175,7 +183,14 @@ public class HijosControladorTest {
   public void guardarHijoDeberiaSetearElCursoAntesDeGuardarlo() {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioMock);
     Hijo hijoReal = new Hijo();
-    hijosControlador.guardarHijos(hijoReal, "TERCERO", "D", sessionMock, redirectAttributesMock);
+    hijosControlador.guardarHijos(
+      hijoReal,
+      "TERCERO",
+      "D",
+      fotoMock,
+      sessionMock,
+      redirectAttributesMock
+    );
     assertThat(hijoReal.getCurso(), equalTo(Curso.TERCERO_D));
   }
 

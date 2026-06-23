@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ServicioHijo {
   List<Hijo> obtenerHijosPorUsuario(Long idUsuario);
 
-  void guardarHijo(Hijo hijo, Usuario usuario);
+  void guardarHijo(Hijo hijo, MultipartFile fotoPerfil, Usuario usuario);
 
   void editarHijo(Long idHijo, Hijo datosNuevos, MultipartFile fotoPerfil, Usuario usuario);
 }

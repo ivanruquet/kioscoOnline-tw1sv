@@ -13,8 +13,9 @@
     <link rel="stylesheet" th:href="@{/css/home.css}" />
     <link rel="stylesheet" th:href="@{/css/perfil.css}" />
     <link rel="stylesheet" th:href="@{/css/vistaHijos.css}" />
-</head>
 
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+</head>
 
 <body>
 <div class="container-fluid">
@@ -24,17 +25,20 @@
     <main class="main">
         <section class="panel-cliente">
             <div th:replace="fragmentos/panelIzqCliente :: panelCliente"></div>
-
-            <!--            <a href="/spring/home" class="btn-volver"> Ir a Tienda</a>-->
             <a th:href="@{/perfil}" class="btn-volver"> Mi perfil</a>
-
-
         </section>
+
         <div class="seccion-hijos">
             <div class="banner-titulos">
                 <div class="banner-titulos-texto">
                     <h1>Mis hijos</h1>
                 </div>
+                <a th:href="@{/credenciales}" class="btn-banner-accion">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icono-btn">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z" />
+                    </svg>
+                    <span>Imprimir Credenciales</span>
+                </a>
             </div>
 
             <div th:if="${error}" class="alerta-mensaje alerta-error">
@@ -74,19 +78,14 @@
                     </div>
                     <p class="hijo-nombre" th:text="${hijo.nombre}"></p>
                     <span class="hijo-badge" th:text="${hijo.curso.descripcion}"></span>
-                    <!-- ACA IRIA CODIGO DE RETIRO: Y EL HASH QUE SE DEBE GENERAR-->
-                    <!-- UN BOTON DE IMPRIMIR CREDENCIAL  QUE ARME UNA VISTA  PARA GENERAR EL PDF-->
                 </div>
-
             </div>
+
             <div class="agregar-hijo-banner">
                 <div>
                     <strong>¿Tenés un nuevo hijo en el colegio?</strong>
                 </div>
-                <!--<a href="/spring/agregarHijo" class="btn-agregar" disabled="true">+ Agregar hijo</a>-->
-                <button class="btn-agregar" id="btnAbrirForm">
-                    + Agregar hijo
-                </button>
+                <button class="btn-agregar" id="btnAbrirForm">+ Agregar hijo</button>
             </div>
 
             <div class="modal-overlay" id="modalOverlay">
@@ -99,8 +98,15 @@
                             </svg>
                         </button>
                     </div>
-                    <!--enctype="multipart/form-data"-->
-                    <form th:action="@{/guardarHijo}" method="post"  class="form-hijo">
+
+                    <form th:action="@{/guardarHijo}" method="post" enctype="multipart/form-data" class="form-hijo">
+                        <div class="alerta-mensaje alerta-informacion">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                            </svg>
+                            <span><strong>Requisito de foto:</strong> La imagen debe ser tipo carnet, con el rostro del alumno de frente, centrado y bien visible.</span>
+                        </div>
+
                         <div class="form-grid">
                             <div class="campo-edicion">
                                 <span class="dato-label">Nombre</span>
@@ -120,10 +126,16 @@
                             </div>
                         </div>
 
-                        <!--                    <div class="campo-edicion">-->
-                        <!--                        <span class="dato-label">Foto de perfil</span>-->
-                        <!--                        <input type="file" name="fotoPerfil" accept="image/*">-->
-                        <!--                    </div>-->
+                        <div class="campo-edicion" style="margin-top: 15px;">
+                            <span class="dato-label">Foto de perfil (Rostro visible)</span>
+                            <input type="file" name="fotoPerfilHijo" class="input-foto-hijo" accept="image/*">
+                            <div class="contenedor-error-foto alerta-mensaje alerta-error" style="display: none; margin-top: 10px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                                </svg>
+                                <span class="texto-error-foto"></span>
+                            </div>
+                        </div>
 
                         <div class="campo-edicion">
                             <span class="dato-label">Curso (año y división)</span>
@@ -145,22 +157,28 @@
                             </div>
                         </div>
 
-
                         <div class="acciones-edicion">
                             <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
                             <button type="submit" class="btn-guardar">Guardar</button>
                         </div>
                     </form>
-
                 </div>
-
             </div>
 
             <div id="seccionEdicionHijo" style="display: none; margin-top: 20px;" class="agregar-hijo-banner-edicion">
                 <div class="banner-edicion">
-                    <h2> Editar Información del Hijo <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                    </svg></h2>
+                    <h2> Editar Información del Hijo
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                        </svg>
+                    </h2>
+                </div>
+
+                <div class="alerta-mensaje alerta-informacion">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                    </svg>
+                    <span><strong>Requisito de foto:</strong> La imagen debe ser tipo carnet, con el rostro del alumno de frente, centrado y bien visible.</span>
                 </div>
 
                 <form th:action="@{/editarHijo}" method="post" enctype="multipart/form-data" class="form-hijo">
@@ -176,19 +194,29 @@
                             <input type="text" name="apellidoH" id="editApellido" required>
                         </div>
                         <div class="campo-edicion">
+                            <span class="dato-label">DNI</span>
+                            <input type="number" name="dniH" id="editDni" required>
+                        </div>
+                        <div class="campo-edicion">
                             <span class="dato-label">Fecha de nacimiento</span>
                             <input type="date" name="fechaH" id="editFecha" required>
-                        </div>
-
-                        <div class="campo-edicion">
-                            <span class="dato-label">Foto de Perfil (Rostro visible)</span>
-                            <input type="file" name="fotoPerfilH" id="editFotoInput" accept="image/*">
-                            <p id="error-foto" style="color: red; font-size: 0.85rem; display: none; margin-top: 5px;"></p>
                         </div>
                     </div>
 
                     <div class="campo-edicion" style="margin-top: 15px;">
-                        <span class="dato-label">Curso</span>
+                        <span class="dato-label">Foto de Perfil (Rostro visible)</span>
+                        <input type="file" name="fotoPerfilH" id="editFotoInput" class="input-foto-hijo" accept="image/*">
+
+                        <div class="contenedor-error-foto alerta-mensaje alerta-error" style="display: none; margin-top: 10px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                            </svg>
+                            <span class="texto-error-foto"></span>
+                        </div>
+                    </div>
+
+                    <div class="campo-edicion" style="margin-top: 15px;">
+                        <span class="dato-label">Curso (año y división)</span>
                         <div class="form-grid">
                             <select name="anio" id="editAnio" required>
                                 <option value="PRIMERO">1°</option>
@@ -216,36 +244,9 @@
         </div>
     </main>
 </div>
-<script>
-    const overlay = document.getElementById('modalOverlay');
-    document.getElementById('btnAbrirForm').addEventListener('click', () => overlay.classList.add('visible'));
-    document.getElementById('btnCerrar').addEventListener('click', () => overlay.classList.remove('visible'));
-    document.getElementById('btnCancelar').addEventListener('click', () => overlay.classList.remove('visible'));
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('visible'); });
 
-    function abrirSeccionEdicion(boton) {
-        // 1. Mostrar la sección contenedora
-        const seccion = document.getElementById('seccionEdicionHijo');
-        seccion.style.display = 'block';
-
-        // 2. Mapear los data-attributes a los inputs del formulario de edición
-        document.getElementById('editIdHijo').value = boton.getAttribute('data-id');
-        document.getElementById('editNombre').value = boton.getAttribute('data-nombre');
-        document.getElementById('editApellido').value = boton.getAttribute('data-apellido');
-        document.getElementById('editFecha').value = boton.getAttribute('data-fecha');
-
-        // 3. Mapear los Selects (Año y división)
-        document.getElementById('editAnio').value = boton.getAttribute('data-anio');
-        document.getElementById('editDivision').value = boton.getAttribute('data-division');
-
-        // Scrollear suavemente hasta la sección si es necesario
-        seccion.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function cerrarSeccionEdicion() {
-        document.getElementById('seccionEdicionHijo').style.display = 'none';
-    }
-</script>
+<script th:src="@{/js/edicionHijos.js}"></script>
 <script th:src="@{/js/drawer.js}"></script>
+<script th:src="@{/js/faceApi.js}"></script>
 </body>
 </html>

@@ -27,6 +27,7 @@ public class HijosControlador {
   private static final String VISTA_HIJOS = "vistaHijos";
   private static final String USUARIO_SESSION = "USUARIO";
   private static final String USUARIO_MODEL = "usuario";
+  private static final String REDIRECT_LOGIN = "redirect:/login";
 
   public HijosControlador(ServicioHijo servicioHijo) {
     this.servicioHijo = servicioHijo;
@@ -36,7 +37,7 @@ public class HijosControlador {
   public ModelAndView irAvistaHijos(HttpSession session) {
     Usuario usuario = (Usuario) session.getAttribute(USUARIO_SESSION);
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
     ModelMap model = new ModelMap();
     ModelAndView mv = new ModelAndView();
@@ -59,19 +60,20 @@ public class HijosControlador {
     @ModelAttribute("hijo") Hijo hijo,
     @RequestParam String anio,
     @RequestParam String division,
+    @RequestParam("fotoPerfilHijo") MultipartFile fotoPerfil,
     HttpSession session,
     RedirectAttributes flash
   ) {
     Usuario usuario = (Usuario) session.getAttribute(USUARIO_SESSION);
 
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
     try {
       String cursoNombre = anio + "_" + division;
       Curso curso = Curso.valueOf(cursoNombre);
       hijo.setCurso(curso);
-      servicioHijo.guardarHijo(hijo, usuario);
+      servicioHijo.guardarHijo(hijo, fotoPerfil, usuario);
 
       flash.addFlashAttribute("exito", "¡Hijo registrado con éxito en el sistema!");
     } catch (HijoExistenteException e) {
@@ -94,7 +96,7 @@ public class HijosControlador {
   ) {
     Usuario usuario = (Usuario) session.getAttribute(USUARIO_SESSION);
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
     // Si las anotaciones del DTO (como @NotNull) fallan, manejamos el error acá
     if (bindingResult.hasErrors()) {
@@ -110,6 +112,7 @@ public class HijosControlador {
       datosNuevos.setApellido(datosEditarHijo.getApellidoH());
       datosNuevos.setFechaNac(datosEditarHijo.getFechaH());
       datosNuevos.setCurso(curso);
+      datosNuevos.setDni(datosEditarHijo.getDniH());
       MultipartFile foto = datosEditarHijo.getFotoPerfilH();
 
       servicioHijo.editarHijo(datosEditarHijo.getIdHijo(), datosNuevos, foto, usuario);
@@ -121,6 +124,22 @@ public class HijosControlador {
     }
 
     return new ModelAndView("redirect:/vistaHijos");
+  }
+
+  @RequestMapping(path = "/credenciales", method = RequestMethod.GET)
+  public ModelAndView irACredenciales(HttpSession session) {
+    Usuario usuario = (Usuario) session.getAttribute(USUARIO_SESSION);
+    if (usuario == null) {
+      return new ModelAndView(REDIRECT_LOGIN);
+    }
+
+    ModelMap model = new ModelMap();
+    model.put(USUARIO_MODEL, usuario);
+
+    List<Hijo> hijos = this.servicioHijo.obtenerHijosPorUsuario(usuario.getId());
+    model.put("hijos", hijos);
+
+    return new ModelAndView("credenciales", model);
   }
 
   // Métodos auxiliares

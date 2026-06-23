@@ -29,11 +29,19 @@ public class ServicioHijoImpl implements ServicioHijo {
   }
 
   @Override
-  public void guardarHijo(Hijo hijo, Usuario usuario) {
+  public void guardarHijo(Hijo hijo, MultipartFile fotoPerfil, Usuario usuario) {
     if (repoHijo.existeHijoPorDni(hijo.getDni())) {
       throw new HijoExistenteException();
     }
     hijo.setPadre(usuario);
+    // Si subieron una foto, la procesamos y guardamos la URL
+    if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
+      String rutaGuardarEnHosting = servicioImagenes.subirImagenHijo(
+        fotoPerfil,
+        "KionetTWI/img_hijos"
+      );
+      hijo.setFotoPerfil(rutaGuardarEnHosting);
+    }
     repoHijo.guardar(hijo);
   }
 
@@ -49,6 +57,7 @@ public class ServicioHijoImpl implements ServicioHijo {
     hijoExistente.setApellido(datosNuevos.getApellido());
     hijoExistente.setFechaNac(datosNuevos.getFechaNac());
     hijoExistente.setCurso(datosNuevos.getCurso());
+    hijoExistente.setDni(datosNuevos.getDni());
 
     if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
       String rutaGuardarEnHosting = servicioImagenes.subirImagenHijo(

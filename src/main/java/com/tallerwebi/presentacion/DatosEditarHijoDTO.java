@@ -16,6 +16,8 @@ public class DatosEditarHijoDTO {
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date fechaH;
 
+  private Long dniH;
+
   private String anio;
   private String division;
 
@@ -75,5 +77,13 @@ public class DatosEditarHijoDTO {
 
   public void setIdHijo(Long idHijo) {
     this.idHijo = idHijo;
+  }
+
+  public Long getDniH() {
+    return dniH;
+  }
+
+  public void setDniH(Long dniH) {
+    this.dniH = dniH;
   }
 }
