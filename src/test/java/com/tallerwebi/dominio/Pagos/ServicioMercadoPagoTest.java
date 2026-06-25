@@ -42,6 +42,7 @@ public class ServicioMercadoPagoTest {
   //
   //    assertThat(urlCheckout, nullValue());
   //  }
+  // ...
 
   @Test
   public void siElPedidoTieneItemsDebeIntentarCrearPreferenciaPeroRetornaNullPorTokenInvalido() {
